@@ -1,5 +1,7 @@
 # ELK Stack with Docker
 
+!!!!   with ssl ( certs are added)
+
 Basic ELK (Elasticsearch, Logstash, Kibana) stack setup using Docker Compose.
 
 ## Setup
