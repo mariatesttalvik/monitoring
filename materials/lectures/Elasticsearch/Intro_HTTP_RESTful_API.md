@@ -52,31 +52,6 @@ sequenceDiagram
 
 REST (Representational State Transfer) is an architectural style that defines a set of constraints for creating web services.
 
-```mermaid
-mindmap
-  ROOT((REST))
-    Client-Server
-      Separation of concerns
-      Independent evolution
-    Stateless
-      No session storage
-      Each request is complete
-    Cacheable
-      Responses mark themselves
-      Client-side caching
-    Layered System
-      Middleware
-      Load balancing
-      Security layers
-    Uniform Interface
-      Resource identification
-      Standard methods
-      Self-descriptive
-    Code on Demand
-      Optional
-      Client-side execution
-```
-
 ## 📝 Example Queries
 
 ### Search Query

@@ -2,9 +2,15 @@
 
 ### Mis on ELK?
 
-![ELK](https://s3-ap-south-1.amazonaws.com/trt-blog-ghost/2023/01/The-Elastic-Stack.jpg)
+![ELK](https://www.guru99.com/images/tensorflow/082918_1504_ELKStackTut1.png)
 
 Elastic Stack on avatud lähtekoodiga tööriistade komplekt andmete analüüsiks, töötlemiseks, salvestamiseks ja visualiseerimiseks. Seda tuntakse kui ELK Stack (Elasticsearch, Logstash, Kibana), kuhu kuulub ka Beats.
+
+### Mis on ELK Cluster?
+![3+ Nodes System](../../media/nodes-diagram.svg)
+
+
+![Cluster Sizing Requirements](../../media/cluster-sizing.svg)
 
 ## Kibana – andmete visualiseerimine
 **Kibana** pakub sektordiagramme, joondiagramme, histogramme ja kaarte. Sellega saab visualiseerida Elasticsearchi andmeid ja kujundada soovitud viisil.
@@ -63,48 +69,41 @@ Elasticsearch salvestab andmeid skeemivabas JSON-formaadis, mis teeb selle paind
 
 ### Elasticsearchi põhifunktsioonid:
 
-| **Funktsioon**                  | **Kirjeldus**                                                                                                                                                       |
-|----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Hajutatud ja skaleeritav**    | Loodud hajutatud keskkonna jaoks, võimaldades horisontaalset skaleerimist mitme sõlme vahel ning lihtsat sõlmede lisamist kasvava töökoormuse tarbeks.               |
-| **Reaalajas otsing ja analüütika** | Võimaldab peaaegu reaalajas andmepäringuid ja analüüsi, tagades ajakohased ülevaated kiiresti muutuvate andmekogumite põhjal.                                        |
-| **Täistekstiotsing**            | Võimas täistekstiotsingu tugi keerukate päringute jaoks, sh hägusad otsingud, metamärgid ja lähedusotsingud, kasutades päringu DSL-i.                                |
-| **Skeemivabad JSON-dokumendid** | Andmed salvestatakse skeemivabade JSON-dokumentidena, mis võimaldab paindlikkust andmestruktuuri muutmisel.                                                       |
-| **Kõrge töökindlus ja veataluvus** | Sisseehitatud andmete replikatsioon ja veataluvus tagavad töökindluse ka rikete korral, hajutades andmed ja säilitades replikad mitme sõlme vahel.                |
-| **RESTful API**                 | Intuitiivne RESTful API standardsete HTTP-meetoditega (GET, POST, PUT, DELETE), mis muudab süsteemi lihtsasti kasutatavaks erinevate programmeerimistasemete jaoks. |
-| **Rikkalikud päringu- ja koondamisvõimalused** | Lai valik tööriistu keerukate andmeanalüüside ja visualiseerimiste teostamiseks, kasutades mõõdikuid, histogramme ja segmentimistoiminguid.                     |
+| Feature | Description |
+|---------|-------------|
+| **Distributed & Scalable** | Built for distributed environments with horizontal scaling across nodes. Easy node addition for growing workloads. |
+| **Real-time Search** | Near real-time querying and analytics for up-to-date insights on rapidly changing datasets. |
+| **Full-text Search** | Advanced full-text search with fuzzy searches, wildcards, and proximity queries using DSL. |
+| **Schema-free JSON** | Data stored as schema-free JSON documents allowing flexible data structures. |
+| **High Reliability** | Built-in data replication and fault tolerance with distributed data across multiple nodes. |
+| **RESTful API** | Intuitive API using standard HTTP methods (GET, POST, PUT, DELETE). |
+| **Rich Querying** | Extensive tools for complex data analysis and visualization using metrics, histograms, and aggregations. |
 
 ---
 
 ### Elasticsearchi roll DevOpsis:
 
-Ülevaade Elasticsearchi kasutusaladest:  
-
-| **Kasutusvaldkond**       | **Kirjeldus**                                                                                                                                                           | **Näited**                                                                                   |
-|---------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| **Logihaldus ja analüüs** | **Tsentraliseeritud logimine**: Elasticsearch kogub ja hoiab logisid erinevatest süsteemidest, tehes need analüüsimiseks kergesti kättesaadavaks.                           | Rakenduse tõrkeotsing, infrastruktuuri jälgimine                                           |
-|                           | **Reaalajas jälgimine**: Võimaldab jälgida süsteemi tervist ja jõudlust reaalajas, tuvastada anomaaliaid ja kitsaskohti.                                                 | Serveri jõudluse mõõdikud, API kasutuse analüüs                                            |
-|                           | **Hoiatused ja teavitused**: Integreerub automaatsete hoiatusmehhanismidega, et ennetada probleeme enne, kui need mõjutavad süsteemi tööd.                                  | E-posti teated, Slacki teavitused kriitiliste sündmuste korral                            |
-| **Andmeotsing ja analüüs**| **Kiire otsing ja filtreerimine**: Elasticsearch indekseerib andmed viisil, mis muudab kiire ja tõhusa otsingu võimalikuks.                                               | E-kaubanduse otsing, logianalüüs                                                           |
-|                           | **Andmeanalüütika**: Elasticsearchi abil saab läbi viia keerukaid analüüse, kasutades aggregatsioone ja visualiseerides tulemusi (nt Kibana abil).                         | Müügimustrite analüüs, trendide tuvastamine                                                |
-| **Masinõpe ja AI**        | **Anomaaliate tuvastamine**: Masinõppe algoritme saab kasutada ebatavalise käitumise tuvastamiseks andmevoogudes.                                                        | Panga kahtlaste tehingute tuvastamine, küberrünnakute jälgimine                            |
-|                           | **Kohandatud ML-mudelid**: Elasticsearch toetab kohandatud masinõppemudelite kasutamist, et rikastada analüüse ja otsuseid.                                             | Prognoosimudelid, klassifikatsioon                                                        |
-| **Andmete tsentraliseerimine**| **Erinevate andmeallikate ühendamine**: Elasticsearch saab andmeid indekseerida erinevatest allikatest, pakkudes ühtset platvormi analüüsideks ja ülevaadeteks.                  | ERP ja CRM süsteemide integreeritud vaade                                                  |
-| **Jõudluse optimeerimine**| **Reaalajas päringud ja andmetöötlus**: Optimeeritud otsingumootorina sobib Elasticsearch suure andmemahu kiireks töötlemiseks ja andmeanalüüsiks.                         | Logide töötlemine miljonite sündmuste hulgast, veebilehe otsingumootor                     |
-| **Audit ja turvalisus**   | **Auditlogide haldus**: Võimaldab säilitada ja analüüsida auditeerimise eesmärgil logisid ning vastavuse jälgimist.                                                      | IT süsteemide turbeauditid, vastavusnõuete analüüs                                         |
-|                           | **Küberturvalisus**: Elasticsearch aitab tuvastada ja analüüsida turvalisuse anomaaliaid, et ennetada küberrünnakuid ja turbeintsidente.                                  | IPS/IDS süsteemide andmeanalüüs, kahtlase liikluse jälgimine                               |
+| Area | Description | Examples |
+|------|-------------|----------|
+| **Log Management** | • Centralized logging across systems<br>• Real-time monitoring<br>• Automated alerts | • Application troubleshooting<br>• Infrastructure monitoring<br>• Slack/email alerts |
+| **Data Search** | • Fast indexing and filtering<br>• Advanced analytics with Kibana | • E-commerce search<br>• Log analysis<br>• Sales pattern analysis |
+| **ML/AI** | • Anomaly detection<br>• Custom ML models | • Fraud detection<br>• Cyber threat monitoring |
+| **Data Centralization** | Unified platform for multiple data sources | Integrated ERP/CRM views |
+| **Performance** | Real-time queries for large datasets | Processing millions of log events |
+| **Security & Audit** | • Audit log management<br>• Security monitoring | • IT security audits<br>• IPS/IDS analysis |                      |
 
 ---
 
 ### Olulised mõisted: 
 
-![Component Relation](https://miro.medium.com/v2/resize:fit:1200/1*jLRM0WF8p-uxwWZzuhMYcA.png)
+![Component Relation](https://www.elastic.co/guide/en/elasticsearch/reference/current/images/data_processing_flow.png)
 
-| **Mõiste**              | **Kirjeldus**                                                                                                         | **Näide**                                                                                         |
-|-------------------------|-----------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| **Node**               | Üksik Elasticsearchi instants, mis töötab ühel masinal. Igal sõlmel on kindel roll klastris.                           | Andmesõlm, mis salvestab logifaile; koordineeriv sõlm, mis edastab päringuid.                     |
-| **Cluster**            | Ühe või mitme sõlme kogum, mis töötavad koos andmete salvestamiseks ja haldamiseks.                                   | Klastris on 3 sõlme: 2 andmesõlme ja 1 master-kõlblik sõlm.                                       |
-| **Index**              | Loogiline nimeruum, mis esindab dokumentide kogumit sarnaste omadustega.                                              | Logide indeks, mis sisaldab serverite vigade ja päringute andmeid.                                |
-| **Shard**              | Indeksi andmesalvestuse üksik osa, mis võimaldab andmeid jaotada sõlmede vahel.                                        | Indeks "server_logs" on jagatud 5 shardiks, millest igal ühel on oma replika.                     |
-| **Replication**        | Protsess shardide koopiate loomise ja hoidmise kohta mitmes sõlmes.                                                   | Indeksi iga shard on replitseeritud 1 kord, tagades andmete kättesaadavuse isegi ühe sõlme tõrke korral. |
-| **Cluster State**      | Klastri konfiguratsiooni ja metaandmete globaalne hoidla, mis sisaldab indeksite ja shardide jaotuse infot.           | Klastri olek salvestab teavet uue indeksi loomise ja shardide jaotuse kohta sõlmede vahel.         |
-
+### Key Concepts:
+| Term | Description | Example |
+|------|-------------|---------|
+| **Node** | Single Elasticsearch instance running on a machine with a specific cluster role | Data node storing logs; coordinating node routing queries |
+| **Cluster** | Collection of nodes working together for data storage and management | 3-node setup: 2 data nodes + 1 master-eligible node |
+| **Index** | Logical namespace representing a collection of similar documents | Log index containing server errors and queries |
+| **Shard** | Individual storage unit of an index distributed across nodes | "server_logs" split into 5 shards, each with a replica |
+| **Replication** | Process of creating and maintaining shard copies across nodes | Each shard replicated once for failover protection |
+| **Cluster State** | Global repository of cluster config and metadata, including index/shard distribution | Stores info about new index creation and shard allocation |
