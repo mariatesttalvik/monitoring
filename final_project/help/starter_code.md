@@ -1,3 +1,4 @@
+```bash
 # app.py - A simple Flask app to monitor
 from flask import Flask, jsonify
 import random
@@ -36,7 +37,8 @@ def health():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
+```
+```yaml
 # docker-compose.yml - Basic setup to start with
 version: '3'
 services:
@@ -58,7 +60,8 @@ services:
     image: grafana/grafana
     ports:
       - "3000:3000"
-
+```
+```yaml
 # prometheus.yml - Basic Prometheus config
 global:
   scrape_interval: 15s
@@ -67,3 +70,4 @@ scrape_configs:
   - job_name: 'flask-app'
     static_configs:
       - targets: ['web:5000']
+```
