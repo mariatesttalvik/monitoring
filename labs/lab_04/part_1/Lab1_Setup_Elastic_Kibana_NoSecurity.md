@@ -3,17 +3,17 @@
 ### **1. Prerequisites**
 
 #### **Step 1.1: Install Docker**
-1. Follow the [official Docker installation guide](https://docs.docker.com/get-docker/).
+1. Follow the [official Docker installation guide](https://docs.docker.com/engine/install/).
 2. Verify the installation:
    ```bash
    docker --version
    ```
 
 #### **Step 1.2: Install Docker Compose**
-1. Follow the [official Docker Compose installation guide](https://docs.docker.com/compose/install/).
+1. Follow the [official Docker Compose installation guide](https://docs.docker.com/compose/install/linux/).
 2. Verify the installation:
    ```bash
-   docker-compose --version
+   docker compose --version
    ```
 
 #### **Step 1.3: Set System Parameters**
