@@ -1,5 +1,14 @@
 # ELK Stack with Docker
 
+!!!!   with ssl ( certs are added)
+
+**Prerequisites**
+
+For full cluster resources:
+4 CPUs (-c 4)
+8 GB RAM (-m 8G)
+50 GB Disk (-d 50G)
+
 Basic ELK (Elasticsearch, Logstash, Kibana) stack setup using Docker Compose.
 
 ## Setup
@@ -10,24 +19,12 @@ git clone https://github.com/SimonBecker1997/ElasticCourse.git
 cd ElasticCourse/01_Create_ELK_Deployment
 ```
 
-2. Configure environment:
-```bash
-# Update .env file with:
+2. Configure environment in .env, if needed.
 
-```bash
-ELASTIC_PASSWORD=elastic
-KIBANA_PASSWORD=kibana
-STACK_VERSION=8.1.0
-CLUSTER_NAME=elastic-cluster
-LICENSE=basic
-ES_PORT=9200
-KIBANA_PORT=5601
-MEM_LIMIT=1073741824
-```
 
 3. Start services:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 ```bash
 # Docker permission error fix:
@@ -41,9 +38,9 @@ Log Out and Back In After adding your user to the docker group, log out and log 
 - Elasticsearch: http://localhost:9200
 - Kibana: http://localhost:5601
 
-Default credentials:
+Default credentials ( from .env file):
 - Username: elastic
-- Password: changeme
+- Password: elastic
 
 ## Common Issues
 
