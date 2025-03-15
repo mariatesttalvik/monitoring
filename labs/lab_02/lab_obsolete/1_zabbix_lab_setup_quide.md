@@ -1,7 +1,7 @@
 # Zabbix Monitoring Lab Setup Guide
 
 ## Prerequisites
-- VirtualBox installed on your computer
+- VirtualBox installed on your computer ( or multipass)
 - Ubuntu Server 22.04 LTS ISO downloaded
 - At least 8GB RAM available on host machine
 - 50GB free disk space
@@ -30,13 +30,47 @@ Specifications:
 - Network: Same as VM1
 ```
 
-## Installation Steps
+### Provisioning with Multipass (if  MAC or Linux)
 
-### 1. Basic Setup (Both VMs)
+To create new SSH keys for use with your Multipass VMs, you can generate them using the following commands:
+
 ```bash
-# Update system first
-sudo apt update
-sudo apt upgrade -y
+# Generate a new SSH key pair
+ssh-keygen -t ed25519 -C "zabbix-lab-key"
+
+# Follow the prompts to save the key to a specific location or use the default
+# You can set a passphrase or leave it empty for ease of use in the lab
+
+# View your public key (to copy into cloud-init)
+cat ~/.ssh/id_ed25519.pub
+```
+
+Then you can use this newly generated public key in your Multipass launch commands:
+
+```bash
+# Create Zabbix Server VM with your new key
+multipass launch --name ZabbixServer-YourName --memory 4G --cpus 2 --disk 20G --cloud-init - << EOF
+#cloud-config
+ssh_authorized_keys:
+  - $(cat ~/.ssh/id_ed25519.pub)
+EOF
+
+# Create Test Website Server VM with your new key
+multipass launch --name TestWeb-YourName --memory 2G --cpus 1 --disk 15G --cloud-init - << EOF
+#cloud-config
+ssh_authorized_keys:
+  - $(cat ~/.ssh/id_ed25519.pub)
+EOF
+```
+
+This will inject your newly created public key into both VMs, allowing you to SSH directly into them. If you need to SSH from your host machine:
+
+```bash
+# Get the IP address of your VM
+multipass info ZabbixServer-YourName
+
+# SSH into the VM using your new key
+ssh -i ~/.ssh/id_ed25519 ubuntu@<vm-ip-address>
 ```
 
 ### 2. VM1 Setup (Zabbix Server)
