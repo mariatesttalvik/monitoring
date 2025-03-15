@@ -1,396 +1,205 @@
-# Monitoring Lab Manual - Part 1: Installation and Environment Setup
+# 🚀 Monitoring Lab Manual - Part 1: Manual Setup Guide
 
-## Introduction
+## 🔍 What is this lab about?
 
-This manual guides you through setting up a complete monitoring environment using Docker containers with Zabbix, Grafana, and Loki. By the end of Part 1, you will have a functioning environment ready for configuration in subsequent parts of the lab.
+This lab sets up a complete monitoring environment using Docker containers with Zabbix, Grafana, and Loki. You'll create a self-contained environment for learning modern monitoring practices.
 
-**Time allocation:** 45 minutes total
+**⏱️ Time allocation:** 45 minutes total
 - Docker Environment Preparation: 15 minutes
 - Certificate Generation: 10 minutes
 - Container Deployment: 20 minutes
 
----
+## 🛠️ Manual Setup Commands
 
-## 1. Docker Environment Preparation (15 min)
+### 1️⃣ Environment Preparation
 
-### 1.1 Update System Packages
-
-First, ensure your system has the latest package information and install necessary dependencies:
+Copy and paste each command block into your terminal. Type or copy each command separately to understand what you're executing.
 
 ```bash
+# Update system and install prerequisites
 sudo apt-get update
+```
+**What?** Updates package repositories.  
+**Why?** Ensures you have the latest package information.
+
+```bash
+# Install required packages
 sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
 ```
+**What?** Installs Docker dependencies.  
+**Why?** These packages enable secure downloads and are required for Docker.
 
-**Explanation:** 
-- `apt-get update` refreshes the package index files so your system knows about the latest available packages
-- The installed packages allow secure HTTPS connections and provide tools needed for Docker installation
-
-### 1.2 Install Docker and Docker Compose
-
-Next, install Docker and Docker Compose to run our containerized monitoring services:
+Now add Docker's repository:
 
 ```bash
-# Add Docker's official GPG key
+# Add Docker's GPG key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+```
 
-# Add the Docker repository to APT sources
+```bash
+# Add Docker repository
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+```
 
-# Update package database with Docker packages from the new repository
+```bash
+# Update package database with Docker packages
 sudo apt-get update
+```
 
+```bash
 # Install Docker and Docker Compose
 sudo apt-get install -y docker-ce docker-compose
+```
 
-# Add your user to the docker group to run Docker without sudo
+```bash
+# Add your user to the docker group
 sudo usermod -aG docker $USER
 ```
 
-**Explanation:**
-- We add Docker's GPG key to verify package integrity
-- We add the official Docker repository to your APT sources
-- We install Docker CE (Community Edition) and Docker Compose
-- Adding your user to the docker group allows you to run Docker commands without sudo
-
-**Important:** After running these commands, you need to log out and log back in for the group changes to take effect. Alternatively, you can run:
-
 ```bash
+# Apply group membership
 newgrp docker
 ```
 
-To verify Docker is installed correctly, run:
+Verify installation:
 
 ```bash
+# Check Docker version
 docker --version
+```
+
+```bash
+# Check Docker Compose version
 docker-compose --version
 ```
 
-You should see version information for both commands, indicating successful installation.
-
-### 1.3 Create Directory Structure
-
-Create an organized directory structure for your monitoring lab:
+Now create the directory structure:
 
 ```bash
+# Create main project directory
+mkdir -p monitoring-lab
+```
+
+```bash
+# Create subdirectories
 mkdir -p monitoring-lab/{certs,zabbix,grafana,data,web-app}
+```
+
+```bash
+# Navigate to project directory
 cd monitoring-lab
 ```
 
-**Explanation:**
-- We create a main directory called `monitoring-lab`
-- Inside it, we create subdirectories for:
-  - `certs`: Will store SSL certificates
-  - `zabbix`: Configuration files for Zabbix
-  - `grafana`: Configuration files for Grafana
-  - `data`: Persistent data storage
-  - `web-app`: Sample web application to monitor
+### 2️⃣ Certificate Generation
 
----
-
-## 2. Certificate Generation (10 min)
-
-To secure your monitoring services, you'll generate self-signed SSL certificates:
-
-### 2.1 Generate Root CA Certificate
+Now you'll generate certificates for secure communications. Type or copy each command separately:
 
 ```bash
+# Navigate to certs directory
 cd certs
-openssl genrsa -out ca.key 4096
-openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out ca.crt -subj "/CN=Monitoring Lab CA"
 ```
 
-**Explanation:**
-- We generate a 4096-bit RSA private key for our Certificate Authority (CA)
-- We create a self-signed CA certificate valid for 365 days
-- The subject is set to "Monitoring Lab CA" for easy identification
-
-### 2.2 Generate Certificates for Services
-
-Now, create certificates for Zabbix and Grafana:
-
-#### Zabbix Server Certificate:
+```bash
+# Generate CA private key
+openssl genrsa -out ca.key 4096
+```
+**What?** Creates a 4096-bit RSA private key for your Certificate Authority.  
+**Why?** The CA key is used to sign all service certificates.
 
 ```bash
-# Generate private key
+# Generate self-signed CA certificate
+openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out ca.crt -subj "/CN=Monitoring Lab CA"
+```
+**What?** Creates a self-signed CA certificate valid for one year.  
+**Why?** This establishes your root of trust for all service certificates.
+
+For the Zabbix server certificate:
+
+```bash
+# Generate Zabbix server private key
 openssl genrsa -out zabbix-server.key 2048
+```
 
-# Generate Certificate Signing Request (CSR)
+```bash
+# Create certificate signing request
 openssl req -new -key zabbix-server.key -out zabbix-server.csr -subj "/CN=zabbix-server"
+```
 
-# Sign CSR with our CA to generate certificate
+```bash
+# Sign the certificate with your CA
 openssl x509 -req -in zabbix-server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out zabbix-server.crt -days 365 -sha256
 ```
 
-#### Zabbix Agent Certificate:
+For the Zabbix agent certificate:
 
 ```bash
-# Generate private key
+# Generate Zabbix agent private key
 openssl genrsa -out zabbix-agent.key 2048
+```
 
-# Generate Certificate Signing Request (CSR)
+```bash
+# Create certificate signing request
 openssl req -new -key zabbix-agent.key -out zabbix-agent.csr -subj "/CN=zabbix-agent"
+```
 
-# Sign CSR with our CA to generate certificate
+```bash
+# Sign the certificate with your CA
 openssl x509 -req -in zabbix-agent.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out zabbix-agent.crt -days 365 -sha256
 ```
 
-#### Grafana Certificate:
+For the Grafana certificate:
 
 ```bash
-# Generate private key
+# Generate Grafana private key
 openssl genrsa -out grafana.key 2048
+```
 
-# Generate Certificate Signing Request (CSR)
+```bash
+# Create certificate signing request
 openssl req -new -key grafana.key -out grafana.csr -subj "/CN=grafana"
+```
 
-# Sign CSR with our CA to generate certificate
+```bash
+# Sign the certificate with your CA
 openssl x509 -req -in grafana.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out grafana.crt -days 365 -sha256
 ```
 
-**Explanation:**
-- For each service, we:
-  1. Generate a 2048-bit RSA private key
-  2. Create a Certificate Signing Request (CSR) with the service name as the Common Name (CN)
-  3. Sign the CSR with our CA to create a trusted certificate valid for 365 days
-
-**Note:** In a production environment, you would use certificates from a trusted CA. These self-signed certificates are suitable for lab purposes only.
-
-### 2.3 Set Appropriate Permissions
+Set proper permissions:
 
 ```bash
-# Set read-only permissions for certificates
+# Set certificate permissions
 chmod 644 *.crt ca.crt
-# Set strict permissions for private keys
+```
+
+```bash
+# Set private key permissions
 chmod 600 *.key ca.key
+```
+
+```bash
 # Return to main directory
 cd ..
 ```
 
-**Explanation:**
-- We set appropriate permissions to protect the private keys while allowing services to read the certificates
+### 3️⃣ Configuration Files
 
----
+Create the configuration files for different services.
 
-## 3. Container Deployment (20 min)
-
-### 3.1 Create Docker Compose File
-
-Create a `docker-compose.yml` file in the main directory:
+For Zabbix Agent:
 
 ```bash
-nano docker-compose.yml
-```
-
-Copy and paste the following content:
-
-```yaml
-version: '3.8'
-
-services:
-  # MySQL for Zabbix
-  zabbix-mysql:
-    image: mysql:8.0
-    container_name: zabbix-mysql
-    command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_bin', '--default-authentication-plugin=mysql_native_password']
-    environment:
-      MYSQL_ROOT_PASSWORD: zabbix_pwd
-      MYSQL_DATABASE: zabbix
-      MYSQL_USER: zabbix
-      MYSQL_PASSWORD: zabbix_pwd
-    volumes:
-      - ./data/mysql:/var/lib/mysql
-    restart: unless-stopped
-    networks:
-      - monitoring-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "zabbix", "-pzabbix_pwd"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-  # Zabbix Server
-  zabbix-server:
-    image: zabbix/zabbix-server-mysql:ubuntu-7.0-latest
-    container_name: zabbix-server
-    depends_on:
-      zabbix-mysql:
-        condition: service_healthy
-    environment:
-      DB_SERVER_HOST: zabbix-mysql
-      MYSQL_DATABASE: zabbix
-      MYSQL_USER: zabbix
-      MYSQL_PASSWORD: zabbix_pwd
-      MYSQL_ROOT_PASSWORD: zabbix_pwd
-      ZBX_TIMEOUT: 30
-    volumes:
-      - ./zabbix/alertscripts:/usr/lib/zabbix/alertscripts
-      - ./zabbix/externalscripts:/usr/lib/zabbix/externalscripts
-      - ./certs/zabbix-server.crt:/etc/ssl/certs/zabbix-server.crt:ro
-      - ./certs/zabbix-server.key:/etc/ssl/private/zabbix-server.key:ro
-      - ./certs/ca.crt:/etc/ssl/certs/ca.crt:ro
-    restart: unless-stopped
-    ports:
-      - "10051:10051"
-    networks:
-      - monitoring-network
-
-  # Zabbix Web Interface
-  zabbix-web:
-    image: zabbix/zabbix-web-nginx-mysql:ubuntu-7.0-latest
-    container_name: zabbix-web
-    depends_on:
-      zabbix-mysql:
-        condition: service_healthy
-      zabbix-server:
-        condition: service_started
-    environment:
-      DB_SERVER_HOST: zabbix-mysql
-      MYSQL_DATABASE: zabbix
-      MYSQL_USER: zabbix
-      MYSQL_PASSWORD: zabbix_pwd
-      ZBX_SERVER_HOST: zabbix-server
-      PHP_TZ: Europe/London
-    volumes:
-      - ./certs/zabbix-server.crt:/etc/ssl/certs/zabbix-server.crt:ro
-      - ./certs/zabbix-server.key:/etc/ssl/private/zabbix-server.key:ro
-    ports:
-      - "8443:8443"
-    restart: unless-stopped
-    networks:
-      - monitoring-network
-
-  # Zabbix Agent
-  zabbix-agent:
-    image: zabbix/zabbix-agent2:ubuntu-7.0-latest
-    container_name: zabbix-agent
-    privileged: true
-    depends_on:
-      - zabbix-server
-    environment:
-      ZBX_SERVER_HOST: zabbix-server
-      ZBX_HOSTNAME: zabbix-agent
-      ZBX_SERVER_TLS_PSK_IDENTITY: PSK 001
-      ZBX_SERVER_TLS_PSK_FILE: /etc/zabbix/zabbix_agentd.psk
-    volumes:
-      - ./zabbix/agent.conf:/etc/zabbix/zabbix_agent2.d/zabbix_agent2.conf:ro
-      - ./certs/zabbix-agent.crt:/etc/ssl/certs/zabbix-agent.crt:ro
-      - ./certs/zabbix-agent.key:/etc/ssl/private/zabbix-agent.key:ro
-      - ./certs/ca.crt:/etc/ssl/certs/ca.crt:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /:/hostfs:ro
-    restart: unless-stopped
-    networks:
-      - monitoring-network
-
-  # Grafana
-  grafana:
-    image: grafana/grafana:9.3.6
-    container_name: grafana
-    environment:
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_INSTALL_PLUGINS: alexanderzobnin-zabbix-app,marcusolsson-treemap-panel
-    volumes:
-      - ./grafana/data:/var/lib/grafana
-      - ./certs/grafana.crt:/etc/grafana/grafana.crt:ro
-      - ./certs/grafana.key:/etc/grafana/grafana.key:ro
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
-    networks:
-      - monitoring-network
-
-  # MySQL (as a service to monitor)
-  mysql-service:
-    image: mysql:8.0
-    container_name: mysql-service
-    command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_bin', '--default-authentication-plugin=mysql_native_password']
-    environment:
-      MYSQL_ROOT_PASSWORD: mysql_pwd
-      MYSQL_DATABASE: testdb
-      MYSQL_USER: testuser
-      MYSQL_PASSWORD: test_pwd
-    volumes:
-      - ./data/mysql-service:/var/lib/mysql
-    restart: unless-stopped
-    ports:
-      - "3306:3306"
-    networks:
-      - monitoring-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "testuser", "-ptest_pwd"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-  # Sample Web Application to monitor
-  web-app:
-    image: nginx:alpine
-    container_name: web-app
-    volumes:
-      - ./web-app:/usr/share/nginx/html
-    ports:
-      - "8080:80"
-    restart: unless-stopped
-    networks:
-      - monitoring-network
-
-  # Loki for log aggregation
-  loki:
-    image: grafana/loki:2.7.3
-    container_name: loki
-    command: -config.file=/etc/loki/local-config.yaml
-    ports:
-      - "3100:3100"
-    restart: unless-stopped
-    networks:
-      - monitoring-network
-
-  # Promtail for log collection
-  promtail:
-    image: grafana/promtail:2.7.3
-    container_name: promtail
-    volumes:
-      - /var/log:/var/log
-      - ./data/promtail:/etc/promtail
-    command: -config.file=/etc/promtail/config.yml
-    depends_on:
-      - loki
-    restart: unless-stopped
-    networks:
-      - monitoring-network
-
-networks:
-  monitoring-network:
-    driver: bridge
-```
-
-Save the file by pressing `Ctrl+X`, then `Y`, then `Enter`.
-
-**Explanation:**
-- This Docker Compose file defines all the containers needed for our monitoring lab
-- Key points:
-  - Services are interconnected through a custom bridge network named `monitoring-network`
-  - Volumes map our local directories to container directories for persistence
-  - SSL certificates are mounted in read-only mode to secure the services
-  - Ports are exposed to make services accessible from your host machine
-
-### 3.2 Create Configuration Files and Initialize Databases
-
-Before starting the containers, create the necessary configuration files and database initialization scripts:
-
-#### Zabbix Agent Configuration:
-
-```bash
+# Create zabbix directory if not already created
 mkdir -p zabbix
+```
+
+```bash
+# Create Zabbix agent config file
 nano zabbix/agent.conf
 ```
 
-Paste the following content:
+Now copy and paste this configuration into the nano editor:
 
-```conf
+```
 # Zabbix Agent 2 configuration
 Server=zabbix-server
 ServerActive=zabbix-server
@@ -417,14 +226,22 @@ HostInterface=0.0.0.0
 
 Save the file by pressing `Ctrl+X`, then `Y`, then `Enter`.
 
-#### Promtail Configuration:
+**What?** Creates configuration for the Zabbix agent.  
+**Why?** Tells the agent how to securely connect to the server and what to monitor.
+
+For Promtail (log collector):
 
 ```bash
+# Create promtail config directory
 mkdir -p data/promtail
+```
+
+```bash
+# Create Promtail config file
 nano data/promtail/config.yml
 ```
 
-Paste the following content:
+Copy and paste this configuration:
 
 ```yaml
 server:
@@ -457,18 +274,22 @@ scrape_configs:
 
 Save the file by pressing `Ctrl+X`, then `Y`, then `Enter`.
 
-#### Note on Database Management:
+**What?** Creates configuration for Promtail (log collector).  
+**Why?** Defines what logs to collect and where to send them (to Loki).
 
-As a learning exercise, we'll manually connect to and configure the database after container startup. This hands-on approach will help you understand database management in a monitoring environment.
-
-#### Create a Sample Web Page:
+Create a sample web application:
 
 ```bash
+# Create web-app directory
 mkdir -p web-app
+```
+
+```bash
+# Create sample web page
 nano web-app/index.html
 ```
 
-Paste the following content:
+Copy and paste this HTML:
 
 ```html
 <!DOCTYPE html>
@@ -503,7 +324,7 @@ Paste the following content:
     </div>
     <script>
         function updateTime() {
-            document.getElementById('server-time').textContent = new Date().toLocaleString();
+            document.getElementById("server-time").textContent = new Date().toLocaleString();
         }
         updateTime();
         setInterval(updateTime, 1000);
@@ -514,156 +335,271 @@ Paste the following content:
 
 Save the file by pressing `Ctrl+X`, then `Y`, then `Enter`.
 
-### 3.3 Start the Containers
+**What?** Creates a simple web page to monitor.  
+**Why?** Provides a real service to monitor with the tools.
 
-Now, start all the containers defined in the Docker Compose file:
+Create the Grafana data directory with the right permissions:
 
 ```bash
+mkdir -p grafana/data
+sudo chown -R 472:472 grafana/data
+```
+So, double check, make sure all required directories and certificates exist:
+```bash
+mkdir -p grafana/data data/mysql data/mysql-service data/promtail zabbix/alertscripts zabbix/externalscripts
+```
+Verify SSL certificates exist and have proper permissions:
+```bash
+ls -la certs/
+chmod 644 certs/*.crt
+chmod 600 certs/*.key
+```
+
+### 4️⃣ Create Docker Compose File
+
+Now create the Docker Compose file that defines all services:
+
+```bash
+# Create docker-compose.yml
+nano docker-compose.yml
+```
+For Docker Compose configuration, see [docker-compose.yml](./docker-compose.yml)
+
+
+Save the file by pressing `Ctrl+X`, then `Y`, then `Enter`.
+
+**What?** Creates the configuration for all Docker containers.  
+**Why?** Defines how services connect to each other in an isolated network.
+
+### 5️⃣ Deploy and Verify
+
+Start all the containers:
+
+```bash
+# Start all containers
 docker-compose up -d
 ```
+**What?** Launches all the services defined in docker-compose.yml.  
+**Why?** Starts the entire monitoring environment in one command.
 
-**Explanation:**
-- `up` tells Docker Compose to create and start the containers
-- `-d` runs the containers in detached mode (background)
+This process may take several minutes as Docker downloads the necessary images.
 
-This process may take several minutes as Docker downloads the required images.
-
-### 3.4 Verify Services are Running
-
-Check that all services are running correctly:
+Verify that all services are running:
 
 ```bash
+# Check if all containers are running
 docker-compose ps
 ```
+**What?** Shows the status of all containers.  
+**Why?** Verifies that everything started correctly.
 
-You should see all containers listed with a status of "Up" or "(healthy)". If any container shows a different status, check its logs:
-
-Specifically, verify that the MySQL databases are healthy:
-
-```bash
-docker-compose ps zabbix-mysql mysql-service
-```
-
-The output should show both databases as "(healthy)" which means they've passed the health checks we defined.
+If any container shows a status other than "Up" or "(healthy)", check its logs:
 
 ```bash
-docker-compose logs <container-name>
-```
-
-For example, to check the Zabbix server logs:
-
-```bash
+# Check logs of a specific container (replace container-name with the actual name)
 docker-compose logs zabbix-server
 ```
 
-If you need to troubleshoot a specific container, you can access its shell:
+### 6️⃣ Configure Test Database
+
+Let's breakdown of the database configuration command with explanations for each step:
 
 ```bash
+# Configure the test database
+docker-compose exec mysql-service mysql -u root -pmysql_pwd -e "
+```
+
+mysql_pwd - This is the root password for the MySQL service container. Please change it.
+
+**What:** This line connects to the MySQL service container using Docker Compose.  
+**Why:** It allows you to execute MySQL commands directly in the container without manually logging in.  
+**How:** `docker-compose exec` runs a command in a running container, `mysql-service` is the container name, and the MySQL command connects as root with the specified password.
+
+```bash
+USE testdb;
+```
+**What:** Selects the database "testdb" to work with.  
+**Why:** This specifies which database will contain our monitoring tables.  
+**How:** The `USE` statement in MySQL changes the current working database.
+
+```bash
+CREATE TABLE test_data (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  value DECIMAL(10,2) NOT NULL,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+**What:** Creates a new table called "test_data" with four columns.  
+**Why:** This table will store sample metrics that we'll monitor.  
+**How:**
+- `id`: An auto-incrementing unique identifier for each row
+- `name`: A descriptive name for the metric (up to 100 characters)
+- `value`: A numeric value with 2 decimal places precision
+- `timestamp`: Automatically records when the entry was created
+
+```bash
+INSERT INTO test_data (name, value) VALUES 
+  ('Server CPU', 45.5),
+  ('Server Memory', 78.2),
+  ('Database Connections', 125),
+  ('Active Users', 1250),
+  ('Response Time', 0.85);
+```
+**What:** Adds five sample records to the test_data table.  
+**Why:** Provides initial data for testing monitoring capabilities.  
+**How:** Each INSERT statement creates a record with a metric name and value representing common server metrics. Timestamps are automatically added by MySQL.
+
+```bash
+CREATE USER 'monitor'@'%' IDENTIFIED BY 'monitor_pwd';
+```
+monitor_pwd - This is the password set for the newly created 'monitor' user. You can change it.
+
+**What:** Creates a dedicated MySQL user for monitoring purposes.  
+**Why:** Following security best practices by using a separate user with limited permissions rather than the root user.  
+**How:** The `'monitor'@'%'` syntax creates a user named 'monitor' that can connect from any host (% is a wildcard).
+
+```bash
+GRANT SELECT, PROCESS, SHOW DATABASES, REPLICATION CLIENT ON *.* TO 'monitor'@'%';
+```
+**What:** Gives the monitor user specific permissions.  
+**Why:** Provides only the minimum privileges needed for monitoring (principle of least privilege).  
+**How:** Grants four specific permissions across all databases and tables:
+- `SELECT`: Ability to read data
+- `PROCESS`: Ability to view server processes
+- `SHOW DATABASES`: Ability to list databases
+- `REPLICATION CLIENT`: Ability to check replication status
+
+```bash
+FLUSH PRIVILEGES;"
+```
+**What:** Reloads the privilege tables in MySQL.  
+**Why:** Ensures the new user and permissions take effect immediately.  
+**How:** The `FLUSH PRIVILEGES` command forces MySQL to reload the grant tables from the system tables in the mysql database.
+
+This configuration follows database monitoring best practices by:
+1. Creating structured data to monitor
+2. Using a dedicated monitoring user with minimal permissions
+3. Providing sample metrics that represent real-world monitoring scenarios
+
+### 7️⃣ Accessing Services
+
+Now that all services are running, you can access them through your web browser:
+
+```
+# Zabbix Web Interface
+https://your-server-ip:8443
+Username: Admin
+Password: zabbix
+```
+
+```
+# Grafana Web Interface
+http://your-server-ip:3000
+Username: admin
+Password: admin
+```
+
+```
+# Sample Web Application
+http://your-server-ip:8080
+```
+
+**Note:** Since you're using self-signed certificates, your browser will show a security warning. For this lab environment, you can safely proceed by accepting the risk.
+
+## 🔍 Understanding the Components
+```mermaid
+flowchart TD
+    subgraph "Monitoring Infrastructure"
+        ZS[Zabbix Server] --> ZM[(Zabbix MySQL DB)]
+        ZA[Zabbix Agent] --> ZS
+        G[Grafana] --> ZS
+        G --> L[Loki]
+        P[Promtail] --> L
+    end
+    
+    subgraph "Services Being Monitored"
+        WA[Web App\nNginx] --> ZA
+        MS[(MySQL Service)] --> ZA
+    end
+    
+    subgraph "Security Layer"
+        CERT[Self-signed Certificates]
+        CERT -.- ZS
+        CERT -.- ZA
+        CERT -.- G
+    end
+    
+    USER[User] --> G
+    USER --> ZW[Zabbix Web UI]
+    ZW --> ZS
+    
+    classDef primary fill:#4b79a1,stroke:#333,stroke-width:1px,color:white;
+    classDef secondary fill:#283e51,stroke:#333,stroke-width:1px,color:white;
+    classDef db fill:#f5af19,stroke:#333,stroke-width:1px;
+    classDef security fill:#76b852,stroke:#333,stroke-width:1px;
+    classDef user fill:#bbd2c5,stroke:#333,stroke-width:1px;
+    
+    class ZS,ZA,G,L,P primary;
+    class WA,MS secondary;
+    class ZM,MS db;
+    class CERT security;
+    class USER,ZW user;
+```
+1. **Centralized Monitoring**: Zabbix Server acts as the central hub for collection and analysis of all metrics from different services.
+
+2. **Agent-Based Collection**: Zabbix Agent efficiently collects detailed system-level data from monitored hosts and containers.
+
+3. **Separation of Concerns**:
+   - Zabbix handles infrastructure monitoring and alerts
+   - Grafana provides visualization dashboards
+   - Loki focuses on log aggregation
+   - Each service has its dedicated database for optimal performance
+
+4. **Security Layer**: Self-signed certificates secure communication between components to protect sensitive monitoring data.
+
+5. **Complete Visibility**: The setup provides monitoring for both infrastructure (servers, networks) and applications (web app, database).
+
+6. **Containerization Benefits**:
+   - Isolated environments prevent conflicts
+   - Easy deployment and scaling
+   - Consistent environment across different systems
+   - Simple backup and restoration
+
+This architecture provides a comprehensive monitoring solution that can detect issues, visualize performance metrics, and analyze logs - all essential for maintaining reliable systems.
+
+## ⚠️ Troubleshooting Tips
+
+If you encounter issues:
+
+```bash
+# If Docker gives permission errors
+newgrp docker
+```
+
+```bash
+# Check container logs
+docker-compose logs <container-name>
+```
+
+```bash
+# Access a container's shell
 docker-compose exec <container-name> bash
 ```
 
-For example:
-
 ```bash
-docker-compose exec zabbix-agent bash
+# Fix volume permissions if needed
+sudo chown -R 1000:1000 ./data
+sudo chmod -R 755 ./data
 ```
 
-### 3.5 Manually Configure the Database for Monitoring
+## 🎯 Next Steps
 
-Now that our containers are running, let's manually set up the database that we'll be monitoring. This hands-on approach will help you better understand database configuration for monitoring environments.
+After completing this lab, explore these advanced topics:
 
-1. **Connect to the MySQL service container**:
-   ```bash
-   docker-compose exec mysql-service mysql -u root -pmysql_pwd
-   ```
+- Create custom Zabbix triggers and notifications
+- Build Grafana dashboards to visualize metrics
+- Configure alert thresholds for key metrics
+- Add additional services to monitor
+- Set up notification channels (email, Slack, etc.)
 
-2. **Create a test table for monitoring**:
-   ```sql
-   USE testdb;
-   
-   CREATE TABLE test_data (
-     id INT AUTO_INCREMENT PRIMARY KEY,
-     name VARCHAR(100) NOT NULL,
-     value DECIMAL(10,2) NOT NULL,
-     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   );
-   ```
-
-3. **Insert sample data for monitoring**:
-   ```sql
-   INSERT INTO test_data (name, value) VALUES 
-     ('Server CPU', 45.5),
-     ('Server Memory', 78.2),
-     ('Database Connections', 125),
-     ('Active Users', 1250),
-     ('Response Time', 0.85);
-   ```
-
-4. **Create a dedicated monitoring user** (good security practice):
-   ```sql
-   CREATE USER 'monitor'@'%' IDENTIFIED BY 'monitor_pwd';
-   GRANT SELECT, PROCESS, SHOW DATABASES, REPLICATION CLIENT ON *.* TO 'monitor'@'%';
-   FLUSH PRIVILEGES;
-   ```
-
-5. **Verify your setup**:
-   ```sql
-   SELECT * FROM test_data;
-   SHOW GRANTS FOR 'monitor'@'%';
-   ```
-
-6. **Exit MySQL**:
-   ```sql
-   EXIT;
-   ```
-
-**Learning Point**: By manually setting up the database, you gain experience in:
-- Creating appropriate tables for monitoring
-- Setting up appropriate security and permissions
-- Understanding what data will be monitored
-- Database user management best practices for monitoring
-
-### 3.6 Access Web Interfaces
-
-Once all services are running, you can access them through your web browser:
-
-1. **Zabbix Web Interface**: https://your-server-ip:8443
-   - Username: Admin
-   - Password: zabbix
-
-2. **Grafana Web Interface**: http://your-server-ip:3000
-   - Username: admin
-   - Password: admin
-
-3. **Sample Web Application**: http://your-server-ip:8080
-
-**Note:** Since we're using self-signed certificates, your browser will show a security warning. For this lab, you can safely proceed by accepting the risk.
-
----
-
-## Troubleshooting Tips
-
-### Docker Issues
-- If `docker-compose up -d` fails with "permission denied", make sure you've logged out and back in after adding your user to the docker group.
-- If containers are not starting or exiting with errors, check their logs with `docker-compose logs <container-name>`.
-
-### Certificate Issues
-- If services fail due to certificate issues, verify that certificates are correctly mounted and have proper permissions.
-
-### Networking Issues
-- If containers can't communicate, ensure they're all on the same `monitoring-network`.
-- If you can't access web interfaces, check your firewall settings.
-
-### Volume Permissions
-- If services complain about permissions for mounted volumes, use `chmod` and `chown` to set the correct permissions.
-
----
-
-## Conclusion
-
-You have now completed Part 1 of the Monitoring Lab. You have:
-- Set up Docker and Docker Compose
-- Generated SSL certificates for secure communication
-- Configured and deployed all the necessary services
-
-In Part 2, you will configure Zabbix for basic monitoring of your environment.
