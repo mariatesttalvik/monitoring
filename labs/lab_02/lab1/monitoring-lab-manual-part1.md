@@ -1,4 +1,4 @@
-# 🚀 Monitoring Lab Manual - Part 1: Manual Setup Guide
+# 🚀 Part 1: Basic Manual Setup
 
 ## 🔍 What is this lab about?
 

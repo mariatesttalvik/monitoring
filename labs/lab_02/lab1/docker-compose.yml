@@ -113,12 +113,11 @@ services:
 
   # Grafana 
   grafana:
-    image: grafana/grafana:9.3.6
+    image: grafana/grafana-oss:9.5.5
     container_name: grafana
-    user: root  # Added this line to fix permission issues
+    user: root
     environment:
       GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_INSTALL_PLUGINS: alexanderzobnin-zabbix-app,marcusolsson-treemap-panel
     volumes:
       - ./grafana/data:/var/lib/grafana
       - ./certs/grafana.crt:/etc/grafana/grafana.crt:ro

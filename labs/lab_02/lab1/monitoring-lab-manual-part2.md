@@ -1,4 +1,4 @@
-# 🚀 Monitoring Lab Manual - Part 2: Zabbix 7.0 and Basic Monitoring Setup
+# 🚀 Part 2: Zabbix 7.0 and Basic Monitoring Setup
 
 ## Introduction
 
@@ -125,7 +125,7 @@ https://bestmonitoringtools.com/zabbix-web-monitoring-create-web-scenarios-with-
    - That the macros are configured correctly
    - That the agent has access to the MySQL container
 
-### 4.2 Create a MySQL Dashboard
+### 4.2 Create a MySQL Dashboard (Optional)
 
 1. Go to **Monitoring → Dashboards**
 2. Click **Create dashboard**
@@ -173,8 +173,6 @@ If MySQL monitoring isn't working:
    ```sql
    SHOW GRANTS FOR 'monitor'@'%';
    ```
-
----
 
 ## Conclusion
 
