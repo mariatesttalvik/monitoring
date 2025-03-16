@@ -307,8 +307,6 @@ Triggeri seadistamine
 ---
 ## Graafikud ja komplekssed ekraanid
 
-[PILT: Zabbix logo koos sinise taustaga tiitellehel]
-
 ## Teemad
 - Graafikud
 - Võrgukaardid
@@ -728,11 +726,11 @@ Konsoolist kontroll
 
 ## ODBC (Open Database Connectivity) monitoorimine. Zabbix sisseehitatud moodul
 
-- Eelised
+- **Eelised**
   - Zabbixisse sisse ehitatud
   - Toetab paljusid andmebaase (Oracle, MySQL, PostgreSQL, MSSQL, IBM DB2, MongoDB, Firebird jne)
   - Ametlikud mallid populaarsetele andmebaasidele (MySQL, MSSQL, Oracle) (alates veebruar 2020)
-- Puudused
+- **Puudused**
   - Töötab ainult serveril, kus on käivitatud zabbix-server ja zabbix-proxy, seetõttu on monitoorimiseks vajalik otsene ühendus andmebaasiga; NAT-i taga asuvate andmebaaside monitoorimine pole võimalik
   - Puudub ühenduste kogu (pool) tugi. Iga päring on uus ühendus andmebaasiga (versioonis 4.4 ilmus db.odbc.get, mistõttu on võimalik vähendada päringute arvu ja andmeid eeltöödelda)
   - Platvormist sõltuv lahendus (lahendust ei saa kasutada seal, kus pole Linux-servereid)
@@ -741,11 +739,11 @@ Konsoolist kontroll
 
 ## Zabbix agent UserParameter abil
 
-- Eelised
+- **Eelised**
   - Töötab vahetult andmebaasi serveril (agendi aktiivne või passiivne režiim, aktiivse puhul NAT pole probleem)
   - Kiiresti ja suhteliselt lihtsalt saab luua oma lahenduse
   - Ristplatvormilisus tänu skriptidele erinevates keeltes
-- Puudused
+- **Puudused**
   - Puudub ühenduste kogu tugi. Iga skripti käivitamine on uus ühendus andmebaasiga
   - Paljude kogutavate mõõdikute ja kõrge küsitlemissageduse korral suureneb serveri koormus (CPU, RAM)
   - Puudub ühtne lahendus Windows/Linux/AIX ja erinevate andmebaaside jaoks
@@ -766,9 +764,9 @@ Konsoolist kontroll
 
 ## Moodulid Zabbix Agendi jaoks (libzbxpgsql, libzbxredis, zabbix-modulemysql jne)
 
-- Eelised
+- **Eelised**
   - Töötavad vahetult andmebaasi serveril (agendi aktiivne või passiivne režiim, aktiivse puhul NAT pole probleem)
-- Puudused
+- **Puudused**
   - Töötavad ainult Linuxil
   - Iga moodul on mõeldud konkreetsele andmebaasile (pole ühtset moodulit kõigile populaarsetele andmebaasidele)
   - Paljude moodulite tugi on lõpetatud, moodulid ja mallid ei arene
@@ -779,11 +777,11 @@ Konsoolist kontroll
 
 ## Välised agendid (mamonsu, DBforBIX, ZabbixDBA, zbxdb, zbxora jne)
 
-- Eelised
+- **Eelised**
   - Töötavad vahetult andmebaasi serveril (agendi aktiivne või passiivne režiim, aktiivse puhul NAT pole probleem)
   - Paljud agendid on ristplatvormilised, kuid mitte kõik pole testitud Windows/AIX-il
   - Paljud agendid toetavad ühenduste kogu
-- Puudused
+- **Puudused**
   - Mõned agendid on ammu hüljatud ja ei arene, puuduvad valmis mallid erinevate andmebaaside jaoks (DBforBIX, ZabbixDBA)
   - Mõnede agentide keerulised seadistused (DBforBIX, zbxdb)
   - Lahenduse kasutamine võib olla võimatu infrastruktuuri piirangute või turvalisuspoliitika tõttu (näiteks on nõutav PSK/SSL-krüpteerimine monitoorimisandmete edastamisel)
@@ -793,32 +791,29 @@ Konsoolist kontroll
 
 ## Zabbix Agent 2
 
-- Eelised
+- **Eelised**
   - Töötavad vahetult andmebaasi serveril (agendi aktiivne või passiivne režiim, aktiivse puhul NAT pole probleem)
   - Kirjutatud Golangi keeles — ristplatvormil töötav, kuid ainult Linuxi ja Windowsi jaoks
   - Redis, Memcached, PostgreSQL, MySQL monitoorimise tugi "karbist". Hiljuti ilmus Oracle'i liides
   - Alates 17.09.2020 on olemas Windows-teenuse tugi [ZBXNEXT 6023]
-- Puudused
+- **Puudused**
   - Kirjutatud Golangi keeles — ebapiisavalt ristplatvormil töötav — AIX versioonid < 7.2 ei ole Golang kompileerija poolt toetatud, Solaris või FreeBSD on küsimärgi all
   - Seni on realiseeritud tugi kaugeltki mitte kõigile populaarsetele andmebaasidele (puudub MSSQL)
   - Ei toeta deemonina töötamist Linuxis
 
-[![Setting up Zabbix Agent 2 for PostgreSQL monitoring](https://blog.zabbix.com/wp-content/uploads/2021/01/4-1.jpg)](https://blog.zabbix.com/setting-up-zabbix-agent-2-for-postgresql-monitoring-and-revealing-how-it-works/13208/)
-
-**[Setting up Zabbix Agent 2 for PostgreSQL monitoring and revealing how it works](https://blog.zabbix.com/setting-up-zabbix-agent-2-for-postgresql-monitoring-and-revealing-how-it-works/13208/)**
-
+![Setting up Zabbix Agent 2 for PostgreSQL monitoring](https://blog.zabbix.com/wp-content/uploads/2021/01/4-1.jpg)
 ---
 
 ## Zabbix Agent DBMON
 
-- Eelised
+- **Eelised**
   - Ristplatvormil töötav (toetab kompileerimist Linuxi, Windowsi, AIX, Solarise jt jaoks)
   - Toetab Oracle, MySQL, PostgreSQL, MSSQL monitoorimist kõigil operatsioonisüsteemidel ilma täiendavate skriptideta
   - Kiire monitoorimine, väike CPU ja RAM ressursside kasutus
   - Valmis modulaarsed mallid Oracle, MySQL, PostgreSQL monitoorimiseks erinevatel operatsioonisüsteemidel
   - Minimaalsed agendi seadistused
   - Kompaktne lahendus minimaalse sõltuvusega
-- Puudused
+- **Puudused**
   - Seni veel arendamisel ja kõik "funktsioonid" ei pruugi olla kättesaadavad
 
 
@@ -878,3 +873,579 @@ Monitoorimise kasutaja andmebaasis
 
 ---
 
+## Discovery trapper
+
+## Teemad
+SNMP
+LLD
+Zabbix-sender/Zabbix-trapper
+Refleksioon
+
+## SNMP protokoll
+**Simple Network Management Protocol (SNMP)** — standardne internetiprotokoll seadmete haldamiseks IP-võrkudes
+* Võimalikud lugemis- ja kirjutamisoperatsioonid
+* Kasutab haldusteabe baasi (MIB — Management Information Base, RFC-1213, -1212)
+
+![PILT: SNMP protokolli kirjeldus ja joonis](https://www.devopsschool.com/blog/wp-content/uploads/2022/03/image-96.png)
+
+## SNMP: käskude näited
+
+```bash
+# Teenuse paigaldamine ja käivitamine
+$ yum install net-snmp net-snmp-utils
+$ systemctl start snmpd
+
+# Käskude näited
+$ snmpwalk -v 2c -c public localhost
+$ snmpdf -v 2c -c public localhost
+$ snmptable -v 2c -c public localhost ipAddrTable
+
+# MIBs 
+$ ls /usr/share/snmp/mibs/
+```
+CentOS 7
+
+## SNMP: haldurilt agendile
+**GetRequest**
+Päring muutuja või muutujate loendi väärtuse saamiseks.
+**SetRequest**
+Päring muutuja või muutujate loendi muutmiseks. Seotud muutujad määratakse päringu kehas. Agent peab kõik määratud muutujate muudatused täitma atomaarse operatsioonina. Haldurile tagastatakse Response (praeguste) uute muutujate väärtustega.
+**GetNextRequest**
+Päring saadaolevate muutujate ja nende väärtuste avastamiseks. Haldurile tagastatakse Response seotud muutujatega muutuja jaoks, mis on järgmine MIB baasis leksikograafilises järjekorras.
+**GetBulkRequest**
+GetNextRequest'i täiustatud versioon. Päring haldurilt objektile mitme GetNextRequest'i iteratsiooni jaoks. Haldur saab vastuse mitme seotud muutujaga, mille agent sai OID puud läbides alustades seotud muutujast (muutujatest) päringus.
+
+## SNMP: agendilt haldurile
+ **Response**
+Tagastab seotud muutujad ja väärtused agendilt haldurile GetRequest, SetRequest, GetNextRequest, GetBulkRequest ja InformRequest jaoks. Veateated on tagatud vea oleku ja vea indeksi väljadega. Seda üksust kasutatakse vastusena nii Get- kui ka Set-päringutele, SNMPv1-s nimetatakse seda GetResponse.
+**Trap**
+Asünkroonne teatis agendilt haldurile. Sisaldab praegust sysUpTime väärtust, OID-d, mis määratleb trap'i tüübi, ja valikulisi seotud muutujaid. Kasulik kasutada juhtudel, kui andmed võivad ilmuda agendi serveri küsitluste vahel.
+
+## MIB
+**Management Information Base (MIB, haldusteavet baas)** — virtuaalne andmebaas, mida kasutatakse võrguobjektide haldamiseks
+**Object Identifier (OID)** — objektide identifikaatorid MIB-is. Iga OID koosneb kahest osast: tekstinimest ja SNMP aadressist numbrilises vormis
+
+![PILT: MIB kirjeldus ja OID puu näide](media/z-mib.png)
+
+## SNMP ja Zabbix
+* Zabbix toetab SNMP v1, 2c ja 3
+* SNMPv3 toetab autentimist ja krüpteerimist
+* Iga andmeelemendi kohta community, turvalisuse tase ja port
+* Kasutaja makrode tugi SNMP community's
+* SNMP päringuid töötlevad Zabbix pollerid
+* Zabbix tarnitakse koos mitme eelnevalt määratletud SNMP mallga
+* Zabbix toetab SNMP päringute paketttöötlust
+
+![PILT: SNMP ja Zabbix integratsioon](https://assets.zabbix.com/img/monitoring_topics/device_onboarding_1127x500.png)
+
+
+## Discovery
+
+## Hostide avastamine
+* Paigaldame hostidele zabbix-agent, avame pordi 10050
+* Määrame Server parameetri (soovitatav on luua ansible playbookid agenti paigaldamiseks uutele hostidele)
+* Lisame avastamireegli Data Collection -> Discovery
+* Aktiveerime või lisame toimingu tüübiga Discovery Actions kohas Alerts -> Actions -> Discovery actions
+
+![PILT: Hostide avastamise selgitus](https://blog.zabbix.com/wp-content/uploads/2020/04/zabbix_network_discovery-1024x536.jpg)
+
+## Näide
+
+![PILT: Näide Zabbix Discovery konfiguratsioonist](media/z-disc1.png)
+
+## Hostide avastamine SNMP kaudu
+* Hostil on snmpd aktiveeritud, SNMP jaoks avatud tulemüür
+* Lisame Discovery rule SNMP kontrolliga
+* Lisame Action koos SNMP jaoks lingitud malliga
+
+## Näide
+
+![PILT: Näide SNMP Discovery konfiguratsioonist](media/z-disc2.png)
+
+## LLD: madala taseme avastamine
+* Võimalus luua kasutaja reegleid ja malle erinevate jälgimiskomponentide avastamiseks lõppsüsteemis:
+  * kettad, failisüsteemid, võrguinterfaceäid
+  * SQL tabelid
+  * SQL päringute põhjal meetrikad
+  * mis tahes muud mallipõhised meetrikad, mille saamine on võimalik skripti kaudu realiseerida
+
+## LLD: komponendid
+* Madala taseme avastamisreegel
+* Andmeelementide prototüübid
+* Triger prototüübid
+* Graafiku prototüübid
+* Võrgusõlmede prototüübid
+
+## LLD: interaktsiooniskeem
+
+![PILT: LLD interaktsiooniskeem](https://i0.wp.com/blog.zabbix.com/wp-content/uploads/2022/05/volanszki_json_ca_core_logic_v2.png?resize=1024%2C339&ssl=1)
+
+## Prototüüpide loomine
+* LLD reeglid tagastavad andmeid makrodes:
+  * Failisüsteemid: {#FSNAME}, {#FSTYPE}
+  * Interfaced: {#IFNAME}
+  * SNMP: {#SNMPINDEX}, {#SNMPVALUE}, ...
+* Võtme näide:
+vfs.fs.size[{#FSNAME},free]
+* LLD makrosid saab kasutada trigeri väljendites:
+{vfs.fs.size[{#FSNAME},pused].last(0)} > {#MY_CUSTOM_MACRO}
+
+## Näide
+![PILT: Prototüüpide loomise selgitus](https://blog.zabbix.com/wp-content/uploads/2020/04/item_prototype_parameters-1.jpg)
+
+## Zabbix-sender
+```bash
+-c, --config config-file
+-s, --host host
+
+# hosti nimi Zabbixis (tõstutundlik)
+-k, --key key
+
+# võti, meetrika nimetus
+-o, --value value
+
+# meetrika väärtus või JSON LLD jaoks
+-i, --input-file input-file
+
+# sisendfail andmetega meetrikate paketi saatmiseks
+Konsooliutiliit meetrikate saatmiseks (Zabbix trapperisse)
+```
+##  Näide: Zabbix Discovery Trapper JSON Data Processing
+```mermaid
+graph TD
+    subgraph "Monitored Host"
+        Script["Custom Script"]
+        Data["System Data\n(filesystems, interfaces, etc.)"]
+        
+        subgraph "JSON LLD Format"
+            JSON["{
+                'data': [
+                    {'{#FSNAME}': '/dev/sda1', '{#FSTYPE}': 'ext4'},
+                    {'{#FSNAME}': '/dev/sdb1', '{#FSTYPE}': 'xfs'}
+                ]
+            }"]
+        end
+        
+        ZS["Zabbix Sender\n(zabbix_sender -z server -s host -k discovery -o JSON)"]
+    end
+    
+    subgraph "Zabbix Server"
+        ZT["Zabbix Trapper\n(Port 10051)"]
+        DP["Discovery Processor"]
+        
+        subgraph "Low-Level Discovery Process"
+            Macros["Macro Processing\n{#FSNAME}, {#FSTYPE}, etc."]
+            ItemProto["Item Prototypes\nvfs.fs.size[{#FSNAME},free]"]
+            TriggerProto["Trigger Prototypes\n{vfs.fs.size[{#FSNAME},pused].last(0)} > 90"]
+            GraphProto["Graph Prototypes"]
+        end
+        
+        DB[(Zabbix Database)]
+    end
+    
+    Data -->|"Collected by"| Script
+    Script -->|"Formats as"| JSON
+    JSON -->|"Passed to"| ZS
+    ZS -->|"Sends to"| ZT
+    
+    ZT -->|"Passes discovery data"| DP
+    DP -->|"Extracts macros"| Macros
+    Macros -->|"Applied to"| ItemProto
+    Macros -->|"Applied to"| TriggerProto
+    Macros -->|"Applied to"| GraphProto
+    
+    ItemProto -->|"Creates actual items"| DB
+    TriggerProto -->|"Creates actual triggers"| DB
+    GraphProto -->|"Creates actual graphs"| DB
+    
+    classDef script fill:#f9f,stroke:#333,stroke-width:1px;
+    classDef json fill:#ff9,stroke:#333,stroke-width:1px;
+    classDef zabbixComponent fill:#bbf,stroke:#333,stroke-width:1px;
+    classDef database fill:#bfb,stroke:#333,stroke-width:1px;
+    
+    class Script,Data script;
+    class JSON json;
+    class ZS,ZT,DP,Macros,ItemProto,TriggerProto,GraphProto zabbixComponent;
+    class DB database;
+```
+## Näide: Zabbix High Availability Data Flow
+
+```mermaid
+sequenceDiagram
+    participant AA as Active Agent
+    participant PA as Passive Agent
+    participant SD as SNMP Device
+    participant ZP as Zabbix Proxy
+    participant ZS1 as Zabbix Server 1<br>(Active)
+    participant ZS2 as Zabbix Server 2<br>(Standby)
+    participant DB as Database Cluster
+    participant WEB as Web Frontend
+    participant ADM as Administrator
+    
+    Note over AA,PA: Active vs Passive Monitoring
+    
+    %% Active Agent flow
+    AA->>AA: Collects metrics based<br>on local configuration
+    AA->>ZP: Initiates connection and<br>sends collected metrics
+    ZP->>ZP: Buffers and processes<br>received data
+    ZP->>ZS1: Forwards processed data<br>to active Zabbix server
+    
+    %% Passive Agent flow
+    ZS1->>PA: Polls for metrics
+    PA->>ZS1: Responds with requested metrics
+    
+    %% SNMP monitoring flow
+    ZP->>SD: Polls for SNMP metrics
+    SD->>ZP: Returns SNMP data
+    ZP->>ZS1: Forwards SNMP data
+    
+    %% Server processing
+    ZS1->>DB: Writes collected data
+    ZS1->>ZS1: Processes triggers,<br>actions, and alerts
+    
+    %% HA Synchronization
+    ZS1-->>ZS2: Heartbeat and status sync
+    Note over ZS1,ZS2: Continuous HA monitoring
+    
+    %% Failover scenario
+    Note over ZS1,ZS2: Failover scenario
+    ZS1-xZS2: Active server fails
+    ZS2->>ZS2: Detects failure and<br>activates standby node
+    ZS2->>DB: Takes over database connections
+    ZP--xZS1: Connection fails
+    ZP->>ZS2: Reconnects to standby server<br>that is now active
+    
+    %% Admin interaction
+    ADM->>WEB: Accesses dashboard
+    WEB->>DB: Queries monitoring data
+    DB->>WEB: Returns data for display
+    WEB->>ADM: Displays monitoring<br>information and alerts
+    
+    %% Configuration change
+    ADM->>WEB: Makes configuration change
+    WEB->>DB: Writes configuration change
+    DB->>ZS2: Configuration is pulled<br>by active server
+    ZS2->>ZP: Updated configuration<br>is pushed to proxies
+    ZP->>AA: Updated configuration<br>is sent to active agents
+    
+    Note over AA,ADM: High Availability ensures<br>continuous monitoring
+```
+
+## Näide: Zabbix Enterprise Network Communication Paths
+
+```mermaid
+flowchart TB
+    %% Define the main components
+    subgraph "External Network"
+        EXT_USERS[External Users]
+        API_CLIENTS[API Clients]
+        REMOTE_AGENTS[Remote Agents]
+    end
+    
+    subgraph "DMZ"
+        LB[Load Balancer]
+        WEB_NODES[Web Servers]
+        VPN[VPN Gateway]
+    end
+    
+    subgraph "Core Network"
+        subgraph "Zabbix Server Infrastructure"
+            ZS_CLUSTER[Zabbix Server Cluster]
+            PROXIES[Zabbix Proxies]
+        end
+        
+        subgraph "Database Infrastructure"
+            DB_LB[Database Load Balancer]
+            PG_PRIMARY[PostgreSQL Primary]
+            PG_STANDBY[PostgreSQL Standby]
+        end
+    end
+    
+    subgraph "Monitored Infrastructure"
+        subgraph "Data Centers"
+            DC_SERVERS[Servers]
+            DC_NETWORK[Network Devices]
+            DC_STORAGE[Storage Systems]
+        end
+        
+        subgraph "Remote Sites"
+            BRANCH_DEVICES[Branch Office Devices]
+        end
+        
+        subgraph "Cloud Infrastructure"
+            CLOUD_RESOURCES[Cloud Resources]
+        end
+        
+        subgraph "IoT"
+            IOT_DEVICES[IoT Devices]
+        end
+    end
+    
+    %% Define the communication paths with protocols
+    %% External to DMZ
+    EXT_USERS-->|HTTPS\nPort 443|LB
+    API_CLIENTS-->|HTTPS API\nPort 443|LB
+    REMOTE_AGENTS-->|VPN|VPN
+    
+    %% DMZ connections
+    LB-->|HTTP|WEB_NODES
+    VPN-->|Internal Network|ZS_CLUSTER
+    
+    %% Web to Zabbix Server
+    WEB_NODES-->|PostgreSQL Protocol\nPort 5432|DB_LB
+    WEB_NODES-->|Internal API\nPort 10051|ZS_CLUSTER
+    
+    %% Zabbix Server connections
+    ZS_CLUSTER-->|PostgreSQL Protocol\nPort 5432|DB_LB
+    ZS_CLUSTER<-->|HA Sync\nTCP 10051|ZS_CLUSTER
+    ZS_CLUSTER<-->|Server-Proxy\nTCP 10051|PROXIES
+    
+    %% Database connections
+    DB_LB-->|PostgreSQL Protocol|PG_PRIMARY
+    PG_PRIMARY-->|Replication Stream|PG_STANDBY
+    
+    %% Monitoring connections
+    PROXIES-->|TCP 10050\nPassive Agent|DC_SERVERS
+    DC_SERVERS-->|TCP 10051\nActive Agent|PROXIES
+    PROXIES-->|SNMP UDP 161/162|DC_NETWORK
+    PROXIES-->|Storage Protocols|DC_STORAGE
+    
+    %% Remote site monitoring
+    PROXIES-->|Various Protocols|BRANCH_DEVICES
+    BRANCH_DEVICES-->|TCP 10051\nActive Agent|PROXIES
+    
+    %% Cloud monitoring
+    ZS_CLUSTER-->|HTTPS API Calls|CLOUD_RESOURCES
+    PROXIES-->|HTTPS API Calls|CLOUD_RESOURCES
+    
+    %% IoT monitoring
+    IOT_DEVICES-->|MQTT, HTTP|PROXIES
+    
+    %% Styling
+    classDef external fill:#f9a,stroke:#333,stroke-width:1px;
+    classDef dmz fill:#adf,stroke:#333,stroke-width:1px;
+    classDef core fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef database fill:#bfb,stroke:#333,stroke-width:1px;
+    classDef monitored fill:#ddf,stroke:#333,stroke-width:1px;
+    
+    class EXT_USERS,API_CLIENTS,REMOTE_AGENTS external;
+    class LB,WEB_NODES,VPN dmz;
+    class ZS_CLUSTER,PROXIES core;
+    class DB_LB,PG_PRIMARY,PG_STANDBY database;
+    class DC_SERVERS,DC_NETWORK,DC_STORAGE,BRANCH_DEVICES,CLOUD_RESOURCES,IOT_DEVICES monitored;
+```
+## Näide: Enterprise Zabbix Architecture with High Availability 
+
+```mermaid
+flowchart TB
+    %% Define the load balancer and frontend
+    LB[Load Balancer]
+    
+    %% Define user access points
+    Admin[Administrator]
+    Users[Users]
+    API[API Clients]
+    
+    %% Define Web Frontend servers with HA
+    subgraph "Web Frontend"
+        WebUI1[Web Server 1]
+        WebUI2[Web Server 2]
+        WebUI3[Web Server 3]
+    end
+    
+    %% Define Zabbix server cluster
+    subgraph "Zabbix Server Cluster HA"
+        ZServer1[Zabbix Server\nActive Node]
+        ZServer2[Zabbix Server\nStandby Node]
+        ZServer3[Zabbix Server\nStandby Node]
+        
+        subgraph "Server Processes"
+            Poller1[Pollers]
+            Trapper1[Trappers]
+            Discovery1[Discovery]
+            LLD1[LLD]
+            SNMP1[SNMP Pollers]
+            IPMI1[IPMI Pollers]
+            JMX1[JMX Pollers]
+            HTTP1[HTTP Pollers]
+            Alert1[Alerters]
+            Escalator1[Escalator]
+            TimedTriggers1[Timed Triggers]
+        end
+    end
+    
+    %% Define the database layer with HA
+    subgraph "Database Layer HA"
+        DBCluster[Database Cluster]
+        DB_Primary[(Primary DB)]
+        DB_Replica1[(Replica DB 1)]
+        DB_Replica2[(Replica DB 2)]
+    end
+    
+    %% Define proxies in different locations
+    subgraph "Distributed Proxies"
+        ProxyDC1[Proxy\nData Center 1]
+        ProxyDC2[Proxy\nData Center 2]
+        ProxyBranch1[Proxy\nBranch Office 1]
+        ProxyBranch2[Proxy\nBranch Office 2]
+        ProxyCloud[Proxy\nCloud]
+    end
+    
+    %% Define monitored infrastructure
+    subgraph "Data Center 1"
+        DC1_Servers[Servers\nLinux/Windows]
+        DC1_Network[Network Devices]
+        DC1_Storage[Storage]
+        DC1_VirtualInfra[Virtualization]
+    end
+    
+    subgraph "Data Center 2"
+        DC2_Servers[Servers\nLinux/Windows]
+        DC2_Network[Network Devices]
+        DC2_Storage[Storage]
+        DC2_VirtualInfra[Virtualization]
+    end
+    
+    subgraph "Branch Offices"
+        Branch_Servers[Local Servers]
+        Branch_Network[Network Equipment]
+        Branch_POS[POS Terminals]
+    end
+    
+    subgraph "Cloud Infrastructure"
+        Cloud_VMs[Virtual Machines]
+        Cloud_Services[Cloud Services]
+        Cloud_Containers[Containers]
+        Cloud_Serverless[Serverless Functions]
+    end
+    
+    subgraph "Remote & IoT"
+        IOT_Devices[IoT Devices]
+        Mobile_Agents[Mobile Devices]
+        External_Services[External Services]
+    end
+    
+    %% Define agent types on monitored devices
+    subgraph "Monitoring Methods"
+        Active_Agent[Active Agents]
+        Passive_Agent[Passive Agents]
+        SNMP_Devices[SNMP]
+        Custom_Scripts[Custom Scripts]
+        API_Monitoring[API Polling]
+        Trapper_Receivers[Trappers]
+    end
+    
+    %% Connection from users to frontend
+    Admin --> LB
+    Users --> LB
+    API --> LB
+    
+    %% Load balancer to web servers
+    LB --> WebUI1
+    LB --> WebUI2
+    LB --> WebUI3
+    
+    %% Web servers to database
+    WebUI1 --> DBCluster
+    WebUI2 --> DBCluster
+    WebUI3 --> DBCluster
+    
+    %% Database cluster connections
+    DBCluster --> DB_Primary
+    DB_Primary --> DB_Replica1
+    DB_Primary --> DB_Replica2
+    
+    %% Web UI to Zabbix server
+    WebUI1 --> ZServer1
+    WebUI2 --> ZServer1
+    WebUI3 --> ZServer1
+    
+    %% HA connections between Zabbix servers
+    ZServer1 <--> ZServer2
+    ZServer1 <--> ZServer3
+    ZServer2 <--> ZServer3
+    
+    %% Zabbix server to database
+    ZServer1 --> DB_Primary
+    ZServer2 --> DB_Primary
+    ZServer3 --> DB_Primary
+    
+    %% Zabbix server process connections
+    ZServer1 --> Poller1
+    ZServer1 --> Trapper1
+    ZServer1 --> Discovery1
+    ZServer1 --> LLD1
+    ZServer1 --> SNMP1
+    ZServer1 --> IPMI1
+    ZServer1 --> JMX1
+    ZServer1 --> HTTP1
+    ZServer1 --> Alert1
+    ZServer1 --> Escalator1
+    ZServer1 --> TimedTriggers1
+    
+    %% Proxy connections to Zabbix server
+    ProxyDC1 --> ZServer1
+    ProxyDC2 --> ZServer1
+    ProxyBranch1 --> ZServer1
+    ProxyBranch2 --> ZServer1
+    ProxyCloud --> ZServer1
+    
+    %% Data Center 1 connections
+    ProxyDC1 --> DC1_Servers
+    ProxyDC1 --> DC1_Network
+    ProxyDC1 --> DC1_Storage
+    ProxyDC1 --> DC1_VirtualInfra
+    
+    %% Data Center 2 connections
+    ProxyDC2 --> DC2_Servers
+    ProxyDC2 --> DC2_Network
+    ProxyDC2 --> DC2_Storage
+    ProxyDC2 --> DC2_VirtualInfra
+    
+    %% Branch office connections
+    ProxyBranch1 --> Branch_Servers
+    ProxyBranch1 --> Branch_Network
+    ProxyBranch1 --> Branch_POS
+    ProxyBranch2 --> Branch_Servers
+    ProxyBranch2 --> Branch_Network
+    ProxyBranch2 --> Branch_POS
+    
+    %% Cloud infrastructure connections
+    ProxyCloud --> Cloud_VMs
+    ProxyCloud --> Cloud_Services
+    ProxyCloud --> Cloud_Containers
+    ProxyCloud --> Cloud_Serverless
+    
+    %% Remote and IoT connections (can go direct to server or via proxies)
+    IOT_Devices --> ProxyBranch1
+    Mobile_Agents --> ZServer1
+    External_Services --> ZServer1
+    
+    %% Connection types
+    DC1_Servers --- Active_Agent
+    DC1_Servers --- Passive_Agent
+    DC1_Network --- SNMP_Devices
+    DC2_Servers --- Custom_Scripts
+    Cloud_Services --- API_Monitoring
+    IOT_Devices --- Trapper_Receivers
+    
+    %% Styling
+    classDef loadBalancer fill:#f9a,stroke:#333,stroke-width:2px;
+    classDef users fill:#fdd,stroke:#333,stroke-width:1px;
+    classDef webServers fill:#adf,stroke:#333,stroke-width:1px;
+    classDef zabbixServers fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef databases fill:#bfb,stroke:#333,stroke-width:2px;
+    classDef proxies fill:#abf,stroke:#333,stroke-width:1px;
+    classDef monitors fill:#ddf,stroke:#333,stroke-width:1px;
+    classDef infra fill:#eee,stroke:#333,stroke-width:1px;
+    classDef monTypes fill:#ffe,stroke:#333,stroke-width:1px;
+    
+    class LB loadBalancer;
+    class Admin,Users,API users;
+    class WebUI1,WebUI2,WebUI3 webServers;
+    class ZServer1,ZServer2,ZServer3,Poller1,Trapper1,Discovery1,LLD1,SNMP1,IPMI1,JMX1,HTTP1,Alert1,Escalator1,TimedTriggers1 zabbixServers;
+    class DBCluster,DB_Primary,DB_Replica1,DB_Replica2 databases;
+    class ProxyDC1,ProxyDC2,ProxyBranch1,ProxyBranch2,ProxyCloud proxies;
+    class DC1_Servers,DC1_Network,DC1_Storage,DC1_VirtualInfra,DC2_Servers,DC2_Network,DC2_Storage,DC2_VirtualInfra,Branch_Servers,Branch_Network,Branch_POS,Cloud_VMs,Cloud_Services,Cloud_Containers,Cloud_Serverless,IOT_Devices,Mobile_Agents,External_Services infra;
+    class Active_Agent,Passive_Agent,SNMP_Devices,Custom_Scripts,API_Monitoring,Trapper_Receivers monTypes;
+```
