@@ -356,7 +356,7 @@ Visualiseerimisplatvorm erinevate tööriistadega (graafikud/kaardid/jne)
 - KÕIGI parameetrite valimine on halb praktika
 - Parameetrite valik sõltub peamiselt teenusest ja ärinõuetest
 
-![Parameetrite valik](https://fastercapital.com/i/False-positive-signals--The-Pitfalls-of-Overzealous-Detection--Common-Causes-of-False-Positive-Signals.webp)
+![Parameetrite valik](https://thekitchenrevolution.wordpress.com/wp-content/uploads/2015/06/img_0685.png?w=558)
 
 ### Käivitamislävi
 
