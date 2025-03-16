@@ -906,24 +906,29 @@ $ ls /usr/share/snmp/mibs/
 CentOS 7
 
 ## SNMP: haldurilt agendile
-**GetRequest**
-Päring muutuja või muutujate loendi väärtuse saamiseks.
-**SetRequest**
-Päring muutuja või muutujate loendi muutmiseks. Seotud muutujad määratakse päringu kehas. Agent peab kõik määratud muutujate muudatused täitma atomaarse operatsioonina. Haldurile tagastatakse Response (praeguste) uute muutujate väärtustega.
-**GetNextRequest**
-Päring saadaolevate muutujate ja nende väärtuste avastamiseks. Haldurile tagastatakse Response seotud muutujatega muutuja jaoks, mis on järgmine MIB baasis leksikograafilises järjekorras.
-**GetBulkRequest**
-GetNextRequest'i täiustatud versioon. Päring haldurilt objektile mitme GetNextRequest'i iteratsiooni jaoks. Haldur saab vastuse mitme seotud muutujaga, mille agent sai OID puud läbides alustades seotud muutujast (muutujatest) päringus.
 
-## SNMP: agendilt haldurile
- **Response**
-Tagastab seotud muutujad ja väärtused agendilt haldurile GetRequest, SetRequest, GetNextRequest, GetBulkRequest ja InformRequest jaoks. Veateated on tagatud vea oleku ja vea indeksi väljadega. Seda üksust kasutatakse vastusena nii Get- kui ka Set-päringutele, SNMPv1-s nimetatakse seda GetResponse.
-**Trap**
-Asünkroonne teatis agendilt haldurile. Sisaldab praegust sysUpTime väärtust, OID-d, mis määratleb trap'i tüübi, ja valikulisi seotud muutujaid. Kasulik kasutada juhtudel, kui andmed võivad ilmuda agendi serveri küsitluste vahel.
+## Haldurilt agendile
 
-## MIB
-**Management Information Base (MIB, haldusteavet baas)** — virtuaalne andmebaas, mida kasutatakse võrguobjektide haldamiseks
-**Object Identifier (OID)** — objektide identifikaatorid MIB-is. Iga OID koosneb kahest osast: tekstinimest ja SNMP aadressist numbrilises vormis
+| Operatsioon | Kirjeldus |
+|-------------|-----------|
+| **GetRequest** | Päring muutuja või muutujate loendi väärtuse saamiseks. |
+| **SetRequest** | Päring muutuja või muutujate loendi muutmiseks. Seotud muutujad määratakse päringu kehas. Agent peab kõik määratud muutujate muudatused täitma atomaarse operatsioonina. Haldurile tagastatakse Response (praeguste) uute muutujate väärtustega. |
+| **GetNextRequest** | Päring saadaolevate muutujate ja nende väärtuste avastamiseks. Haldurile tagastatakse Response seotud muutujatega muutuja jaoks, mis on järgmine MIB baasis leksikograafilises järjekorras. |
+| **GetBulkRequest** | GetNextRequest'i täiustatud versioon. Päring haldurilt objektile mitme GetNextRequest'i iteratsiooni jaoks. Haldur saab vastuse mitme seotud muutujaga, mille agent sai OID puud läbides alustades seotud muutujast (muutujatest) päringus. |
+
+## Agendilt haldurile
+
+| Operatsioon | Kirjeldus |
+|-------------|-----------|
+| **Response** | Tagastab seotud muutujad ja väärtused agendilt haldurile GetRequest, SetRequest, GetNextRequest, GetBulkRequest ja InformRequest jaoks. Veateated on tagatud vea oleku ja vea indeksi väljadega. Seda üksust kasutatakse vastusena nii Get- kui ka Set-päringutele, SNMPv1-s nimetatakse seda GetResponse. |
+| **Trap** | Asünkroonne teatis agendilt haldurile. Sisaldab praegust sysUpTime väärtust, OID-d, mis määratleb trap'i tüübi, ja valikulisi seotud muutujaid. Kasulik kasutada juhtudel, kui andmed võivad ilmuda agendi serveri küsitluste vahel. |
+
+## MIB mõisted
+
+| Termin | Kirjeldus |
+|--------|-----------|
+| **Management Information Base (MIB, haldusteavet baas)** | Virtuaalne andmebaas, mida kasutatakse võrguobjektide haldamiseks. |
+| **Object Identifier (OID)** | Objektide identifikaatorid MIB-is. Iga OID koosneb kahest osast: tekstinimest ja SNMP aadressist numbrilises vormis. |
 
 ![PILT: MIB kirjeldus ja OID puu näide](media/z-mib.png)
 
@@ -977,8 +982,39 @@ Asünkroonne teatis agendilt haldurile. Sisaldab praegust sysUpTime väärtust, 
 * Võrgusõlmede prototüübid
 
 ## LLD: interaktsiooniskeem
-
-![PILT: LLD interaktsiooniskeem](https://i0.wp.com/blog.zabbix.com/wp-content/uploads/2022/05/volanszki_json_ca_core_logic_v2.png?resize=1024%2C339&ssl=1)
+```mermaid
+sequenceDiagram
+    participant Z as Zabbix Server
+    participant A as Zabbix Agent
+    participant T as Sihtssüsteem
+    
+    Note over Z,T: Madala Taseme Avastamise Protsess
+    
+    Z->>A: Saada avastamisreegli päring
+    A->>T: Kogu avastamisandmed
+    T-->>A: Tagasta toorandmed (liidesed, kettad, jne)
+    A->>A: Töötle andmed avastamiselementidega
+    A-->>Z: Tagasta avastamisandmed JSON formaadis
+    
+    Z->>Z: Töötle avastamisandmed
+    
+    Note over Z: Iga avastatud elemendi jaoks
+    
+    loop Iga Avastatud Üksuse Jaoks
+        Z->>Z: Loo elemendid prototüüpide põhjal
+        Z->>Z: Loo päästikud prototüüpide põhjal
+        Z->>Z: Loo graafikud prototüüpide põhjal
+    end
+    
+    Note over Z: Seire algab
+    
+    Z->>A: Küsi andmeid avastatud elementide kohta
+    A->>T: Kogu konkreetseid mõõdikuid
+    T-->>A: Tagasta mõõdikute andmed
+    A-->>Z: Tagasta töödeldud mõõdikud
+    
+    Z->>Z: Salvesta andmed ja hinda päästikuid
+```
 
 ## Prototüüpide loomine
 * LLD reeglid tagastavad andmeid makrodes:
