@@ -1,0 +1,190 @@
+version: '3.8'
+
+services:
+  # MySQL for Zabbix
+  zabbix-mysql:
+    image: mysql:8.0
+    container_name: zabbix-mysql
+    command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_bin', '--default-authentication-plugin=mysql_native_password']
+    environment:
+      MYSQL_ROOT_PASSWORD: zabbix_pwd
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbix_pwd
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - monitoring-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "zabbix", "-pzabbix_pwd"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Zabbix Server 
+  zabbix-server:
+    image: zabbix/zabbix-server-mysql:ubuntu-7.0-latest
+    container_name: zabbix-server
+    depends_on:
+      zabbix-mysql:
+        condition: service_healthy
+    environment:
+      DB_SERVER_HOST: zabbix-mysql
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbix_pwd
+      MYSQL_ROOT_PASSWORD: zabbix_pwd
+      ZBX_TIMEOUT: 30
+    volumes:
+      - ./zabbix/alertscripts:/usr/lib/zabbix/alertscripts
+      - ./zabbix/externalscripts:/usr/lib/zabbix/externalscripts
+      - ./certs/zabbix-server.crt:/etc/ssl/certs/zabbix-server.crt:ro
+      - ./certs/zabbix-server.key:/etc/ssl/private/zabbix-server.key:ro
+      - ./certs/ca.crt:/etc/ssl/certs/ca.crt:ro
+    restart: unless-stopped
+    ports:
+      - "10051:10051"
+    networks:
+      - monitoring-network
+
+  # Zabbix Web Interface
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-mysql:ubuntu-7.0-latest
+    container_name: zabbix-web
+    depends_on:
+      zabbix-mysql:
+        condition: service_healthy
+      zabbix-server:
+        condition: service_started
+    environment:
+      DB_SERVER_HOST: zabbix-mysql
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbix_pwd
+      ZBX_SERVER_HOST: zabbix-server
+      PHP_TZ: Europe/London
+      # SSL configuration
+      ZBX_SERVER_NAME: zabbix-server
+      # These are what the official image looks for
+      ENABLE_WEB_ACCESS_LOG: "true"
+      PHP_FPM_PM: dynamic
+      PHP_FPM_PM_MAX_CHILDREN: 50
+      PHP_FPM_PM_START_SERVERS: 5
+      PHP_FPM_PM_MIN_SPARE_SERVERS: 5
+      PHP_FPM_PM_MAX_SPARE_SERVERS: 35
+      # These are critical for SSL
+      SSL_CERTIFICATE_FILE: /etc/ssl/nginx/ssl.crt
+      SSL_KEY_FILE: /etc/ssl/nginx/ssl.key
+      SSL_CERTIFICATE_PATH: /etc/ssl/nginx
+    volumes:
+      - ./certs/zabbix-server.crt:/etc/ssl/nginx/ssl.crt:ro
+      - ./certs/zabbix-server.key:/etc/ssl/nginx/ssl.key:ro
+    ports:
+      - "8443:8443"
+      - "8081:8080"  # Also expose HTTP port for troubleshooting
+    restart: unless-stopped
+    networks:
+      - monitoring-network
+
+  # Zabbix Agent
+  zabbix-agent:
+    image: zabbix/zabbix-agent2:ubuntu-7.0-latest
+    container_name: zabbix-agent
+    privileged: true
+    depends_on:
+      - zabbix-server
+    environment:
+      ZBX_SERVER_HOST: zabbix-server
+      ZBX_HOSTNAME: zabbix-agent
+      ZBX_SERVER_TLS_PSK_IDENTITY: PSK 001
+      ZBX_SERVER_TLS_PSK_FILE: /etc/zabbix/zabbix_agentd.psk
+    volumes:
+      - ./zabbix/agent.conf:/etc/zabbix/zabbix_agent2.d/zabbix_agent2.conf:ro
+      - ./certs/zabbix-agent.crt:/etc/ssl/certs/zabbix-agent.crt:ro
+      - ./certs/zabbix-agent.key:/etc/ssl/private/zabbix-agent.key:ro
+      - ./certs/ca.crt:/etc/ssl/certs/ca.crt:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/hostfs:ro
+    restart: unless-stopped
+    networks:
+      - monitoring-network
+
+  # Grafana 
+  grafana:
+    image: grafana/grafana-oss:9.5.5
+    container_name: grafana
+    user: root
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./certs/grafana.crt:/etc/grafana/grafana.crt:ro
+      - ./certs/grafana.key:/etc/grafana/grafana.key:ro
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - monitoring-network
+
+  mysql-service:
+    image: mysql:8.0
+    container_name: mysql-service
+    command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_bin', '--default-authentication-plugin=mysql_native_password']
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql_pwd
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: test_pwd
+    volumes:
+      - ./data/mysql-service:/var/lib/mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    networks:
+      - monitoring-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "testuser", "-ptest_pwd"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  web-app:
+    image: nginx:alpine
+    container_name: web-app
+    volumes:
+      - ./web-app:/usr/share/nginx/html
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - monitoring-network
+
+  loki:
+    image: grafana/loki:2.7.3
+    container_name: loki
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    restart: unless-stopped
+    networks:
+      - monitoring-network
+
+  promtail:
+    image: grafana/promtail:2.7.3
+    container_name: promtail
+    volumes:
+      - /var/log:/var/log
+      - ./data/promtail:/etc/promtail
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    restart: unless-stopped
+    networks:
+      - monitoring-network
+
+networks:
+  monitoring-network:
+    driver: bridge
