@@ -1,108 +1,290 @@
-# Part 3: Grafana Configuration and Log Monitoring
+# Monitooringu Labor 3 - Grafana ja Loki seadistamine
 
-## Introduction
+## Sissejuhatus
 
-In this final part of the lab, you'll configure Grafana for advanced data visualization and set up Loki for centralized log monitoring. By the end of this section, you'll have a complete monitoring ecosystem that combines metrics, synthetic monitoring, and logs in powerful dashboards.
+Selles labori viimases osas seadistate Grafana visualiseerimissüsteemi ja Loki logikogumise lahenduse. 
 
-**Time allocation:** 1 hour total
-- Grafana Basic Setup: 15 minutes
-- Advanced Grafana Dashboards: 20 minutes
-- Loki and Log Monitoring: 25 minutes
+## 1. Docker Compose faili täiendamine
 
----
+Enne labori alustamist on vaja kontrollida ja täiendada Docker Compose faili, et kõik teenused oleksid õigesti seadistatud.
 
-## 1. Grafana Basic Setup (15 min)
+### 1.1 Loki teenuse täiendamine
 
-### 1.1 Access Grafana Web Interface
+Avage Docker Compose fail:
+```bash
+nano docker-compose.yml
+```
 
-1. Open your web browser and navigate to:
+Leidke Loki teenuse konfiguratsioon ja lisage puuduv volume:
+```yaml
+loki:
+  image: grafana/loki:2.7.3
+  container_name: loki
+  command: -config.file=/etc/loki/local-config.yaml
+  ports:
+    - "3100:3100"
+  volumes:
+    - ./data/loki:/etc/loki  # LISA SEE RIDA!
+  restart: unless-stopped
+  networks:
+    - monitoring-network
+```
+
+### 1.2 Promtail teenuse täiendamine
+
+Leidke Promtail teenuse konfiguratsioon ja lisage puuduv volume:
+```yaml
+promtail:
+  image: grafana/promtail:2.7.3
+  container_name: promtail
+  volumes:
+    - /var/log:/var/log
+    - ./data/promtail:/etc/promtail
+    - /var/lib/docker/containers:/var/lib/docker/containers:ro  # LISA SEE RIDA!
+    # Docker socketi volume on juba olemas, mis on hea
+  command: -config.file=/etc/promtail/config.yml
+  depends_on:
+    - loki
+  restart: unless-stopped
+  networks:
+    - monitoring-network
+```
+
+### 1.3 Rakenda muudatused
+
+Salvestage muudatused ja taaskäivitage teenused:
+```bash
+docker-compose down loki promtail
+docker-compose up -d loki promtail
+```
+
+## 2. Loki ja Promtail seadistamine
+
+### 2.1 Loo vajalikud kataloogid
+
+```bash
+mkdir -p ./data/loki
+mkdir -p ./data/promtail
+```
+
+### 2.2 Loo Loki konfiguratsioonifail
+
+```bash
+nano ./data/loki/local-config.yaml
+```
+
+Kopeeri sinna järgmine sisu:
+```yaml
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+
+ingester:
+  lifecycler:
+    address: 127.0.0.1
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+    final_sleep: 0s
+  chunk_idle_period: 5m
+  chunk_retain_period: 30s
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /tmp/loki/boltdb-shipper-active
+    cache_location: /tmp/loki/boltdb-shipper-cache
+    cache_ttl: 24h
+    shared_store: filesystem
+  filesystem:
+    directory: /tmp/loki/chunks
+
+limits_config:
+  enforce_metric_name: false
+  reject_old_samples: true
+  reject_old_samples_max_age: 168h
+```
+
+### 2.3 Loo Promtail konfiguratsioonifail
+
+```bash
+nano ./data/promtail/config.yml
+```
+
+Kopeeri sinna järgmine sisu:
+```yaml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /etc/promtail/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*.log
+
+  - job_name: containers
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: containerlogs
+          __path__: /var/lib/docker/containers/*/*.log
+
+  - job_name: zabbix
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: zabbix
+          __path__: /var/log/zabbix/*.log
+
+  - job_name: nginx
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: nginx
+          __path__: /var/log/nginx/*.log
+
+  - job_name: mysql
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: mysql
+          __path__: /var/log/mysql/*.log
+          
+  # Docker konteineri logide jälgimine
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+```
+
+### 2.4 Taaskäivita Loki ja Promtail teenused
+
+```bash
+docker-compose restart loki promtail
+```
+
+### 2.5 Kontrolli, et teenused töötavad
+
+```bash
+docker-compose ps loki promtail
+docker-compose logs loki | tail
+docker-compose logs promtail | tail
+```
+
+## 3. Grafana põhiseadistus
+
+### 3.1 Ligipääs Grafana veebiliidesele
+
+1. Ava veebibrauser ja navigeeri URL-ile:
    ```
    http://your-server-ip:3000
    ```
 
-2. Log in with the default credentials:
-   - Username: **admin**
-   - Password: **admin**
+2. Logi sisse vaikimisi kasutajanime ja parooliga:
+   - Kasutajanimi: **admin**
+   - Parool: **admin**
 
-3. When prompted to change the password, enter a new secure password and click **Submit**.
+3. Kui sul palutakse parooli muuta, sisesta uus turvaline parool ja kliki **Submit**.
 
-### 1.2 Add Loki as a Data Source
+### 3.2 Lisa Loki andmeallikas
 
-Next, let's add Loki for log monitoring:
+1. Navigeeri **Configuration** → **Data Sources** vasakul menüüs.
 
-1. Navigate to **Configuration** → **Data Sources** in the left sidebar.
+2. Kliki **Add data source**.
 
-2. Click **Add data source**.
+3. Otsi ja vali "Loki" nimekirjast.
 
-3. Search for "Loki" and select it from the list.
-
-4. Enter the following settings:
+4. Sisesta järgmised seaded:
    - Name: **Loki**
    - URL: **http://loki:3100**
    - Access: **Server (default)**
 
-5. Click **Save & Test**.
+5. Kliki **Save & Test**.
 
-   You should see a green message indicating a successful connection to Loki.
+   Peaksid nägema rohelist teadet, mis kinnitab edukat ühendust Lokiga.
 
-### 1.3 Viewing Logs with Loki
+### 3.3 Logide vaatamine Lokis
 
-After successfully connecting to Loki, follow these steps to view your system logs:
+1. Kliki **Explore** ikoonil (kompass) vasakul menüüs.
 
-1. Click on the **Explore** icon (compass) in the left sidebar.
+2. Vali **Loki** andmeallikate rippmenüüst lehe ülaosas.
 
-2. Select **Loki** from the data source dropdown at the top of the page.
-
-3. You will see the Log browser interface with a query field.
-
-4. Enter a basic query to see logs:
+3. Sisesta lihtne päring logide nägemiseks:
    ```
    {job="varlogs"}
    ```
-   This will show logs from system log files defined in your Promtail configuration.
 
-5. For Docker container logs, use:
+4. Klikki **Run query** logide nägemiseks.
+
+5. Docker konteineri logide jaoks kasuta:
    ```
    {job="docker"}
    ```
 
-6. Click **Run query** to execute and view the logs.
-
-7. You can refine your search by adding more labels or text search terms:
+6. Otsinguid saad täpsustada lisades teksti otsingutingimusi:
    ```
    {job="docker"} |= "error"
    ```
-   This will show only Docker logs containing the word "error".
+   See näitab ainult Docker logisid, mis sisaldavad sõna "error".
 
-8. Use the time range selector at the top right to adjust the time period for which logs are displayed.
+7. Kasuta ajavahemiku valijat üleval paremal, et kohandada, millise perioodi logisid kuvatakse.
 
-**Note:** It may take a few minutes for logs to be collected by Promtail and sent to Loki. If you don't see logs immediately, wait a few minutes and try again.
+**Märkus:** Võib kuluda mõni minut, enne kui Promtail kogub logisid ja saadab need Lokisse. Kui te logisid kohe ei näe, oodake mõni minut ja proovige uuesti.
 
-### 1.4 Add Zabbix as a Data Source
+### 3.4 Lisa Zabbix andmeallikas
 
-You should find  it the same as Loki.
+Kui sa ei leia Zabbix andmeallikat, siis installi see:
+```bash
+docker exec -it grafana sh
+docker exec -it grafana grafana-cli plugins install alexanderzobnin-zabbix-app
+docker ps | grep grafana
+docker-compose restart grafana
+```
 
-If you cant find Zabbix as datasource, install it
- ```bash
- docker exec -it grafana sh
- docker exec -it grafana grafana-cli plugins install alexanderzobnin-zabbix-app
- docker ps | grep grafana
- docker-compose restart grafana
- ```
- - Configure the Zabbix data source:
-   For the URL field in Image: http://zabbix-web:8080/api_jsonrpc.php
- - Username: Admin
- - Password: zabbix
+Seejärel seadista Zabbix andmeallikas:
+- Konfigureeri Zabbix andmeallikas:
+  URL väljale: http://zabbix-web:8080/api_jsonrpc.php
+- Kasutajanimi: Admin
+- Parool: zabbix
 
 ```bash
-Maybe you need to add Mysql DB (ZabbixDB)
+Võib-olla pead lisama ka MySQL andmeallika (ZabbixDB)
 
 Configuration → Data Sources
 Click "Add data source"
 Select "MySQL" as the data source type
 Configure the MySQL connection:
 
-Name: ZabbixDB (or any name you prefer)
+Name: ZabbixDB (või mis tahes nimi, mida eelistad)
 Host: zabbix-mysql
 Database: zabbix
 User: zabbix
@@ -110,347 +292,240 @@ Password: zabbix_pwd
 
 Click "Save & Test" to verify the connection works
 ```
----
 
-## 2. Creating Your First Log Dashboard (10 min)
+## 4. Esimese logidashboardi loomine
 
-Now let's create a simple dashboard to monitor logs:
+Loome lihtsa dashboardi logide jälgimiseks:
 
-1. From the left sidebar, navigate to **Dashboards** → **+ New Dashboard**.
+1. Navigeeri vasakult menüüst **Dashboards** → **+ New Dashboard**.
 
-2. Click **Add visualization**.
+2. Kliki **Add visualization**.
 
-3. In the query editor, select **Loki** as the data source.
+3. Päringueditoris vali andmeallikaks **Loki**.
 
-4. Add another panel with system logs by clicking **Add panel** again and using the query:
+4. Lisa teine paneel süsteemi logidega, klikkides uuesti **Add panel** ja kasutades päringut:
    ```
    {job="varlogs"}
    ```
-5. Save your dashboard by clicking the disk icon in the top right corner and give it a name, e.g., "System Monitoring".
+   
+5. Salvesta dashboard klikkides kettaikooni üleval paremal ja anna talle nimi, nt "System Monitoring".
 
----
+## 5. Testlogide genereerimine
 
-## 2. Advanced Grafana Dashboards (20 min)
+Genereerime mõned testilogid, et neid oleks võimalik visualiseerida:
 
-### 2.1 Import a System Monitoring Dashboard
-
-Let's start by importing a pre-built dashboard for system monitoring:
-
-1. In the Grafana interface, navigate to **Dashboards** → **Import** (from the "+" icon in the sidebar).
-
-2. You can either:
-   - Enter the dashboard ID (pick one)
-   - Or upload a dashboard JSON file provided by your instructor
-
-3. Click **Load**.
-
-4. On the next screen:
-   - Name: **System Monitoring Dashboard**
-   - Folder: **General**
-   - Zabbix Data Source: Select **Zabbix** from the dropdown
-   - Click **Import**.
-
-5. Examine the imported dashboard. It should show various system metrics from Zabbix:
-   - CPU usage
-   - Memory usage
-   - Disk I/O
-   - Network traffic
-   - And more
-
-6. Take a few minutes to explore the panels and understand the visualizations.
-
-### 2.2 Create a Database Monitoring Dashboard
-
-Try  to add any Datasource, import Template and create the Dashboard.
-
-## 3. Loki and Log Monitoring (25 min)
-
-### 3.1 Configure Promtail for Log Collection
-
-Promtail is the agent that collects logs and sends them to Loki. Let's configure it properly:
-
-1. First, check if Promtail is running:
-   ```bash
-   docker-compose ps promtail
-   ```
-
-2. Let's create a more comprehensive configuration. Create a new file for Promtail configuration:
-   ```bash
-   nano data/promtail/config.yml
-   ```
-
-3. Replace the content with the following:
-   ```yaml
-   server:
-     http_listen_port: 9080
-     grpc_listen_port: 0
-
-   positions:
-     filename: /etc/promtail/positions.yaml
-
-   clients:
-     - url: http://loki:3100/loki/api/v1/push
-
-   scrape_configs:
-     - job_name: system
-       static_configs:
-         - targets:
-             - localhost
-           labels:
-             job: varlogs
-             __path__: /var/log/*.log
-
-     - job_name: containers
-       static_configs:
-         - targets:
-             - localhost
-           labels:
-             job: containerlogs
-             __path__: /var/lib/docker/containers/*/*.log
-
-     - job_name: zabbix
-       static_configs:
-         - targets:
-             - localhost
-           labels:
-             job: zabbix
-             __path__: /var/log/zabbix/*.log
-
-     - job_name: nginx
-       static_configs:
-         - targets:
-             - localhost
-           labels:
-             job: nginx
-             __path__: /var/log/nginx/*.log
-
-     - job_name: mysql
-       static_configs:
-         - targets:
-             - localhost
-           labels:
-             job: mysql
-             __path__: /var/log/mysql/*.log
-   ```
-
-4. Save the file and restart Promtail:
-   ```bash
-   docker-compose restart promtail
-   ```
-
-5. Verify Promtail is running:
-   ```bash
-   docker-compose logs promtail | tail
-   ```
-   Look for any error messages in the output.
-
-### 3.2 Set Up a Log Generator
-
-Let's generate some sample logs to have data for our monitoring:
-
-1. Generate system logs:
+1. Genereeri süsteemi logid:
    ```bash
    docker-compose exec zabbix-agent bash -c 'for i in {1..20}; do logger "INFO: System check completed successfully at $(date)"; sleep 1; done'
    ```
 
-2. Generate some error logs:
+2. Genereeri vealogid:
    ```bash
    docker-compose exec zabbix-agent bash -c 'for i in {1..5}; do logger "ERROR: Database connection timeout at $(date)"; sleep 1; done'
    ```
 
-3. Generate web server logs by making HTTP requests:
+3. Genereeri veebiseveri logid, tehes HTTP päringuid:
    ```bash
    for i in {1..10}; do curl http://localhost:8080/ >/dev/null 2>&1; curl http://localhost:8080/login.php >/dev/null 2>&1; sleep 1; done
    ```
 
-### 3.3 Create a Log Analysis Dashboard in Grafana
+## 6. Logi analüüsi dashboardi loomine Grafanas
 
-Now, let's create a dashboard for log analysis:
+Loome dashboardi logide analüüsimiseks:
 
-1. Navigate to **Dashboards** → **New Dashboard**.
+1. Navigeeri **Dashboards** → **New Dashboard**.
 
-2. Click **Add new panel**.
+2. Kliki **Add new panel**.
 
-3. Select **Loki** as the data source.
+3. Vali **Loki** andmeallikaks.
 
-4. Enter a LogQL query to view system logs:
+4. Sisesta LogQL päring süsteemi logide nägemiseks:
    ```
    {job="varlogs"}
    ```
 
-5. Configure the panel:
+5. Konfigureeri paneel:
    - Title: **System Logs**
-   - Visualization: Select **Logs**
-   - Click **Apply**
+   - Visualization: Vali **Logs**
+   - Kliki **Apply**
 
-6. Add a panel for error logs:
-   - Click **Add new panel**
-   - Select **Loki** as the data source
-   - Enter this LogQL query:
+6. Lisa paneel vealogide jaoks:
+   - Kliki **Add new panel**
+   - Vali **Loki** andmeallikaks
+   - Sisesta LogQL päring:
      ```
      {job="varlogs"} |= "ERROR"
      ```
    - Title: **Error Logs**
-   - Visualization: Select **Logs**
-   - Click **Apply**
+   - Visualization: Vali **Logs**
+   - Kliki **Apply**
 
-7. Add a panel for log volume over time:
-   - Click **Add new panel**
-   - Select **Loki** as the data source
-   - Enter this LogQL query:
+7. Lisa paneel logide mahu jälgimiseks:
+   - Kliki **Add new panel**
+   - Vali **Loki** andmeallikaks
+   - Sisesta LogQL päring:
      ```
      sum(count_over_time({job="varlogs"}[5m])) by (job)
      ```
    - Title: **Log Volume (5m intervals)**
-   - Visualization: Select **Time series**
-   - Click **Apply**
+   - Visualization: Vali **Time series**
+   - Kliki **Apply**
 
-8. Add a panel for error rate:
-   - Click **Add new panel**
-   - Select **Loki** as the data source
-   - Enter two queries:
+8. Lisa paneel veamäära nägemiseks:
+   - Kliki **Add new panel**
+   - Vali **Loki** andmeallikaks
+   - Sisesta kaks päringut:
      - A: `sum(count_over_time({job="varlogs"} |= "ERROR"[5m]))`
      - B: `sum(count_over_time({job="varlogs"}[5m]))`
-   - In the Transform tab, add a "Reduce" transformation:
+   - Transform vahelehel lisa "Reduce" transformatsioon:
      - Mode: **Binary operation**
-     - Operation: **A/B** (division)
-     - Multiply by: **100** (to get percentage)
+     - Operation: **A/B** (jagamine)
+     - Multiply by: **100** (protsendi saamiseks)
    - Title: **Error Rate (%)**
-   - Visualization: Select **Gauge**
-   - Click **Apply**
+   - Visualization: Vali **Gauge**
+   - Kliki **Apply**
 
-9. Save the dashboard:
-   - Click the save icon (💾) in the top right
+9. Salvesta dashboard:
+   - Kliki salvestamise ikooni (💾) üleval paremal
    - Name: **Log Analysis**
    - Folder: **Application Monitoring**
-   - Click **Save**
+   - Kliki **Save**
 
-### 3.4 Create LogQL Queries for Specific Patterns
+## 7. LogQL päringute loomine spetsiifiliste mustrite jaoks
 
-LogQL is Loki's query language. Let's practice creating some advanced queries:
+LogQL on Loki päringukeel. Harjutame mõnede keerukamate päringute loomist:
 
-1. Add a new panel to your Log Analysis dashboard.
+1. Lisa uus paneel oma Log Analysis dashboardi.
 
-2. Select **Loki** as the data source.
+2. Vali **Loki** andmeallikaks.
 
-3. Try the following LogQL queries:
+3. Proovi järgmisi LogQL päringuid:
 
-   a. Filter by specific text patterns:
+   a. Filtreeri konkreetsete tekstimustrite järgi:
    ```
    {job="varlogs"} |= "connection" |= "timeout"
    ```
 
-   b. Count occurrences of errors by time:
+   b. Loenda vigu aja jooksul:
    ```
    count_over_time({job="varlogs"} |= "ERROR"[1h])
    ```
 
-   c. Extract and count by error type using a regex pattern:
+   c. Eraldage ja loendage veatüüpide järgi, kasutades regex mustrit:
    ```
    sum by (error_type) (count_over_time({job="varlogs"} |~ "ERROR: ([a-zA-Z ]+)" [1h]))
    ```
 
-4. Configure the panel:
+4. Konfigureeri paneel:
    - Title: **Error Patterns**
-   - Choose appropriate visualization based on the query
-   - Click **Apply**
+   - Vali sobiv visualiseerimisviis vastavalt päringule
+   - Kliki **Apply**
 
-5. Save the dashboard.
+5. Salvesta dashboard.
 
-### 3.5 Connect Logs to Metrics
+## 8. Logide ja mõõdikute ühendamine
 
-The real power of a unified monitoring stack is connecting logs with metrics. Let's create a dashboard that shows this:
+Tervikliku monitooringu võimsus seisneb logide ja mõõdikute ühendamises. Loome dashboardi, mis näitab seda:
 
-1. Navigate to **Dashboards** → **New Dashboard**.
+1. Navigeeri **Dashboards** → **New Dashboard**.
 
-2. Click **Add new panel**.
+2. Kliki **Add new panel**.
 
-3. Create a layout with multiple panels:
-   - CPU usage graph (from Zabbix)
-   - System logs (from Loki)
-   - Web response time (from Zabbix)
-   - Web access logs (from Loki)
+3. Loo mitme paneeliga paigutus:
+   - CPU kasutamise graafik (Zabbixist)
+   - Süsteemi logid (Lokist)
+   - Veebi reageerimisaeg (Zabbixist)
+   - Veebi juurdepääsulogid (Lokist)
 
-4. Use template variables to allow filtering by host:
-   - Click the gear icon in the top right to access dashboard settings
-   - Go to "Variables" and click "Add variable"
+4. Kasuta mall-muutujaid, et võimaldada filtreerimist hosti järgi:
+   - Kliki hammasratta ikoonil üleval paremal, et pääseda dashboardi seadeteni
+   - Vali "Variables" ja kliki "Add variable"
    - Name: **host**
    - Type: **Query**
    - Data source: **Zabbix**
    - Query type: **Host**
-   - Click **Update**
+   - Kliki **Update**
 
-5. Make your panels use the host variable by selecting it in the host dropdown.
+5. Pane oma paneelid kasutama hosti muutujat, valides selle hosti rippmenüüst.
 
-6. Save the dashboard:
+6. Salvesta dashboard:
    - Name: **Unified Monitoring**
    - Folder: **Infrastructure Monitoring**
-   - Click **Save**
+   - Kliki **Save**
 
----
+## 9. Lõpuülesanded
 
-## 4. Final Tasks and Verification (10 min)
+### 9.1 Dashboardi rotatsiooni seadistamine
 
-### 4.1 Set Up Dashboard Rotation
+NOC (Network Operations Center) ekraani jaoks võite seadistada automaatse dashboardide rotatsiooni:
 
-For a NOC (Network Operations Center) display, you can set up automatic dashboard rotation:
-
-1. Install the Dashboard Carousel plugin:
+1. Installi Dashboard Carousel plugin:
    ```bash
    docker-compose exec grafana grafana-cli plugins install smartmakers-trafficlight-panel
    docker-compose restart grafana
    ```
 
-2. Navigate to **Dashboards** → **Playlists**.
+2. Navigeeri **Dashboards** → **Playlists**.
 
-3. Click **New playlist**.
+3. Kliki **New playlist**.
 
-4. Enter details:
+4. Sisesta üksikasjad:
    - Name: **Monitoring Overview**
-   - Interval: **1m** (1 minute)
-   - Select your dashboards to include
-   - Click **Save**
+   - Interval: **1m** (1 minut)
+   - Vali oma dashboardid, mida kaasata
+   - Kliki **Save**
 
-5. To start the playlist, click the playlist and then click **Start playlist**.
+5. Esitusloendi käivitamiseks kliki playlist ja seejärel **Start playlist**.
 
-### 4.2 Set Up Dashboard Sharing
+### 9.2 Dashboardi jagamise seadistamine
 
-Let's configure dashboard sharing for team access:
+Seadistame meeskonnapääsu dashboardide jagamiseks:
 
-1. Navigate to **Configuration** → **Users**.
+1. Navigeeri **Configuration** → **Users**.
 
-2. Click **Invite** to add a new viewer user.
+2. Kliki **Invite**, et lisada uus vaatajakasutaja.
 
-3. Enter an email address and select the **Viewer** role.
+3. Sisesta e-posti aadress ja vali **Viewer** roll.
 
-4. Click **Submit**.
+4. Kliki **Submit**.
 
-### 4.3 Verify the Complete Monitoring Stack
+### 9.3 Kontrolli kogu monitooringusüsteemi
 
-Let's make sure all components are working together:
+Veendume, et kõik komponendid töötavad koos:
 
-1. Navigate through all your dashboards to verify they show data.
+1. Navigeeri läbi kõigi oma dashboardide, et kontrollida, kas need näitavad andmeid.
 
-2. Generate some test events:
+2. Genereeri mõned testsündmused:
    ```bash
-   # Generate CPU load
+   # Genereeri CPU koormus
    docker-compose exec zabbix-agent stress --cpu 2 --timeout 60
    
-   # Generate log events
+   # Genereeri logisündmused
    docker-compose exec zabbix-agent bash -c 'for i in {1..10}; do logger "WARNING: High CPU detected at $(date)"; sleep 1; done'
    ```
 
-3. Verify that:
-   - Metrics in Grafana show the spike in CPU
-   - Logs in Loki show the warning messages
-   - The unified dashboard shows both together
+3. Kontrolli, et:
+   - Mõõdikud Grafanas näitavad CPU tõusu
+   - Logid Lokis näitavad hoiatusteated
+   - Ühendatud dashboard näitab mõlemad koos
 
-4. Try filtering data using dashboard variables.
+4. Proovi andmete filtreerimist dashboard muutujate abil.
 
-### 4.4 Take Required Screenshots for Submission
+### 9.4 Tee nõutavad ekraanipildid esitamiseks
 
-As mentioned in the original lab plan, capture the following screenshots:
+Tee järgmised ekraanipildid:
 
-1. The Zabbix Host Configuration screen with items and triggers
-2. Your System Monitoring Dashboard in Grafana
-3. The Log Analysis Dashboard showing patterns and correlations
+1. Zabbix hosti konfiguratsiooniekraan koos elementide ja päästikutega
+2. Sinu süsteemi monitooringu dashboard Grafanas
+3. Logi analüüsimise dashboard, mis näitab mustreid ja korrelatsioone
+
+## Kontrollnimekiri labori lõpetamiseks
+
+- [ ] Docker Compose fail on korrektselt muudetud
+- [ ] Loki ja Promtail on seadistatud ja töötavad
+- [ ] Grafana on seadistatud ja ühendatud Lokiga
+- [ ] Testlogid on genereeritud
+- [ ] Logi analüüsimise dashboard on loodud
+- [ ] Logid ja mõõdikud on ühises dashboardis ühendatud
+- [ ] Dashboardi automaatne rotatsioon on seadistatud
+- [ ] Vajalikud ekraanipildid on tehtud

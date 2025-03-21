@@ -1,186 +1,184 @@
-# 🚀 Part 2: Zabbix 7.0 and Basic Monitoring Setup
+# Lab 2: Zabbix 7.0 Configuration
 
-## Introduction
+## Lab Overview
 
-In this part of the lab, you will configure the Zabbix 7.0 monitoring system that you deployed in Part 1. You'll set up various monitoring scenarios including system resources, web applications, and databases. By combining pre-made templates with custom configurations, you'll learn how to efficiently set up a comprehensive monitoring system.
+In this lab, you will configure the Zabbix 7.0 monitoring system that was deployed in Lab 1. You'll set up comprehensive monitoring for system resources, web applications, and databases, leveraging Zabbix 7.0's advanced features.
 
-**Time allocation:** 1 hour total
-- Zabbix Initial Configuration: 15 minutes
-- System Monitoring with Zabbix: 15 minutes
-- Web Application Monitoring: 15 minutes
-- Database Monitoring Setup: 15 minutes
+**Lab Time:** 1 hour
 
----
+## Prerequisites
 
-## 1. Zabbix Initial Configuration (15 min)
+- Completed Lab 1 with all containers running
+- Basic understanding of monitoring concepts
+- Access to the Zabbix web interface
 
-### 1.1 Access the Zabbix Web Interface
+## Lab Tasks
 
-1. Open your web browser and navigate to:
-   ```
-   https://your-server-ip:8443
-   ```
-
-   > **Note:** Since we're using self-signed certificates, you'll see a security warning. Click "Advanced" and then "Accept the Risk and Continue" (or equivalent in your browser).
-
-2. You should see the Zabbix login screen. Use the default credentials:
-   - Username: **Admin**
-   - Password: **zabbix**
-
-   > **Important:** Zabbix usernames are case-sensitive. Make sure to use "Admin" with a capital A.
-
-### 1.2 Change the Admin Password
-
-1. Once logged in, click on your username in the top-right corner.
-2. Select **Profile** from the dropdown menu.
-3. Click on the **Change password** button.
-4. Enter a new secure password and click **Update**.
-
-   > **Security Note:** Choose a strong password as this account has full administrative access to your monitoring system.
-
-### 1.3 Configure General Settings
-
-1. Go to **Administration** → **General**.
-2. Click on the **GUI** section and configure:
-   - Default theme: **Dark** (or your preference)
-   - Working hours: Set to your typical working hours (e.g., **09:00-18:00**)
-   - Click **Update** to save changes.
-
-### 1.4 Create a New User Group and User
-Creating separate user accounts with appropriate permissions is a good security practice.
-
-1. Go to **User groups**.
-2. Click **Create user group**.
-3. Enter:
-   - Group name: **Adminnid**
-   - Frontend access: **System default**
-   - Permissions: Add permissions for host groups you want this group to monitor
-   - Click **Add** to save.
-
-4. Go to **Users**.
-5. Click **Create user**.
-6. In the "User" tab, enter:
-   - Username: **admin**
-   - Password: Enter a secure password
-   - User groups: Select **Adminnid**
-   - Choose Permissions - **Admin role**
-   - Click **Add** to save.
+1. Configure Zabbix initial settings
+2. Set up system monitoring
+3. Configure web application monitoring
+4. Implement database monitoring
+5. Explore Zabbix 7.0 specific features
 
 ---
 
-## 2. System Monitoring with Zabbix (15 min)
+## Task 1: Initial Zabbix Configuration
 
-### 2.1 Review and Configure Zabbix Server
+### Initial Setup
+1. Access Zabbix at `https://your-server-ip:8443` (credentials: `Admin`/`zabbix`)
+2. Change default admin password via Profile settings
+3. Configure UI: Administration → General → GUI
+   - Set Dark theme and working hours (09:00-18:00)
 
-1. **Check the Zabbix Agent IP Address**
-   - Run the following command to determine the agent's IP address:
-     ```bash
-     docker inspect zabbix-agent | grep IPAddress
-     ```
-   - Note down the IP address (e.g., 172.21.0.10)
-
-2. Add and configure Zabbix Agent, Zabbix Server(you already have), MySQL Database. 
-
-Use this table as a guide to properly configure all your hosts:
-
-| Host | Host Name | Interface | Encryption | Templates | Macros | Purpose |
-|------|-----------|-----------|------------|-----------|--------|---------|
-| **Zabbix Server** | zabbix-server | 172.21.0.10:10050 | No encryption | • Linux by Zabbix agent<br>• Zabbix server health | None needed | Monitors the Zabbix server itself |
-| **Zabbix Agent** | zabbix-agent | 172.21.0.10:10050 | Connections from host<br>•Certificate Issuer: TLSConnect=cert<br>•Subject: TLSAccept=cert<br>•No encryption for both directions| • Linux by Zabbix agent active | None needed | Monitors the agent system |
-| **MySQL Database** | mysql-service | 172.21.0.10:10050 | No encryption | • MySQL by Zabbix agent 2 | • {$MYSQL.DSN}: tcp://mysql-service:3306<br>• {$MYSQL.USER}: monitor<br>• {$MYSQL.PASSWORD}: monitor_pwd | Monitors MySQL metrics |
-
-**Important Notes:**
-- The host name in Zabbix must match exactly what's in the agent configuration file (e.g., Hostname=zabbix-agent)
-- All hosts use the same agent IP address because the single agent collects data for all containers
-- For secure communication, use Certificate-based encryption with the certificates created in Part 1
-- Configure encryption settings as follows:
-  - Connections to host: Certificate only (select only Certificate)
-  - Connections from host: Both No encryption and Certificate checked
-  - Issuer: TLSConnect=cert
-  - Subject: TLSAccept=cert
-
-
-3. **Verify Connection Status. Mysql data can take time!!!!!!**
-   - Navigate to **Monitoring → Problems**
-   - The agent availability problem should resolve within a few minutes
-   - Go to **Monitoring → Latest data** and filter by host to see incoming data
-
-## 3. Web Application Monitoring (15 min)
-
-### 3.1 Configure Web Scenario (Optional)
-   Visible name: Web App -> Host Name: web-app -> Interface: 172.21.0.10:10050 -> Templates: Website by Browser
-
-https://bestmonitoringtools.com/zabbix-web-monitoring-create-web-scenarios-with-examples/
-
-## 4. Database Monitoring Setup (15 min)
-
-
-### 4.1 Verify MySQL Monitoring
-
-1. Go to **Monitoring → Latest data**
-2. Filter by Host: "mysql-service"
-3. You should see various MySQL metrics being collected
-4. If no data is visible, check:
-   - That the monitor user exists in MySQL with proper permissions
-   - That the macros are configured correctly
-   - That the agent has access to the MySQL container
-
-### 4.2 Create a MySQL Dashboard (Optional)
-
-1. Go to **Monitoring → Dashboards**
-2. Click **Create dashboard**
-3. Enter a name: **MySQL Performance**
-4. Click **Add** → **Graph widget**
-5. Configure:
-   - Title: **MySQL Connections**
-   - Data set: Select appropriate MySQL connection items
-6. Click **Add** to add the widget
-7. Add additional widgets for other metrics like:
-   - MySQL Query Rate
-   - MySQL Buffer Pool Usage
-   - MySQL Slow Queries
-8. Click **Apply** to save the dashboard
+### User Management
+1. Create Administrator group:
+   - Path: Administration → User groups
+   - Permissions: Grant full system access
+   
+2. Create admin user:
+   - Path: Administration → Users
+   - Assign Admin role and add to Administrators group
+   - Use strong password with complexity requirements
 
 ---
 
-## 5. Troubleshooting Common Issues (10 min)
+## Task 2: System Monitoring Configuration
 
-### 5.1 Host Unavailable Issues
+### Host Configuration
+1. Get agent IP: `docker inspect zabbix-agent | grep IPAddress`
 
-If a host shows as unavailable:
-1. Verify the agent's IP address with `docker inspect zabbix-agent | grep IPAddress`
-2. Make sure the IP address and port are correctly configured in Zabbix
-3. Check that "No encryption" is selected if you're having issues with certificate-based encryption
-4. Verify the host name matches exactly what's in the agent configuration
+> **Critical requirement**: Set host names EXACTLY matching container names
 
-### 5.2 No Data Collected
+2. Configure Host Monitoring:
 
-If items show "no data":
-1. Check that the correct templates are linked to the host
-2. Verify that the agent is accessible (navigate to **Monitoring → Hosts** and check the "Availability" column)
-3. Check the agent logs: `docker logs zabbix-agent`
-4. Verify that item keys are correct and supported by the agent
+   #### Zabbix Server Host
+   - Navigate to Data Collection → Hosts → zabbix-server
+   - Update the Interface field with the correct Agent IP: [Agent IP]:10050
+   - Templates are already applied - no need to modify
 
-### 5.3 MySQL Monitoring Issues
 
-If MySQL monitoring isn't working:
-1. Verify the DSN, username, and password macros
-2. Check that the monitor user exists in MySQL:
-   ```sql
-   SELECT User FROM mysql.user WHERE User='monitor';
-   ```
-3. Verify the monitor user has the necessary permissions:
-   ```sql
-   SHOW GRANTS FOR 'monitor'@'%';
-   ```
+   #### Zabbix Agent Host
+   - Navigate to Data Collection → Hosts → Create host
+   - Host name: zabbix-agent (must match container name exactly)
+   - Interface: [Agent IP]:10050
+   - Template: "Linux by Zabbix agent active"
+   - Configure certificate-based security:
+     - Host connections: Certificate
+     - From host: Both "No encryption" and "Certificate"
+     - Set TLSConnect=cert and TLSAccept=cert
 
-## Conclusion
+   #### MySQL Service Host
+   - Navigate to Data Collection → Hosts → Create host
+   - Configure:
+     - Host name: mysql-service
+     - Interface: [Agent IP]:10050
+     - Templates: MySQL by Zabbix agent 2
+     - Macros:
+       - {$MYSQL.DSN}: tcp://mysql-service:3306
+       - {$MYSQL.USER}: monitor
+       - {$MYSQL.PASSWORD}: monitor_pwd
+   - Click Add
 
-You have now completed Part 2 of the Monitoring Lab. You have:
-- Configured Zabbix 7.0 with appropriate security settings
-- Set up system monitoring with custom and template items
-- Created web application monitoring scenarios
-- Configured MySQL database monitoring
-- Created basic dashboards and troubleshooting approaches
+3. Verify Host Connectivity:
+   - Navigate to Monitoring → Problems
+   - Wait a few minutes for connections to establish
+   - Check Monitoring → Latest data for incoming metrics
 
-In Part 3, you will integrate Grafana with Zabbix for advanced visualizations and set up Loki for log management.
+---
+
+## Task 3: Web Application Monitoring
+
+Check the documentation for web monitoring in Zabbix:
+
+https://www.zabbix.com/documentation/current/en/manual/web_monitoring
+
+1. Configure a Web Monitoring Host:
+   - Navigate to Monitoring → Hosts → Create host
+   - Configure:
+     - Host name: web-app
+     - Interface: [Agent IP]:10050
+     - Templates: Website by Browser, Website certificate by Zabbix agent 2
+   - Click Add
+
+2. Create a Web Scenario:
+   - Go to the web-app host → Web tab
+   - Click Create web scenario
+   - Name: Web App Availability
+   - Application: Web monitoring
+   - Agent: Zabbix
+   - Steps:
+     - Step name: Homepage
+     - URL: http://your-server-ip:8080/
+     - Required status codes: 200
+     - Follow redirects: Yes
+   - Click Add
+
+3. Check Web Monitoring Results:
+   - Wait a few minutes for data collection
+   - Navigate to Monitoring → Latest data
+   - Filter by host: web-app
+   - Verify web monitoring metrics are being collected
+
+Press couple times to Web Test page, metrics will start running
+
+---
+
+## Task 4: Database Monitoring
+
+Check the documentation for dashboard in Zabbix:
+
+https://www.zabbix.com/documentation/7.2/en/manual/web_interface/frontend_sections/dashboards?hl=Dashboard%2Cdashboard
+
+Repo for  Mysql:
+https://github.com/zabbix/zabbix/tree/master/templates/db/mysql_agent
+
+1. Verify MySQL Monitoring:
+   - Navigate to Monitoring → Latest data
+   - Filter by host: mysql-service
+   - Review the MySQL metrics being collected
+
+2. Create a MySQL Performance Dashboard:
+   - Navigate to Dashboards-> All Dashboards
+   - Click Create dashboard
+   - Name: MySQL Performance
+   - Add a Graph widget:
+     - Title: MySQL Connections
+     - Data source: Time series
+     - Add  you mysql-service as data co
+   - Add additional widgets for:
+     - MySQL Query Rate
+     - MySQL Buffer Pool Usage
+     - MySQL Slow Queries
+   - Click Apply to save
+
+3. Try to add a Custom SQL Query:
+
+Some instructions here:
+https://sbcode.net/zabbix/setup_mysql_database_monitoring/
+
+- **If you change some configs in Docker**, don't forget to restart the container.
+- We already have monitoring for the user.
+- Refer to the section about `template_db_mysql.conf` for more details.
+---
+
+## Troubleshooting
+
+If you encounter issues during this lab:
+
+### Host Connection Problems:
+- Verify the agent IP address is correct
+- Check that hostnames match exactly between Zabbix and agent config
+- Temporarily disable encryption to test connectivity
+- Review logs: `docker logs zabbix-agent` or `docker logs zabbix-server`
+
+### No Data Collection:
+- Verify templates are properly linked
+- Check item configuration details
+- Ensure the agent can access the services it's monitoring
+- Check for network connectivity between containers
+
+### MySQL Monitoring Issues:
+- Verify the monitor user exists: `SELECT User FROM mysql.user WHERE User='monitor';`
+- Check permissions: `SHOW GRANTS FOR 'monitor'@'%';`
+- Confirm DSN and credential macros are correct
+- Test MySQL connectivity
