@@ -1,102 +1,263 @@
-- **Main Lecture is here:**: [Grafana material](https://docs.google.com/document/d/1gviMHQwUG4Fl29KddkzFz_gqnAAQgzwfc3JlecZv_So/edit?usp=sharing).
+# Grafana
 
-# Kokkuvõte
+## Sissejuhatus Grafanasse
 
-Grafana on juhtiv avatud lähtekoodiga platvorm monitooringu ja analüütika visualiseerimiseks. See võimaldab organisatsioonidel:
-- Visualiseerida süsteemide ja rakenduste jõudlust
-- Seadistada hoiatusi kriitiliste sündmuste jaoks
-- Ühendada erinevaid andmeallikaid ühtseks vaateks
-- Jagada andmeid meeskonna või organisatsiooni sees
+Grafana on juhtiv avatud lähtekoodiga platvorm monitooringu ja analüütika visualiseerimiseks. See võimaldab organisatsioonidel saada ülevaadet oma andmetest võimsate, kohandatavate juhtpaneelide kaudu.
 
-## Grafana Põhikontseptsioonid
+Check:
+https://grafana.com/
+Grafana Sandbox
 
-### 1. Dashboardid
-Dashboardid on Grafana südameks. Need on kohandatavad vaated, mis koosnevad erinevatest paneelidest. Igal paneelil võib olla:
-- Graafik
-- Statistika
-- Tabel
-- Hoiatuste ülevaade
+### Mida Grafana Võimaldab:
+- **Reaalajas visualiseerimine** süsteemi ja rakenduse jõudluse jälgimiseks
+- **Ühendatud monitooring** erinevate andmeallikate lõikes
+- **Täiustatud hoiatussüsteem** kriitiliste sündmuste jaoks
+- **Meeskonnatöö juhtpaneelid** kogu meeskonna jaoks nähtavuse tagamiseks
 
-### 2. Andmeallikad (Data Sources)
-Grafana toetab paljusid populaarseid andmeallikaid:
-- **Aegridade andmebaasid:** Prometheus, InfluxDB
-- **Logide andmebaasid:** Elasticsearch, Loki
-- **Klassikalised andmebaasid:** PostgreSQL, MySQL
-- **Pilveplatvormid:** AWS CloudWatch, Azure Monitor
+## Põhikontseptsioonid
 
-### 3. Päringud (Queries)
-Grafana võimaldab pärida andmeid erinevatel viisidel:
-- Graafiline päringuehitaja
-- SQL päringud
-- PromQL (Prometheuse päringukeel)
-- Muud spetsiifilised päringuvormingud
+### 1. Andmeallikad
 
-## Praktiline Näide
+Grafana tugevus seisneb võimes ühenduda praktiliselt iga andmeallikaga:
 
-### Veebirakenduse Monitooring
-Kujutage ette tüüpilist veebirakendust. Grafanaga saame jälgida:
+| Tüüp | Populaarsed Näited | Parim Kasutus |
+|------|-----------------|----------|
+| **Aegrea Andmebaasid** | Prometheus, InfluxDB, Graphite | Mõõdikud, jälgimisandmed |
+| **SQL Andmebaasid** | PostgreSQL, MySQL, Microsoft SQL | Äriandmed, relatsioonilised andmed |
+| **Logimisplatvormid** | Elasticsearch, Loki, Splunk | Rakenduse ja süsteemi logid |
+| **Pilveteenused** | AWS CloudWatch, Azure Monitor, Google Cloud Monitoring | Pilve infrastruktuur |
+| **IoT & Kohandatud** | MQTT, REST API-d, JSON lõpp-punktid | Seadmete andmed, kohandatud integratsioonid |
 
-**1. Infrastruktuuri Tervist**
-- Serveri CPU kasutus
-- Mälu kasutus
-- Kettaruumi olek
-- Võrgu läbilaskevõime
+### 2. Dashboardid (Juhtpaneelid)
 
-**2. Rakenduse Jõudlust**
-- Vastuse aeg (Response time)
-- Vigade arv
-- Aktiivsed kasutajad
-- API päringute maht
+Dashboardid on paneelide kogumid, mis annavad visuaalse ülevaate sinu andmetest.
 
-**3. Äriaspekte**
-- Kasutajate registreerumine
-- Tehingute arv
-- Käive
-- Kasutajate geograafiline jaotus
+**Dashboardi Anatoomia:**
+- **Read**: Organisatsiooniüksused seotud paneelide grupeerimiseks
+- **Paneelid**: Individuaalsed visualiseerimisüksused
+- **Muutujad**: Dünaamilised valijad, mis filtreerivad juhtpaneeli sisu
+- **Annotatsioonid**: Sündmuste markerid aegrea andmetel
 
-## Paigaldusvõimalused
+**Parimad Praktikad:**
+- Loo hierarhilised juhtpaneelid (ülevaade → detailid)
+- Kasuta järjekindlaid nimede konventsioone
+- Rakenda malle korduvkasutatavate juhtpaneelide jaoks
+- Lisa dokumentatsioonilinke ja kirjeldusi
+
+### 3. Paneelid ja Visualiseerimised
+
+Grafana pakub arvukalt visualiseerimistüüpe, mis vastavad sinu konkreetsetele andmevajadustele:
+
+| Visualiseerimine | Parim Kasutus | Näide Kasutusest |
+|---------------|---------------|------------------|
+| **Aegrea Graafik** | Trendid ajas | CPU/Mälu kasutus |
+| **Mõõdik (Gauge)** | Praegused väärtused lävendite suhtes | Ketta ruumi kasutus |
+| **Statistika Paneel** | Peamised jõudlusnäitajad | Aktiivsed kasutajad |
+| **Tulpdiagramm** | Kategooriate võrdlemine | Päringute arv lõpp-punkti järgi |
+| **Soojuskaart** | Jaotuse mustrid | Päringu latentsi jaotus |
+| **Tabel** | Detailne andmete uurimine | Tehingute logid |
+| **Sektordiagramm** | Proportsionaalne jaotus | Liikluse allikad |
+| **Geokaart** | Geograafilised andmed | Kasutaja asukohad |
+
+### 4. Päringukeeled
+
+Igal andmeallikal on oma päringukeel. Siin on kõige levinumad:
+
+**PromQL (Prometheus):**
+- Päringute koostamine reaalajas mõõdikute jälgimiseks
+- Ideaalne süsteemi jõudluse mõõtmiseks
+
+**SQL:**
+- Struktureeritud päringud relatsiooniliste andmete jaoks
+- Sobib äriandmete ja kasutajategevuse analüüsimiseks
+
+**Elasticsearch Query DSL:**
+- Paindlik päringukeel logide ja dokumentide jaoks
+- Võimas täisteksti otsingutel ja mustrite leidmisel
+
+### 5. Hoiatussüsteem
+
+Grafana hoiatussüsteem aitab tuvastada probleeme enne, kui need mõjutavad kasutajaid:
+
+**Hoiatussüsteemi Komponendid:**
+- **Reeglid**: Tingimused, mis käivitavad hoiatused
+- **Teavitused**: Kuidas hoiatusi edastatakse (e-post, Slack jne)
+- **Vaigistused**: Teavituste ajutine peatamine
+- **Kontaktpunktid**: Kes milliseid hoiatusi saab
+
+## Praktiline Rakendamine
+
+### Täiemahulise Jälgimise Näide
+
+Loome täieliku jälgimislahenduse veebirakenduse komplekti jaoks:
+
+#### 1. Infrastruktuuri Dashboard
+
+**Võtme Mõõdikud:**
+- CPU, Mälu, Ketta, Võrgu kasutus
+- Sõlme olek ja kättesaadavus
+- Konteineri/podi tervis (konteineriseeritud keskkondade jaoks)
+
+#### 2. Rakenduse Jõudluse Dashboard
+
+**Võtme Mõõdikud:**
+- Päringute määrad ja latentsid
+- Veamäärad ja peamised vead
+- Andmebaasi päringu jõudlus
+- Vahemälu tabamuse määrad
+- Kasutaja sessiooni mõõdikud
+
+**Täiustatud Rakenduse Mõõdikud:**
+- Apdex skoor (Rakenduse jõudlusindeks)
+- Kasutaja teekonna ajad
+- Front-end ja back-end jõudlus eraldi
+
+#### 3. Ärimõõdikute Dashboard
+
+**Võtme Mõõdikud:**
+- Konversiooni määrad
+- Tehingute maht
+- Tulu
+- Kasutajate hankimine ja hoidmine
+- Funktsioonide kasutuselevõtt
+
+### Dashboardi Organiseerimise Strateegia
+
+**Soovituslik Struktuur:**
+1. **Ülevaate Dashboard**: Kõrgtaseme tervis ja KPI-d
+2. **Valdkonna-spetsiifilised Dashboardid**: Infrastruktuur, Rakendused, Äri
+3. **Teenuse-spetsiifilised Dashboardid**: Individuaalsed komponendid
+4. **Süvitsi Uurimise Dashboardid**: Veaotsingu tööriistad
+
+**Kaustade Struktuuri Näide:**
+```
+/Dashboardid
+  ├── Ülevaade
+  │   └── Süsteemi Tervis
+  ├── Infrastruktuur
+  │   ├── Kubernetes Klaster
+  │   ├── Andmebaasi Jõudlus
+  │   └── Võrgu Ülevaade
+  ├── Rakendused
+  │   ├── Frontend Teenused
+  │   ├── Backend API-d
+  │   └── Autentimisteenus
+  └── Äri
+      ├── Müügianalüütika
+      ├── Kasutaja Teekond
+      └── Funktsioonide Kasutus
+```
+
+## Täiendavad Teemad
+
+### 1. Grafana Ettevalmistamine
+
+Automatiseeri oma Grafana seadistus konfiguratsiooniga koodis:
+- Dashboardide automaatne haldamine
+- Andmeallikate automaatne seadistamine
+- Versioonihaldus dashboardidele
+
+### 2. Jõudluse Optimeerimine
+
+**Päringu Optimeerimise Tehnikad:**
+- Kasuta sobivaid ajavahemikke
+- Rakenda rate() ja increase() funktsioonile loenduritele
+- Rakenda sildi filtreid vara päringus
+- Kasuta salvestusreegleid keerukateks arvutusteks
+
+**Dashboardi Optimeerimine:**
+- Jaota paneelide värskenduse sagedusi
+- Kasuta malli muutujaid paneelide arvu vähendamiseks
+- Rakenda vahemälu kasutamist, kus asjakohane
+- Kaalu ajavahemiku nihutamist võrdlusteks
+
+### 3. Autentimine ja Autoriseerimine
+
+Grafana toetab mitmeid autentimismeetodeid:
+
+| Meetod | Parim Kasutus | Konfiguratsiooni Keerukus |
+|--------|----------|--------------------------|
+| Sisseehitatud Kasutajad | Väikesed meeskonnad, testimine | Madal |
+| LDAP/Active Directory | Ettevõtete keskkonnad | Keskmine |
+| OAuth (Google, GitHub jne) | Pilvepõhised organisatsioonid | Keskmine |
+| SAML | Suured ettevõtted SSO-ga | Kõrge |
+
+## Juurutamise Võimalused
 
 ### 1. Grafana Cloud
-- Kiire alustamine
-- Hallatav teenus
-- Skaleeritav
-- Sobib väiksematele ja keskmistele organisatsioonidele
 
-### 2. Kohapealne Paigaldus (On-Premises)
-- Täielik kontroll
-- Andmed jäävad organisatsiooni sisse
-- Kohandatav seadistus
-- Sobib suurematele organisatsioonidele ja rangete turvanõuetega keskkondadele
+**Eelised:**
+- Hallatav infrastruktuur
+- Automaatsed uuendused
+- Sisseehitatud mõõdikute kogumine
+- Meeskonnatöö funktsioonid
 
-## Praktilised Soovitused
+**Hinnamudel:**
+- Tasuta tase saadaval (10K seeriat, 14-päevane säilitamine)
+- Kasutuspõhine hinnastamine mõõdikute, logide ja jälgede jaoks
+- Meeskonnapõhine hinnastamine täiendavate kasutajate jaoks
 
-### 1. Alustamiseks
-- Alustage Grafana Cloud'iga proovimiseks
-- Kasutage valmis dashboarde (Grafana marketplace)
-- Õppige tundma põhilisi visualiseerimise võimalusi
+### 2. Ise Majutatud
 
-### 2. Dashboardide Loomine
-- Järgige ühtset disainikeelt
-- Grupeerige seotud mõõdikud
-- Kasutage templatesid korduvateks elementideks
-- Lisage dokumentatsioon ja selgitused
+**Juurutamise Meetodid:**
+- Docker konteinerid
+- Kubernetes orkestreerimine
+- Traditsioonilised paigaldused (Linux, Windows)
 
-### 3. Jõudluse Optimeerimine
-- Optimeerige päringuid
-- Seadke sobivad värskendusintervallid
-- Kasutage vahemälu (caching) võimalusi
+**Kõrge Saadavuse Seadistus:**
+- Paigalda mitu Grafana instantsi
+- Kasuta jagatud andmebaasi taustasüsteemi (MySQL/PostgreSQL)
+- Rakenda koormuse tasakaalustamist
+- Seadista jagatud salvestusruum piltide ja pluginate jaoks
 
-## Kokkuvõte
+tal[5m])) by (status_code, endpoint)
 
-Grafana on võimas tööriist, mis:
-- Muudab keerulised andmed arusaadavaks
-- Võimaldab kiiresti tuvastada probleeme
-- Aitab teha andmepõhiseid otsuseid
-- Sobib nii väikestele kui suurtele organisatsioonidele
+# Vahemikuvektori valijad
+process_cpu_seconds_total[5m]
 
-### Kodus, kui tahad rohkem õppida
+# Nihke modifikaator
+rate(http_requests_total[5m] offset 1d)
+```
 
-1. Registreeruge Grafana Cloud'i
-2. Tutvuge dokumentatsiooniga
-3. Proovige mõnda valmis dashboardi
-4. Looge oma esimene dashboard
+### Kasulikud Grafana Muutujad
+
+```
+# Aja muutujad
+$__timeFrom()
+$__timeTo()
+$__interval
+
+# Andmeallika muutujad
+${DS:prometheus}
+
+# Kohandatud intervalli muutuja
+interval:
+- 1m
+- 5m
+- 15m
+- 1h
+- 6h
+- 12h
+- 1d
+- 7d
+- 30d
+
+# Päringu tulemuse muutuja
+Query: label_values(node_cpu_seconds_total, instance)
+```
+
+## Lisa B: Veaotsing
+
+### Levinud Probleemid ja Lahendused
+
+| Probleem | Potentsiaalsed Põhjused | Lahendused |
+|-------|------------------|-----------|
+| Paneelides pole andmeid | Andmeallika ühenduvus | Kontrolli andmeallika tervist, volitusi, võrku |
+| Dashboardi aeglane laadimine | Liiga palju paneele, ebaefektiivsed päringud | Optimeeri päringuid, kasuta malli muutujaid |
+| Hoiatused ei käivitu | Vale reegli konfiguratsioon | Testi hoiatusreegleid, kontrolli teavituskanaleid |
+| Autentimise tõrked | Valesti seadistatud autentimine | Kontrolli autentimise seadeid, vaata logisid |
+| Puuduvad mõõdikud | Kollektori probleemid, valed päringud | Valideeri mõõdiku olemasolu andmeallikas |
+
+---
+
+*See materjal on koostatud Grafana versiooni 10.x jaoks. Palun kontrolli ametlikku dokumentatsiooni uusimate funktsioonide ja muudatuste kohta.*
