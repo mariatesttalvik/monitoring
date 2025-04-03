@@ -125,8 +125,6 @@ Monitoring involves continuously observing a system’s performance, availabilit
 
 ![Monitoring Overview](media/image_5.png)
 
-Here’s a rewritten, more engaging version of the text tailored to teenagers learning about monitoring, with a fun and relatable tone:
-
 ---
 
 ### Why Monitoring is Awesome (and Super Important!)
