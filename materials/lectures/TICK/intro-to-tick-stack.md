@@ -1,325 +1,230 @@
 # TICK Stack
 
-## Ajalugu ja areng
+## Mis on TICK Stack?
 
-TICK Stack sai alguse 2013. aastal, kui InfluxData (tollal nime all Errplane) alustas InfluxDB arendamist. Paul Dix ja tema meeskond nägid vajadust modernsema ajaseeria andmebaasi järele, mis vastaks kaasaegsete hajussüsteemide vajadustele.
+TICK Stack on avatud lähtekoodiga tarkvara kogum, mis on mõeldud ajaseeria andmete (time series data) töötlemiseks. "TICK" on lühend, mis tuleb neljast peamisest komponendist:
 
-### Olulised verstapostid:
-- **2013**: InfluxDB esmaversioon
-- **2014**: Telegraf'i väljalaske
-- **2015**: TICK Stack ametlik väljakuulutamine
-- **2016**: Chronograf'i täielik ümberkujundamine
-- **2019**: InfluxDB 2.0 väljalase, mis tõi kaasa Flux päringkeele
-- **2020**: Kasutajate arv ületas 500,000 piiri
-- **2023**: Üle 650,000 aktiivse paigalduse globaalselt
+- **T**elegraf - andmete kogumise tööriist
+- **I**nfluxDB - andmebaas andmete salvestamiseks
+- **C**hronograf - visuaalne kasutajaliides
+- **K**apacitor - andmete töötlemise ja häirete süsteem
 
-## Tuntud kasutajad
+## TICK Stack komponendid tabelina
 
-### Tehnoloogiaettevõtted:
-- **Netflix**: Kasutab platvormide jälgimiseks ja striimimisteenuste analüüsiks
-- **Cisco**: Võrguseadmete monitoorimiseks
-- **eBay**: E-kaubanduse platvormide jõudluse jälgimiseks
-- **PayPal**: Tehingute ja süsteemide monitoorimiseks
-- **Tesla**: IoT andmete kogumiseks ja analüüsiks
+| Komponent | Funktsioon | Alternatiivid | Port |
+|-----------|------------|---------------|------|
+| **Telegraf** | Andmete kogumine | Prometheus exporters, Collectd, Beats | 8125 |
+| **InfluxDB** | Andmete säilitamine | Prometheus, TimescaleDB, OpenTSDB | 8086 |
+| **Chronograf** | Visualiseerimine | Grafana, Kibana, Datadog UI | 8888 |
+| **Kapacitor** | Andmetöötlus ja häired | Prometheus Alertmanager, Nagios, ElastAlert | 9092 |
 
-### Teadusasutused:
-- **CERN**: Teaduslike eksperimentide andmete kogumiseks
-- **NASA**: Kosmoseuuringute andmete analüüsiks
+## Andmetüübid, mida saab jälgida
 
-### Eesti näited:
-- **Telia**: Võrgu monitooring
-- **Bolt**: Sõitude ja tellimuste analüütika
-- **Wise**: Finantstehingute jälgimine
-- **Taltech**: Teadustöö ja laborite seire
+| Kategooria | Näited | Jälgimise kasu |
+|------------|--------|----------------|
+| **Süsteemi ressursid** | CPU, mälu, kettakasutus | Ressursside puuduse ennetamine |
+| **Võrk** | Latentsus, läbilaskevõime, paketikadu | Võrguprobleemide tuvastamine |
+| **Rakendused** | Vastusaeg, veateated, API päringud | Rakenduste jõudluse parandamine |
+| **Andmebaasid** | Päringute arv, täitmisaeg, ühenduste arv | Andmebaasi optimeerimise võimaluste leidmine |
+| **Kasutajate aktiivsus** | Sisselogimised, lehekülje vaatamised, ostud | Kasutajakogemuse parandamine |
 
-## Populaarsuse põhjused
+## Lihtsustatud arhitektuur
 
-### Tehniline üleolek:
-1. **Skaleeruvus**: Võimeline töötlema miljoneid kirjutamisoperatsioone sekundis
-2. **Paindlikkus**: Toetab paljusid andmeallikaid ja väljundformaate
-3. **Lihtne seadistamine**: "Battery-included" lähenemine
-
-### Ärilised eelised:
-1. **Avatud lähtekood**: Madal sisenemisbarjäär
-2. **Tugev kogukond**: Kiire abi probleemide korral
-3. **Tasuta alustada**: Sobiv nii väikestele kui suurtele projektidele
-
-## Turupositsioon
-
-### Võrdlus konkurentidega:
-- **Prometheus**: Populaarne Kubernetes keskkonnas
-- **Graphite**: Vanem, traditsioonilisem lahendus
-- **Elastic Stack**: Laiem fookus, mitte ainult ajaseeria andmed
-
-TICK Stack eristub:
-- Parem kirjutamiskiirus
-- Lihtsam seadistamine
-- Väiksem ressursikasutus
-- Integreeritud tööriistad
-
-## Kasutusstsenaariumid
-
-### DevOps:
-- Konteinerite ja mikroteenuste jälgimine
-- Rakenduste jõudluse monitooring
-- Logide analüüs
-
-### IoT:
-- Sensoriandmete kogumine
-- Seadmete jälgimine
-- Anomaaliate tuvastamine
-
-### Ärianalüütika:
-- Reaalaja dashboardid
-- Kasutajate käitumise analüüs
-- Müügitrendide jälgimine
-
-### Finantssektor:
-- Tehingute monitooring
-- Turvariskide tuvastamine
-- Jõudluse optimeerimine
-
-## Tulevikusuunad
-
-### Arenduses olevad funktsioonid:
-- Parem masinõppe integratsioon
-- Edge Computing tugi
-- Täiustatud visualiseerimistööriistad
-- Automaatne skaleerimine
-
-### Kogukonna fookus:
-- Kubernetes integratsioon
-- Serverless lahendused
-- IoT optimeerimine
-- 5G võrkude tugi
-
-## Kogukonna ressursid:
-- Online õpetused
-- Konverentsid (InfluxDays)
-- Kohalikud kasutajagrupid
-
-# TICK Stack
-
-TICK Stack on avatud lähtekoodiga platvormi komplekt, mis on mõeldud ajaseeria andmete kogumiseks, salvestamiseks, analüüsimiseks ja visualiseerimiseks. See koosneb neljast peamisest komponendist:
+```
+┌────────────────────┐
+│   ANDMEALLIKAD     │ ← Serverid, rakendused, seadmed, sensorid jne
+└──────────┬─────────┘
+           │
+           ▼
+┌────────────────────┐
+│      TELEGRAF      │ ← Kogub andmeid erinevatest allikatest
+└──────────┬─────────┘
+           │
+           ▼
+┌────────────────────┐
+│      INFLUXDB      │ ← Salvestab ajaseeria andmed
+└────┬─────────┬─────┘
+     │         │
+     ▼         ▼
+┌─────────┐ ┌────────────┐
+│CHRONOGRAF│ │ KAPACITOR  │ ← Visualiseerimine ja häirete loomine
+└─────────┘ └────────────┘
+```
 
 ## Komponendid
 
-```mermaid
-flowchart TB
-    subgraph "Andmeallikad"
-        A1[("Süsteemi\nmetrics")]
-        A2[("Logid")]
-        A3[("IoT\nSeadmed")]
-        A4[("Rakendused")]
-        A5[("Custom\nmetrics")]
-    end
+### 📊 Telegraf - Andmete koguja
 
-    subgraph "Telegraf"
-        T1[Input Plugins]
-        T2[Processor Plugins]
-        T3[Aggregator Plugins]
-        T4[Output Plugins]
-    end
+**Mis see on?** Telegraf on nagu "koristaja", kes käib ringi ja korjab andmeid kokku.
 
-    subgraph "InfluxDB"
-        I1[(Time Series\nDatabase)]
-        I2[HTTP API]
-        I3[Query Engine]
-    end
+**Mida see teeb?**
+- Kogub erinevaid näitajaid (meetrikaid) sinu süsteemidest
+- Suudab koguda andmeid paljudest erinevatest kohtadest (serverid, võrguseadmed, andmebaasid jne)
+- Töötab väga efektiivselt ja vajab vähe ressursse
 
-    subgraph "Kapacitor"
-        K1[Stream Processing]
-        K2[Batch Processing]
-        K3[Alerting Engine]
-    end
+**Näide elust:** Kujuta ette, et Telegraf on nagu elektriarvesti, mis pidevalt jälgib, kui palju elektrit sinu kodu erinevad seadmed tarbivad.
 
-    subgraph "Chronograf"
-        C1[Dashboards]
-        C2[Alert UI]
-        C3[Data Explorer]
-        C4[Admin Interface]
-    end
+**Kuidas see töötab:**
+1. Paigaldad Telegraf oma serverisse või arvutisse
+2. Määrad seadistustes, milliseid andmeid soovid koguda
+3. Telegraf hakkab automaatselt andmeid koguma ja saatma InfluxDB-sse
 
-    subgraph "Väljundid"
-        O1[Email]
-        O2[Slack]
-        O3[PagerDuty]
-        O4[Custom Webhooks]
-    end
+### 💾 InfluxDB - Andmete säilitaja
 
-    A1 --> T1
-    A2 --> T1
-    A3 --> T1
-    A4 --> T1
-    A5 --> T1
-    T1 --> T2
-    T2 --> T3
-    T3 --> T4
-    T4 --> I2
-    I2 --> I1
-    I1 --> I3
-    I1 --> K1
-    I1 --> K2
-    K1 --> K3
-    K2 --> K3
-    K3 --> O1
-    K3 --> O2
-    K3 --> O3
-    K3 --> O4
-    I3 --> C1
-    I3 --> C3
-    K3 --> C2
-    I2 --> C4
-```
+**Mis see on?** InfluxDB on spetsiaalne andmebaas, mis on optimeeritud just ajaseeria andmete salvestamiseks.
 
-## Components
+**Mida see teeb?**
+- Salvestab suuri koguseid ajaseeria andmeid kiiresti ja efektiivselt
+- Võimaldab neid andmeid hiljem pärida ja analüüsida
+- Suudab töödelda miljoneid andmepunkte sekundis
 
-### 📊 Telegraf
-Telegraf on agent, mis kogub ja saadab meetrika andmeid erinevatest süsteemidest ja teenustest.
+**Näide elust:** InfluxDB on nagu digitaalne päevik, mis salvestab automaatselt kõik sündmused koos täpse ajatempliga.
 
-**Tehnilised omadused:**
-- Kirjutatud Go keeles
-- Väike mälukasutus (~20MB)
-- Üle 200 sisend-plugina
-- Toetab mitmeid väljundformaate
+**Põhimõisted:**
+- **Mõõtmised** (measurements) - andmete kategooriad (nt. CPU kasutus, temperatuur)
+- **Väljad** (fields) - tegelikud väärtused (nt. CPU kasutus = 75%)
+- **Sildid** (tags) - meta-andmed, mille järgi saab andmeid filtreerida (nt. server = "web-1")
+- **Ajatempel** (timestamp) - millal andmed salvestati
 
-**Konfiguratsiooninäide:**
-```toml
-[[inputs.cpu]]
-  percpu = true
-  totalcpu = true
-  collect_cpu_time = false
-  report_active = false
+### 📈 Chronograf - Andmete visualiseerija
 
-[[outputs.influxdb_v2]]
-  urls = ["http://localhost:8086"]
-  token = "your-token"
-  organization = "your-org"
-  bucket = "your-bucket"
-```
+**Mis see on?** Chronograf on veebirakendus, mis võimaldab sul näha ja visualiseerida InfluxDB-s olevaid andmeid.
 
-### 💾 InfluxDB
-InfluxDB on võimas ajaseeria andmebaas, optimeeritud kõrge läbilaskevõimega operatsioonideks.
+**Mida see teeb?**
+- Loob graafikuid ja visuaalseid töölaudu (dashboards)
+- Võimaldab andmeid uurida ilma keerulisi päringuid kirjutamata
+- Aitab häireid ja teateid seadistada
 
-**Päringute näited:**
-```sql
-// InfluxQL näide
-SELECT mean("usage_idle") 
-FROM "cpu" 
-WHERE time > now() - 1h 
-GROUP BY time(5m)
-```
+**Näide elust:** Chronograf on nagu ilmateade, mis näitab sulle graafiliselt, kuidas temperatuur, niiskus ja õhurõhk on päeva jooksul muutunud.
 
-### 📈 Chronograf
-Chronograf on TICK Stacki visuaalne liides.
+**Miks see on kasulik:**
+- Lihtne graafiline kasutajaliides
+- Ei vaja programmeerimisoskusi
+- Saad kiiresti ülevaate oma süsteemide seisundist
 
-### ⚡ Kapacitor
-Kapacitor on reaalajas töötlev mootor.
+### ⚡ Kapacitor - Andmete töötleja ja häiresüsteem
 
-## Technical Details
+**Mis see on?** Kapacitor on mootor, mis võimaldab andmeid töödelda ja nende põhjal häireid luua.
 
-### System Requirements
+**Mida see teeb?**
+- Analüüsib andmeid reaalajas
+- Loob häireid, kui midagi olulist juhtub (nt. serveri mälu on otsas)
+- Saab andmeid töödelda ja muuta
 
-#### Minimum:
-- CPU: 2 cores
-- RAM: 4GB
-- Storage: 10GB
-- OS: Linux (Ubuntu 20.04+, CentOS 8+), macOS 10.15+
+**Näide elust:** Kapacitor on nagu valvesüsteem, mis jälgib pidevalt su kodu ja annab häiret, kui midagi kahtlast toimub.
 
-#### Recommended:
-- CPU: 4+ cores
-- RAM: 16GB+
-- SSD: 100GB+
-- OS: Linux (Ubuntu 22.04 LTS)
+**Milleks see kasulik on:**
+- Automaatsed hoiatused, kui midagi läheb valesti
+- Saad teada probleemidest enne, kui need suureks muutuvad
+- Võimaldab automaatseid tegevusi (nt. e-maili saatmine või skripti käivitamine)
 
-### Docker Setup
+## Kasutusnäited
 
-```yaml
-version: '3'
-services:
-  influxdb:
-    image: influxdb:latest
-    ports:
-      - "8086:8086"
-    volumes:
-      - influxdb-storage:/var/lib/influxdb2
+### 1. Serveri jälgimine
+Soovid teada, kuidas sinu server töötab - kui palju mälu, protsessorit ja kettaruumi kasutatakse.
 
-  telegraf:
-    image: telegraf:latest
-    volumes:
-      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+**Lahendus TICK Stackiga:**
+1. Telegraf kogub serveri ressursside kasutuse andmed
+2. InfluxDB salvestab need andmed
+3. Chronograf näitab sulle graafilisel kujul, kuidas need näitajad ajas muutuvad
+4. Kapacitor saadab sulle e-maili, kui mälu kasutus läheb liiga kõrgeks
 
-  chronograf:
-    image: chronograf:latest
-    ports:
-      - "8888:8888"
-    depends_on:
-      - influxdb
+### 2. Veebilehe jälgimine
+Soovid teada, kas sinu veebileht on kättesaadav ja kui kiiresti see laadib.
 
-  kapacitor:
-    image: kapacitor:latest
-    ports:
-      - "9092:9092"
-    depends_on:
-      - influxdb
+**Lahendus TICK Stackiga:**
+1. Telegraf kontrollib iga minuti järel, kas veebileht vastab ja kui kiire on vastuse aeg
+2. InfluxDB salvestab need andmed
+3. Chronograf näitab sulle graafikut, kuidas lehekülje laadimisaeg päeva jooksul muutub
+4. Kapacitor saadab sulle SMS-i, kui veebileht ei vasta 5 minuti jooksul
 
-volumes:
-  influxdb-storage:
-```
+### 3. Temperatuuri jälgimine
+Sul on temperatuurisensorid, mis mõõdavad temperatuuri erinevates ruumides.
 
-## History and Usage
+**Lahendus TICK Stackiga:**
+1. Telegraf kogub sensorite andmed
+2. InfluxDB salvestab temperatuurid koos ajatempliga
+3. Chronograf näitab temperatuuri muutumist ajas igas ruumis
+4. Kapacitor saadab häire, kui temperatuur langeb alla 18°C või tõuseb üle 28°C
 
-### Timeline
-- **2013**: InfluxDB esmaversioon
-- **2014**: Telegraf'i väljalase
-- **2015**: TICK Stack ametlik väljakuulutamine
-- **2016**: Chronograf'i täielik ümberkujundamine
-- **2019**: InfluxDB 2.0 väljalase
-- **2020**: 500,000+ kasutajat
-- **2023**: 650,000+ aktiivset paigaldust
+## Alustamine TICK Stack'iga
 
-### Notable Users
-- Netflix
-- Cisco
-- eBay
-- PayPal
-- Tesla
-- CERN
-- NASA
+### Mida on vaja alustamiseks?
 
-### Estonian Users
-- Telia
-- Bolt
-- Wise
-- Taltech
+#### Miinimumnõuded arvutile:
+- **Protsessor:** Vähemalt 2 tuuma
+- **Mälu:** Vähemalt 4GB RAM
+- **Kõvaketas:** Vähemalt 10GB vaba ruumi
+- **Operatsioonisüsteem:** Linux (Ubuntu 20.04 või uuem), macOS (10.15 või uuem)
 
-## Security
+#### Soovituslikud nõuded suurema süsteemi jaoks:
+- **Protsessor:** 4 või rohkem tuuma
+- **Mälu:** 16GB või rohkem RAM
+- **Kõvaketas:** SSD tüüpi, vähemalt 100GB
+- **Operatsioonisüsteem:** Linux (Ubuntu 22.04 LTS)
 
-- SSL/TLS krüpteering
-- RBAC (Role-Based Access Control)
-- Token-põhine autentimine
-- Andmete krüpteerimine
-- Audit logging
+## Turvalisus
 
-## Troubleshooting
+TICK Stack on turvaline süsteem, kuid on oluline teada põhilisi turvafunktsioone:
 
-Log locations:
+- **SSL/TLS krüpteering** - See on nagu tähtsate dokumentide saatmine lukustatud kohvris, et keegi teel neid näha ei saaks.
+  
+- **Kasutajaõiguste haldus (RBAC)** - See võimaldab määrata, kes mida teha saab. Näiteks üks kasutaja võib ainult andmeid vaadata, teine võib neid muuta.
+  
+- **Token-põhine autentimine** - See on nagu spetsiaalne võti, mida on vaja süsteemi sisenemiseks. Igal rakendusel või kasutajal on oma unikaalne võti.
+  
+- **Andmete krüpteerimine** - See tagab, et isegi kui keegi andmetele ligi pääseb, ei saa ta neid lugeda ilma õige võtmeta.
+
+## Probleemide lahendamine
+
+Kui midagi ei tööta, siis esimene koht, kust otsida, on logifailid. Need on nagu süsteemi päevikud, kuhu kirjutatakse kõik, mis juhtub:
+
 ```bash
-/var/log/telegraf/telegraf.log
-/var/log/influxdb/influxd.log
-/var/log/chronograf/chronograf.log
-/var/log/kapacitor/kapacitor.log
+/var/log/telegraf/telegraf.log    - Telegraf'i logid
+/var/log/influxdb/influxd.log     - InfluxDB logid
+/var/log/chronograf/chronograf.log - Chronograf'i logid
+/var/log/kapacitor/kapacitor.log  - Kapacitor'i logid
 ```
 
-## Resources
+**Tüüpilised probleemid:**
 
-- [Official Documentation](https://docs.influxdata.com/)
-- [Telegraf Plugins](https://docs.influxdata.com/telegraf/latest/plugins/)
-- [Kapacitor Alerts](https://docs.influxdata.com/kapacitor/latest/guides/alerts/)
-- [Chronograf Dashboards](https://docs.influxdata.com/chronograf/latest/guides/dashboard-template-variables/)
+1. **Telegraf ei kogu andmeid** - Kontrolli, kas õigused ja ühendused on korras
+2. **InfluxDB ei käivitu** - Kontrolli, kas port 8086 on vaba ja kas sul on piisavalt kettaruumi
+3. **Chronograf näitab tühja lehte** - Kontrolli, kas InfluxDB on käivitatud ja ühendus on seadistatud
+4. **Häired ei tööta** - Kontrolli, kas Kapacitor on käivitatud ja õigesti seadistatud
+
+## Komponentide asendamine
+
+| Komponent | Populaarne alternatiiv | Eelised | Puudused |
+|-----------|------------------------|---------|----------|
+| Telegraf | Prometheus eksporterid | Parem integratsioon Kubernetes-ega | Rohkem seadistamist vaja |
+| InfluxDB | Prometheus | Parem alerting, paremad Kubernetes integratsioonid | Mitte nii hea kirjutamise jõudlus |
+| Chronograf | Grafana | Rohkem visualiseerimise võimalusi, rohkem andmeallikaid | Keerulisem seadistada |
+| Kapacitor | Alertmanager | Lihtsam integratsioon Prometheus'ega | Vähem paindlik |
+
+### Olulised mõisted monitoringus:
+
+| Mõiste | Selgitus | Näide TICK Stack'is |
+|--------|----------|---------------------|
+| **Mõõtepunkt (Metric)** | Konkreetne mõõdetav väärtus | CPU kasutus = 75% |
+| **Ajavahemik (Interval)** | Kui tihti andmeid kogutakse | Telegraf kogub andmeid iga 10 sekundi tagant |
+| **Retensioon (Retention)** | Kui kaua andmeid säilitatakse | InfluxDB säilitab detailseid andmeid 30 päeva |
+| **Häire (Alert)** | Teavitus, kui midagi olulist juhtub | Kapacitor saadab e-maili, kui server läheb maha |
+| **Töölaud (Dashboard)** | Visuaalne andmete kogu | Chronograf näitab 4 graafikut ühel lehel |
+
+### Lisaressursid õppimiseks:
+- [TICK Stack õpetused](https://docs.influxdata.com/influxdb/v2.0/get-started/)
+- [InfluxData YouTube kanal](https://www.youtube.com/influxdata)
+- [Community foorumid](https://community.influxdata.com/)
+- [GitHub projektid](https://github.com/influxdata)
+- [Ametlik dokumentatsioon](https://docs.influxdata.com/) - Põhjalik teabeallikas kõigi komponentide kohta
+- [Telegraf pluginad](https://docs.influxdata.com/telegraf/latest/plugins/) - Nimekiri kõigist andmeallikatest, mida Telegraf toetab
+- [Kapacitor häired](https://docs.influxdata.com/kapacitor/latest/guides/alerts/) - Juhend häirete seadistamiseks
+- [Chronograf töölauad](https://docs.influxdata.com/chronograf/latest/guides/dashboard-template-variables/) - Juhend visuaalsete töölaudade loomiseks
+- [YouTube õpetused](https://www.youtube.com/results?search_query=tick+stack+tutorial) - Visuaalsed õpetused alustajatele
 
 ---
 
 <div align="center">
-  <p>Made with ❤️ for time series data</p>
+  <p>Made with ❤️ from Maria</p>
 </div>
