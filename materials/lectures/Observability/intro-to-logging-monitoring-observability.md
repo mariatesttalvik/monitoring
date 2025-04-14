@@ -125,10 +125,6 @@ Standardiseeritud logiformaadi kasutamine tagab järjepidevuse, muutes logide an
 Mõelge seirest kui süsteemi elutähtsate näitajate monitorist - pidevalt jälgides jõudlust, kättesaadavust ja üldist tervist.
 Seire hõlmab süsteemi jõudluse, kättesaadavuse ja üldise tervise pidevat jälgimist. Erinevalt logimisest, mis salvestab diskreetseid sündmusi, keskendub seire mõõdikutele ja näitajatele, mis peegeldavad süsteemi töökorda ajas.
 
-![Seire ülevaade](media/image_5.png)
-
----
-
 ### Miks seire on oluline
 
 **Tehnoloogia kontrolli all hoidmine:**
