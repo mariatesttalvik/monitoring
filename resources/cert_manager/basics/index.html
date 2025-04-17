@@ -1,0 +1,3990 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://haapsalu-kutsehariduskeskus.github.io/monitoring/resources/cert_manager/basics/">
+      
+      
+        <link rel="prev" href="../../vscode-guide/">
+      
+      
+        <link rel="next" href="../automation/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>Basics - Monitoring Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.4af4bdda.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#understanding-certificates-keystore-and-truststore" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Monitoring Guide" class="md-header__button md-logo" aria-label="Monitoring Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Monitoring Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Basics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../archive/2_TICK_Stack_Local/" class="md-tabs__link">
+          
+  
+  
+  Archive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../final_project/final_project_building_monsystem/" class="md-tabs__link">
+          
+  
+  
+  Final Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../labs/lab_01/lab2/Simple_Linux_Logging_Lab/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../materials/lectures/Elasticsearch/Part1_Introduction/" class="md-tabs__link">
+          
+  
+  
+  Materials
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../github-guide/" class="md-tabs__link">
+          
+  
+  
+  Resources
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Monitoring Guide" class="md-nav__button md-logo" aria-label="Monitoring Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Monitoring Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../archive/2_TICK_Stack_Local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack Local
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../archive/lab04/1_InfluxDB_Cloud_Observability_Lab_Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lab 04 Cloud
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Linux Logging Labs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Linux Logging Labs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../archive/lab1/1_linux_logging_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../archive/lab1/2_linux_logging_lab_advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../archive/lab1/3_linux_logging_lab_testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Final Project
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Final Project
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/final_project_building_monsystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/topology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Topology
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Help
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Help
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/elk_stack_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ELK Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/hints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hints
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/virtualbox_wsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox WSL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/kibana_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kibana Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/networking_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Networking Debug
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/starter_code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Starter Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Labs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Labs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 01
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 01
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_01/lab2/Simple_Linux_Logging_Lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simple Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 02
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 02
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_02/lab1/monitoring-lab-manual-part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_02/lab1/monitoring-lab-manual-part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_02/lab1/monitoring-lab-manual-part3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_02/lab1/monitoring-lab-manual-extra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Extra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 03
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 03
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_03/prometheus_lab_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_03/prometheus_lab_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 04
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 04
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_04/tick_lab_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_04/tick_lab_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 05
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 05
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_05/part_1/adding_logstash_and_filebeat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Filebeat & Logstash
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_05/part_8/Lab8_Security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 06
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 06
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_06/splunk_cloud_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Cloud
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_06/splunk_cluster_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Cluster
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lab 07
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Materials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Materials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Elasticsearch
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Elasticsearch
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/Part1_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/Part2_Data_Modeling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/Part3_Search_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Search & Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/Part9_Backup_Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backup & Restore
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Prometheus/intro-to-prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Grafana
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Grafana/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Grafana/loki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Loki
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Splunk
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Splunk
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Splunk/intro-to-splunk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Linux/intro-to-linux-logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Linux Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            Observability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Observability/intro-to-logging-monitoring-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Observability/wrap-up-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wrap-Up
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/TICK/intro-to-tick-stack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Zabbix/zabbix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../github-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../konto-digital_ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DigitalOcean Account
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vscode-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VS Code Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Cert Manager
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cert Manager
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-distribution-and-multi-node-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Certificate Distribution and Multi-Node Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Distribution and Multi-Node Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-certificate-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding Certificate Complexity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-World Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-certificate-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding Certificate Types
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-confusion-points-explained" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Confusion Points Explained
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-of-complex-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example of Complex Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ca-storage-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      CA Storage Architecture
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Components
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#certificate-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Certificate Components
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#digital-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Digital Signatures
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Storage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Types of Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keystore-p12-pfx-jks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keystore (.p12, .pfx, .jks)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#truststore-jks-p12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Truststore (.jks, .p12)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-certificate-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Certificate Operations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Manual Certificate Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-creating-a-root-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Creating a Root CA
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-creating-an-intermediate-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Creating an Intermediate CA
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-creating-server-certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Creating Server Certificates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-creating-client-certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Creating Client Certificates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-different-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Working with Different Formats
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Working with Different Formats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-pkcs12-p12-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. PKCS#12 (.p12) Operations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-java-keystore-jks-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Java Keystore (.jks) Operations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-pem-format-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. PEM Format Operations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-certificate-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Certificate Verification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Common Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-key-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Key Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-certificate-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Certificate Organization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-security-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Security Measures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-certificate-renewal" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Certificate Renewal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-backup-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Backup Procedures
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-certificate-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal Certificate Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Internal Certificate Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#internal-usage-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal Usage Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-internal-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is Internal Usage?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples-of-internal-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples of Internal Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-self-signed-certificates-work-for-internal-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Self-Signed Certificates Work for Internal Use
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-setup-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal Setup Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-verification-and-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Certificate Verification and Checks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Verification and Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#viewing-certificate-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      Viewing Certificate Content
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trust-chain-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trust Chain Verification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keystoretruststore-content-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keystore/Truststore Content Verification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chain-file-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chain File Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-chain-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Certificate Chain Visualization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elastic-cert_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Elastic Certs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hashicorp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HashiCorp
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-distribution-and-multi-node-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Certificate Distribution and Multi-Node Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Distribution and Multi-Node Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-certificate-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding Certificate Complexity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-World Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-certificate-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding Certificate Types
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-confusion-points-explained" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Confusion Points Explained
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-of-complex-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example of Complex Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ca-storage-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      CA Storage Architecture
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Components
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#certificate-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Certificate Components
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#digital-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Digital Signatures
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Storage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Types of Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keystore-p12-pfx-jks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keystore (.p12, .pfx, .jks)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#truststore-jks-p12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Truststore (.jks, .p12)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-certificate-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Certificate Operations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Manual Certificate Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-creating-a-root-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Creating a Root CA
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-creating-an-intermediate-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Creating an Intermediate CA
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-creating-server-certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Creating Server Certificates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-creating-client-certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Creating Client Certificates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-different-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Working with Different Formats
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Working with Different Formats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-pkcs12-p12-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. PKCS#12 (.p12) Operations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-java-keystore-jks-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Java Keystore (.jks) Operations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-pem-format-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. PEM Format Operations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-certificate-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Certificate Verification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Common Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-key-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Key Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-certificate-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Certificate Organization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-security-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Security Measures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-certificate-renewal" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Certificate Renewal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-backup-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Backup Procedures
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-certificate-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal Certificate Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Internal Certificate Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#internal-usage-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal Usage Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-internal-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is Internal Usage?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples-of-internal-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples of Internal Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-self-signed-certificates-work-for-internal-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Self-Signed Certificates Work for Internal Use
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-setup-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal Setup Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-verification-and-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Certificate Verification and Checks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Verification and Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#viewing-certificate-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      Viewing Certificate Content
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trust-chain-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trust Chain Verification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keystoretruststore-content-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keystore/Truststore Content Verification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chain-file-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chain File Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-chain-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Certificate Chain Visualization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="understanding-certificates-keystore-and-truststore">Understanding Certificates, Keystore, and Truststore<a class="headerlink" href="#understanding-certificates-keystore-and-truststore" title="Permanent link">&para;</a></h1>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#components">Components</a></li>
+<li><a href="#types-of-storage">Types of Storage</a></li>
+<li><a href="#manual-certificate-operations">Manual Certificate Operations</a></li>
+<li><a href="#working-with-different-formats">Working with Different Formats</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+</ol>
+<h2 id="certificate-distribution-and-multi-node-setup">Certificate Distribution and Multi-Node Setup<a class="headerlink" href="#certificate-distribution-and-multi-node-setup" title="Permanent link">&para;</a></h2>
+<h3 id="understanding-certificate-complexity">Understanding Certificate Complexity<a class="headerlink" href="#understanding-certificate-complexity" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>flowchart TD
+    subgraph &quot;Example 1: Simple Website&quot;
+        W[www.myshop.com] --&gt;|needs| C1[SSL Certificate]
+        C1 --&gt;|signed by| DC[DigiCert]
+    end
+
+    subgraph &quot;Example 2: Company Internal&quot;
+        APP1[Internal App] --&gt;|needs| C2[Internal Certificate]
+        DB[Database] --&gt;|needs| C3[Internal Certificate]
+        C2 &amp; C3 --&gt;|signed by| ICA[Company CA]
+    end
+
+    subgraph &quot;Example 3: Complex Service&quot;
+        LB[F5 Load Balancer] --&gt;|needs| C4[Wildcard Certificate]
+        S1[Server 1] &amp; S2[Server 2] --&gt;|need| C5[Server Certificates]
+        API[API Gateway] --&gt;|needs| C6[API Certificate]
+        C4 --&gt;|signed by| GL[GlobalSign]
+        C5 &amp; C6 --&gt;|signed by| ICA
+    end
+
+    style W fill:#f9f,stroke:#333
+    style LB fill:#bbf,stroke:#333
+    style ICA fill:#bfb,stroke:#333
+</code></pre></div>
+<h3 id="real-world-examples">Real-World Examples<a class="headerlink" href="#real-world-examples" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Simple Online Shop</strong>
+   <div class="highlight"><pre><span></span><code>Situation: www.myshop.com
+What you need: SSL Certificate for your website
+Where to get it: DigiCert, Let&#39;s Encrypt, etc.
+
+What you&#39;ll receive:
+1. Your certificate (myshop_com.crt)
+2. Your private key (myshop_com.key)
+3. Intermediate certificate (DigiCert_intermediate.crt)
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Company Internal Applications</strong>
+   <div class="highlight"><pre><span></span><code>Situation: Internal HR system hr.internal.company.com
+What you need: Internal SSL Certificate
+Options:
+1. Buy from CA (expensive for internal use)
+2. Create your own CA (common for internal use)
+
+If creating own CA:
+1. Root CA certificate (keep extremely secure!)
+2. Intermediate CA certificate (for signing)
+3. Server certificates (for each service)
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Complex Service with Load Balancer</strong>
+   <div class="highlight"><pre><span></span><code>Situation: Large service with F5
+What you need:
+1. Certificate for F5 VIP (*.company.com)
+2. Certificates for backend servers
+
+Example structure:
+- F5 Load Balancer: *.company.com
+  └─ api.company.com points to:
+     ├─ backend1.internal
+     ├─ backend2.internal
+     └─ backend3.internal
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="understanding-certificate-types">Understanding Certificate Types<a class="headerlink" href="#understanding-certificate-types" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Public-facing Services</strong>
+   <div class="highlight"><pre><span></span><code>If your service is: public website
+You need: SSL certificate from trusted CA
+Example providers: DigiCert, Let&#39;s Encrypt
+What you&#39;ll get:
+- Certificate file (.crt)
+- Private key file (.key)
+- Intermediate certificate
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Internal Services</strong>
+   <div class="highlight"><pre><span></span><code>If your service is: internal application
+You need: Internal certificate from your company CA
+What you&#39;ll get:
+- Service certificate
+- Internal CA certificate (for trust)
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Multiple Servers Same Service</strong>
+   <div class="highlight"><pre><span></span><code>Two options:
+1. Same certificate for all:
+   - Easier to manage
+   - Less secure
+
+2. Different certificates for each:
+   - More secure
+   - More complex to manage
+
+Example F5 setup:
+- F5: wildcard cert *.company.com
+- Backend servers: individual certificates
+  server1.internal.company.com
+  server2.internal.company.com
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="common-confusion-points-explained">Common Confusion Points Explained<a class="headerlink" href="#common-confusion-points-explained" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Why Intermediate Certificates?</strong>
+   <div class="highlight"><pre><span></span><code>Chain of Trust:
+Browser -&gt; DigiCert Root CA -&gt; DigiCert Intermediate -&gt; Your Certificate
+
+Like a chain of references:
+- Browser trusts DigiCert
+- DigiCert trusts their Intermediate
+- Intermediate signs your certificate
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Public vs Private CA</strong>
+   <div class="highlight"><pre><span></span><code>Public CA (like DigiCert):
+- Trusted by browsers
+- Costs money
+- Good for public services
+
+Private CA (your company):
+- Not trusted by browsers
+- Free to create certificates
+- Good for internal services
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Different Types of Certificates</strong>
+   <div class="highlight"><pre><span></span><code>Single Domain: www.company.com
+Wildcard: *.company.com
+Multi-domain: company.com, www.company.com, shop.company.com
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="example-of-complex-setup">Example of Complex Setup<a class="headerlink" href="#example-of-complex-setup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Company Service Setup:
+1. Public website (www.company.com)
+   └─ Public SSL from DigiCert
+
+2. Load Balancer
+   └─ Wildcard cert *.company.com
+
+3. Internal Services
+   ├─ HR system (hr.internal)
+   ├─ Finance app (finance.internal)
+   └─ All using internal CA certificates
+
+What you maintain:
+1. Public certificates (from DigiCert)
+2. Company CA for internal certs
+3. Individual service certificates
+4. Load balancer certificates
+</code></pre></div>
+<h3 id="ca-storage-architecture">CA Storage Architecture<a class="headerlink" href="#ca-storage-architecture" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>graph TD
+    subgraph &quot;Secure Environment / HSM&quot;
+        ROOT[Root CA]
+    end
+
+    subgraph &quot;Certificate Authority Server&quot;
+        INT[Intermediate CA]
+    end
+
+    subgraph &quot;Production Environment&quot;
+        N1[Node 1] &amp; N2[Node 2] &amp; N3[Node 3] &amp; N4[Node 4] &amp; N5[Node 5] &amp; N6[Node 6]
+    end
+
+    subgraph &quot;Load Balancer - F5&quot;
+        LB1[LB Certificate]
+        VIP1[Virtual IP 1]
+        VIP2[Virtual IP 2]
+    end
+
+    ROOT --&gt;|signs| INT
+    INT --&gt;|issues certificates| N1 &amp; N2 &amp; N3 &amp; N4 &amp; N5 &amp; N6
+    INT --&gt;|issues certificate| LB1
+    LB1 --- VIP1 &amp; VIP2
+    VIP1 --&gt;|forwards to| N1 &amp; N2 &amp; N3
+    VIP2 --&gt;|forwards to| N4 &amp; N5 &amp; N6
+
+    style ROOT fill:#f9f,stroke:#333
+    style INT fill:#bbf,stroke:#333
+    style LB1 fill:#bfb,stroke:#333
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>graph TD
+    subgraph &quot;Certificate Structure&quot;
+        CERT[Certificate] --&gt; PK[Public Key]
+        CERT --&gt; DN[Domain Name]
+        CERT --&gt; EXP[Expiry Date]
+        CERT --&gt; SIG[Digital Signature]
+    end
+
+    subgraph &quot;Storage Types&quot;
+        KEY[Private Key] --&gt; KS[Keystore]
+        CERT --&gt; KS
+        CA[CA Certificate] --&gt; TS[Truststore]
+    end
+
+    style CERT fill:#f9f,stroke:#333
+    style KS fill:#bbf,stroke:#333
+    style TS fill:#bfb,stroke:#333
+</code></pre></div></p>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<p>Digital certificates are essential for securing communications and establishing trust in computer networks. This document provides detailed instructions for manual certificate operations and management.</p>
+<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
+<h3 id="certificate-components">Certificate Components<a class="headerlink" href="#certificate-components" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Private Key</strong>: Used for encryption and signing</li>
+<li><strong>Public Key</strong>: Used for decryption and verification</li>
+<li><strong>Digital Signature</strong>: Verifies certificate authenticity</li>
+<li><strong>Validity Period</strong>: Defines certificate lifetime</li>
+<li><strong>Subject</strong>: Entity the certificate is issued to</li>
+<li><strong>Issuer</strong>: Entity that issued the certificate</li>
+<li><strong>Serial Number</strong>: Unique identifier</li>
+<li><strong>Extensions</strong>: Additional certificate properties</li>
+</ul>
+<h3 id="digital-signatures">Digital Signatures<a class="headerlink" href="#digital-signatures" title="Permanent link">&para;</a></h3>
+<p>Example of a digital signature in a certificate:
+<div class="highlight"><pre><span></span><code>Signature Algorithm: sha256WithRSAEncryption
+45:bd:1e:ab:c4:12:3f:55:8f:9a:2d:3c:76:91:0f:43:1e:0a
+b4:91:e7:88:5f:e2:1b:33:87:5d:bc:91:8c:7f:b2:0e:3d:84
+</code></pre></div></p>
+<h2 id="types-of-storage">Types of Storage<a class="headerlink" href="#types-of-storage" title="Permanent link">&para;</a></h2>
+<h3 id="keystore-p12-pfx-jks">Keystore (.p12, .pfx, .jks)<a class="headerlink" href="#keystore-p12-pfx-jks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Stores private keys and certificates</li>
+<li>Password protected</li>
+<li>Used for server authentication</li>
+<li>Common formats:</li>
+<li>PKCS#12 (.p12, .pfx)</li>
+<li>Java Keystore (.jks)</li>
+</ul>
+<h3 id="truststore-jks-p12">Truststore (.jks, .p12)<a class="headerlink" href="#truststore-jks-p12" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Stores trusted CA certificates</li>
+<li>Used for client verification</li>
+<li>Can use same formats as keystore</li>
+<li>Typically contains only public certificates</li>
+</ul>
+<h2 id="manual-certificate-operations">Manual Certificate Operations<a class="headerlink" href="#manual-certificate-operations" title="Permanent link">&para;</a></h2>
+<h3 id="1-creating-a-root-ca">1. Creating a Root CA<a class="headerlink" href="#1-creating-a-root-ca" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create directory structure</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/ca/<span class="o">{</span>root-ca,intermediate-ca<span class="o">}</span>/<span class="o">{</span>private,certs,newcerts,crl<span class="o">}</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/ca/<span class="o">{</span>root-ca,intermediate-ca<span class="o">}</span>/csr
+touch<span class="w"> </span>~/ca/<span class="o">{</span>root-ca,intermediate-ca<span class="o">}</span>/index.txt
+<span class="nb">echo</span><span class="w"> </span><span class="m">1000</span><span class="w"> </span>&gt;<span class="w"> </span>~/ca/<span class="o">{</span>root-ca,intermediate-ca<span class="o">}</span>/serial
+
+<span class="c1"># Generate root CA private key</span>
+openssl<span class="w"> </span>genrsa<span class="w"> </span>-aes256<span class="w"> </span>-out<span class="w"> </span>~/ca/root-ca/private/ca.key<span class="w"> </span><span class="m">4096</span>
+
+<span class="c1"># Create root CA certificate</span>
+openssl<span class="w"> </span>req<span class="w"> </span>-config<span class="w"> </span>openssl.cnf<span class="w"> </span>-key<span class="w"> </span>~/ca/root-ca/private/ca.key<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-new<span class="w"> </span>-x509<span class="w"> </span>-days<span class="w"> </span><span class="m">7300</span><span class="w"> </span>-sha256<span class="w"> </span>-extensions<span class="w"> </span>v3_ca<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-out<span class="w"> </span>~/ca/root-ca/certs/ca.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-subj<span class="w"> </span><span class="s2">&quot;/C=RU/ST=Moscow/L=Moscow/O=MyCompany/CN=Root CA&quot;</span>
+</code></pre></div>
+<h3 id="2-creating-an-intermediate-ca">2. Creating an Intermediate CA<a class="headerlink" href="#2-creating-an-intermediate-ca" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate intermediate CA key</span>
+openssl<span class="w"> </span>genrsa<span class="w"> </span>-aes256<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-out<span class="w"> </span>~/ca/intermediate-ca/private/intermediate.key<span class="w"> </span><span class="m">4096</span>
+
+<span class="c1"># Create CSR for intermediate CA</span>
+openssl<span class="w"> </span>req<span class="w"> </span>-config<span class="w"> </span>openssl.cnf<span class="w"> </span>-new<span class="w"> </span>-sha256<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-key<span class="w"> </span>~/ca/intermediate-ca/private/intermediate.key<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-out<span class="w"> </span>~/ca/intermediate-ca/csr/intermediate.csr<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-subj<span class="w"> </span><span class="s2">&quot;/C=RU/ST=Moscow/L=Moscow/O=MyCompany/CN=Intermediate CA&quot;</span>
+
+<span class="c1"># Sign intermediate certificate with root CA</span>
+openssl<span class="w"> </span>ca<span class="w"> </span>-config<span class="w"> </span>openssl.cnf<span class="w"> </span>-extensions<span class="w"> </span>v3_intermediate_ca<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-days<span class="w"> </span><span class="m">3650</span><span class="w"> </span>-notext<span class="w"> </span>-md<span class="w"> </span>sha256<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-in<span class="w"> </span>~/ca/intermediate-ca/csr/intermediate.csr<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-out<span class="w"> </span>~/ca/intermediate-ca/certs/intermediate.crt
+</code></pre></div>
+<h3 id="3-creating-server-certificates">3. Creating Server Certificates<a class="headerlink" href="#3-creating-server-certificates" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate private key</span>
+openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>server.key<span class="w"> </span><span class="m">2048</span>
+
+<span class="c1"># Create CSR</span>
+openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>server.key<span class="w"> </span>-out<span class="w"> </span>server.csr<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-subj<span class="w"> </span><span class="s2">&quot;/C=RU/ST=Moscow/L=Moscow/O=MyCompany/CN=myserver.com&quot;</span>
+
+<span class="c1"># Sign with intermediate CA</span>
+openssl<span class="w"> </span>ca<span class="w"> </span>-config<span class="w"> </span>openssl.cnf<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-extensions<span class="w"> </span>server_cert<span class="w"> </span>-days<span class="w"> </span><span class="m">375</span><span class="w"> </span>-notext<span class="w"> </span>-md<span class="w"> </span>sha256<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-in<span class="w"> </span>server.csr<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-out<span class="w"> </span>server.crt
+</code></pre></div>
+<h3 id="4-creating-client-certificates">4. Creating Client Certificates<a class="headerlink" href="#4-creating-client-certificates" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate client key</span>
+openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>client.key<span class="w"> </span><span class="m">2048</span>
+
+<span class="c1"># Create client CSR</span>
+openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>client.key<span class="w"> </span>-out<span class="w"> </span>client.csr<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-subj<span class="w"> </span><span class="s2">&quot;/C=RU/ST=Moscow/L=Moscow/O=MyCompany/CN=user@example.com&quot;</span>
+
+<span class="c1"># Sign with intermediate CA</span>
+openssl<span class="w"> </span>ca<span class="w"> </span>-config<span class="w"> </span>openssl.cnf<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-extensions<span class="w"> </span>usr_cert<span class="w"> </span>-days<span class="w"> </span><span class="m">375</span><span class="w"> </span>-notext<span class="w"> </span>-md<span class="w"> </span>sha256<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-in<span class="w"> </span>client.csr<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-out<span class="w"> </span>client.crt
+</code></pre></div>
+<h2 id="working-with-different-formats">Working with Different Formats<a class="headerlink" href="#working-with-different-formats" title="Permanent link">&para;</a></h2>
+<h3 id="1-pkcs12-p12-operations">1. PKCS#12 (.p12) Operations<a class="headerlink" href="#1-pkcs12-p12-operations" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create PKCS#12 file</span>
+openssl<span class="w"> </span>pkcs12<span class="w"> </span>-export<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-in<span class="w"> </span>server.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-inkey<span class="w"> </span>server.key<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-out<span class="w"> </span>keystore.p12<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-name<span class="w"> </span><span class="s2">&quot;server-alias&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-chain<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-CAfile<span class="w"> </span>chain.pem
+
+<span class="c1"># View PKCS#12 content</span>
+openssl<span class="w"> </span>pkcs12<span class="w"> </span>-info<span class="w"> </span>-in<span class="w"> </span>keystore.p12
+
+<span class="c1"># Extract certificate from PKCS#12</span>
+openssl<span class="w"> </span>pkcs12<span class="w"> </span>-in<span class="w"> </span>keystore.p12<span class="w"> </span>-nokeys<span class="w"> </span>-out<span class="w"> </span>cert.pem
+
+<span class="c1"># Extract private key from PKCS#12</span>
+openssl<span class="w"> </span>pkcs12<span class="w"> </span>-in<span class="w"> </span>keystore.p12<span class="w"> </span>-nocerts<span class="w"> </span>-out<span class="w"> </span>key.pem
+</code></pre></div>
+<h3 id="2-java-keystore-jks-operations">2. Java Keystore (.jks) Operations<a class="headerlink" href="#2-java-keystore-jks-operations" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Convert PKCS#12 to JKS</span>
+keytool<span class="w"> </span>-importkeystore<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-srckeystore<span class="w"> </span>keystore.p12<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-srcstoretype<span class="w"> </span>PKCS12<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-destkeystore<span class="w"> </span>keystore.jks<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-deststoretype<span class="w"> </span>JKS
+
+<span class="c1"># List certificates in JKS</span>
+keytool<span class="w"> </span>-list<span class="w"> </span>-v<span class="w"> </span>-keystore<span class="w"> </span>keystore.jks
+
+<span class="c1"># Import certificate into JKS</span>
+keytool<span class="w"> </span>-import<span class="w"> </span>-trustcacerts<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-file<span class="w"> </span>server.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-alias<span class="w"> </span>server-alias<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-keystore<span class="w"> </span>keystore.jks
+
+<span class="c1"># Export certificate from JKS</span>
+keytool<span class="w"> </span>-export<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-alias<span class="w"> </span>server-alias<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-file<span class="w"> </span>server.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-keystore<span class="w"> </span>keystore.jks
+</code></pre></div>
+<h3 id="3-pem-format-operations">3. PEM Format Operations<a class="headerlink" href="#3-pem-format-operations" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Convert DER to PEM</span>
+openssl<span class="w"> </span>x509<span class="w"> </span>-inform<span class="w"> </span>der<span class="w"> </span>-in<span class="w"> </span>certificate.der<span class="w"> </span>-out<span class="w"> </span>certificate.pem
+
+<span class="c1"># Convert PEM to DER</span>
+openssl<span class="w"> </span>x509<span class="w"> </span>-outform<span class="w"> </span>der<span class="w"> </span>-in<span class="w"> </span>certificate.pem<span class="w"> </span>-out<span class="w"> </span>certificate.der
+
+<span class="c1"># Combine certificate and key into PEM</span>
+cat<span class="w"> </span>server.crt<span class="w"> </span>server.key<span class="w"> </span>&gt;<span class="w"> </span>combined.pem
+
+<span class="c1"># Create certificate chain</span>
+cat<span class="w"> </span>server.crt<span class="w"> </span>intermediate.crt<span class="w"> </span>root.crt<span class="w"> </span>&gt;<span class="w"> </span>fullchain.pem
+</code></pre></div>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="1-certificate-verification">1. Certificate Verification<a class="headerlink" href="#1-certificate-verification" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify certificate against CA</span>
+openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>ca.crt<span class="w"> </span>server.crt
+
+<span class="c1"># Verify certificate chain</span>
+openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>server.crt
+
+<span class="c1"># Check certificate expiration</span>
+openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-noout<span class="w"> </span>-enddate
+
+<span class="c1"># View certificate details</span>
+openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-text<span class="w"> </span>-noout
+</code></pre></div>
+<h3 id="2-common-issues">2. Common Issues<a class="headerlink" href="#2-common-issues" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check private key matches certificate</span>
+openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
+openssl<span class="w"> </span>rsa<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>server.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
+
+<span class="c1"># Test SSL connection</span>
+openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host:port<span class="w"> </span>-showcerts
+
+<span class="c1"># Check certificate chain order</span>
+openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host:port<span class="w"> </span>-showcerts<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text
+</code></pre></div>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="1-key-management">1. Key Management<a class="headerlink" href="#1-key-management" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Use strong key sizes (RSA 2048+ bits)</li>
+<li>Protect private keys (chmod 600)</li>
+<li>Regular key rotation</li>
+<li>Secure backup procedures</li>
+</ul>
+<h3 id="2-certificate-organization">2. Certificate Organization<a class="headerlink" href="#2-certificate-organization" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Recommended directory structure</span>
+/etc/ssl/
+├──<span class="w"> </span>certs/<span class="w">          </span><span class="c1"># Public certificates</span>
+├──<span class="w"> </span>private/<span class="w">        </span><span class="c1"># Private keys</span>
+└──<span class="w"> </span>ca/<span class="w">             </span><span class="c1"># CA certificates</span>
+<span class="w">    </span>├──<span class="w"> </span>root/
+<span class="w">    </span>└──<span class="w"> </span>intermediate/
+</code></pre></div>
+<h3 id="3-security-measures">3. Security Measures<a class="headerlink" href="#3-security-measures" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Use secure protocols (TLS 1.2+)</li>
+<li>Regular security audits</li>
+<li>Monitor certificate expiration</li>
+<li>Implement certificate revocation</li>
+<li>Document all procedures</li>
+</ul>
+<h3 id="4-certificate-renewal">4. Certificate Renewal<a class="headerlink" href="#4-certificate-renewal" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check expiration date</span>
+openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-noout<span class="w"> </span>-enddate
+
+<span class="c1"># Create new CSR using existing key</span>
+openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>server.key<span class="w"> </span>-out<span class="w"> </span>server_new.csr
+
+<span class="c1"># Sign new certificate</span>
+openssl<span class="w"> </span>ca<span class="w"> </span>-config<span class="w"> </span>openssl.cnf<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-extensions<span class="w"> </span>server_cert<span class="w"> </span>-days<span class="w"> </span><span class="m">375</span><span class="w"> </span>-notext<span class="w"> </span>-md<span class="w"> </span>sha256<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-in<span class="w"> </span>server_new.csr<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-out<span class="w"> </span>server_new.crt
+</code></pre></div>
+<h3 id="5-backup-procedures">5. Backup Procedures<a class="headerlink" href="#5-backup-procedures" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Backup certificates and keys</span>
+tar<span class="w"> </span>czf<span class="w"> </span>certs_backup.tar.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--transform<span class="w"> </span><span class="s1">&#39;s,^,cert_backup/,&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>/etc/ssl/certs/*<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>/etc/ssl/private/*<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>/etc/ssl/ca/*
+
+<span class="c1"># Encrypt backup</span>
+openssl<span class="w"> </span>enc<span class="w"> </span>-aes-256-cbc<span class="w"> </span>-salt<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-in<span class="w"> </span>certs_backup.tar.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-out<span class="w"> </span>certs_backup.tar.gz.enc
+</code></pre></div>
+<h2 id="internal-certificate-usage">Internal Certificate Usage<a class="headerlink" href="#internal-certificate-usage" title="Permanent link">&para;</a></h2>
+<h3 id="internal-usage-flow">Internal Usage Flow<a class="headerlink" href="#internal-usage-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>graph TD
+    subgraph &quot;Internal Network&quot;
+        ES1[Elasticsearch Node 1] &lt;--&gt;|SSL| ES2[Elasticsearch Node 2]
+        ES1 &lt;--&gt;|SSL| ES3[Elasticsearch Node 3]
+        ES2 &lt;--&gt;|SSL| ES3
+        KB[Kibana] --&gt;|SSL| ES1
+        LB[Logstash] --&gt;|SSL| ES2
+    end
+
+    subgraph &quot;Certificate Management&quot;
+        CA[Internal CA] --&gt;|signs| CERT1[Node 1 Cert]
+        CA --&gt;|signs| CERT2[Node 2 Cert]
+        CA --&gt;|signs| CERT3[Node 3 Cert]
+        CA --&gt;|signs| CERTK[Kibana Cert]
+        CA --&gt;|signs| CERTL[Logstash Cert]
+    end
+
+    style CA fill:#f9f,stroke:#333
+    style ES1 fill:#bbf,stroke:#333
+    style ES2 fill:#bbf,stroke:#333
+    style ES3 fill:#bbf,stroke:#333
+</code></pre></div>
+<h3 id="what-is-internal-usage">What is Internal Usage?<a class="headerlink" href="#what-is-internal-usage" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Certificates used within a closed network or organization</li>
+<li>No external client trust required</li>
+<li>Used for internal service communication</li>
+</ul>
+<h3 id="examples-of-internal-usage">Examples of Internal Usage<a class="headerlink" href="#examples-of-internal-usage" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Data encryption between Elastic Stack nodes (Transport Layer)</li>
+<li>Internal client-server communication (e.g., Kibana → Elasticsearch)</li>
+<li>DevOps automation (e.g., Jenkins, Ansible)</li>
+</ol>
+<h3 id="why-self-signed-certificates-work-for-internal-use">Why Self-Signed Certificates Work for Internal Use<a class="headerlink" href="#why-self-signed-certificates-work-for-internal-use" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Cost-effective and easily generated</li>
+<li>Suitable for isolated or secure networks</li>
+<li>Pre-configured trust relationships</li>
+</ul>
+<h3 id="internal-setup-configuration">Internal Setup Configuration<a class="headerlink" href="#internal-setup-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Example Elasticsearch SSL configuration</span>
+<span class="nt">xpack.security.transport.ssl</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">verification_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">certificate</span>
+<span class="w">  </span><span class="nt">certificate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/node.crt</span>
+<span class="w">  </span><span class="nt">certificate_authorities</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;/path/to/ca.crt&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/node.key</span>
+</code></pre></div>
+<h2 id="certificate-verification-and-checks">Certificate Verification and Checks<a class="headerlink" href="#certificate-verification-and-checks" title="Permanent link">&para;</a></h2>
+<h3 id="viewing-certificate-content">Viewing Certificate Content<a class="headerlink" href="#viewing-certificate-content" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># View certificate details</span>
+openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-text<span class="w"> </span>-noout
+
+<span class="c1"># Check certificate expiration</span>
+openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-noout<span class="w"> </span>-enddate
+</code></pre></div>
+<h3 id="trust-chain-verification">Trust Chain Verification<a class="headerlink" href="#trust-chain-verification" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify against CA</span>
+openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>rootCA.crt<span class="w"> </span>server.crt
+
+<span class="c1"># Verify certificate chain</span>
+openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>server.crt
+</code></pre></div>
+<h3 id="keystoretruststore-content-verification">Keystore/Truststore Content Verification<a class="headerlink" href="#keystoretruststore-content-verification" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check PKCS#12 content</span>
+openssl<span class="w"> </span>pkcs12<span class="w"> </span>-info<span class="w"> </span>-in<span class="w"> </span>keystore.p12<span class="w"> </span>-password<span class="w"> </span>pass:yourpassword
+
+<span class="c1"># Check JKS content</span>
+keytool<span class="w"> </span>-list<span class="w"> </span>-keystore<span class="w"> </span>truststore.jks<span class="w"> </span>-storepass<span class="w"> </span>yourpassword
+</code></pre></div>
+<h3 id="chain-file-management">Chain File Management<a class="headerlink" href="#chain-file-management" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>chain.pem</strong>: Contains full certificate chain (Root CA and intermediates)</li>
+<li>Order matters: server certificate → intermediate CA → root CA</li>
+</ul>
+<h3 id="certificate-chain-visualization">Certificate Chain Visualization<a class="headerlink" href="#certificate-chain-visualization" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>graph TD
+    ROOT[Root CA] --&gt;|signs| INT[Intermediate CA]
+    INT --&gt;|signs| SERVER[Server Certificate]
+
+    subgraph &quot;Verification Process&quot;
+        V1[Verify Server Cert] --&gt;|using| INT
+        V2[Verify Intermediate] --&gt;|using| ROOT
+    end
+
+    style ROOT fill:#f9f,stroke:#333
+    style INT fill:#bbf,stroke:#333
+    style SERVER fill:#bfb,stroke:#333
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
