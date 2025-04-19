@@ -12,16 +12,21 @@ Observability is the ability to understand what's happening inside your systems 
 2. **Logs** - Detailed records of events that occurred
 3. **Traces** - Following requests as they travel through distributed systems
 
-```mermaid
+<div class="mermaid">
 graph TD
-    A[Observability] --> B[Metrics]
+    A[Monitoring] --> B[Metrics]
     A --> C[Logs]
-    A --> D[Traces]
-    style A fill:#f96,stroke:#333
-    style B fill:#99f,stroke:#333
-    style C fill:#99f,stroke:#333
-    style D fill:#99f,stroke:#333
-```
+    A --> D[Tracing]
+    
+    B --> B1[Prometheus]
+    B --> B2[TICK]
+    
+    C --> C1[ELK]
+    C --> C2[Loki]
+    
+    D --> D1[Tempo]
+    D --> D2[Jaeger]
+</div>
 
 **Example:** A user reports that your application is slow. With proper observability:
 - **Metrics** tell you that database latency spiked right when the issue occurred 
@@ -184,7 +189,7 @@ This configuration tells Prometheus to scrape metrics from both server1 and serv
 
 The pull approach has several benefits, illustrated with this diagram:
 
-```mermaid
+<div class="mermaid">
 graph LR
     A[Prometheus Server] -->|Pull metrics| B[Web Servers]
     A -->|Pull metrics| C[Database Servers]
@@ -193,7 +198,7 @@ graph LR
     style B fill:#99f,stroke:#333
     style C fill:#99f,stroke:#333
     style D fill:#99f,stroke:#333
-```
+</div>
 
 - **Centralized control**: Configuration is managed in one place
   
@@ -375,7 +380,7 @@ Since Prometheus doesn't have built-in security features, you need to implement 
 
 #### 1. Network-level Security
 
-```mermaid
+<div class="mermaid">
 graph LR
     A[Internet] -->|Blocked| B[Firewall]
     B -->|Allowed| C[Internal Network]
@@ -384,7 +389,7 @@ graph LR
     style B fill:#f96,stroke:#333
     style C fill:#ddf,stroke:#333
     style D fill:#99f,stroke:#333
-```
+</div>
 
 **Best practices:**
 - Run Prometheus on a private network
@@ -400,14 +405,14 @@ iptables -A INPUT -p tcp --dport 9090 -j DROP                  # Block everythin
 
 #### 2. Reverse Proxy Authentication
 
-```mermaid
+<div class="mermaid">
 graph LR
     A[User] -->|HTTPS + Auth| B[Reverse Proxy]
     B -->|HTTP| C[Prometheus]
     style A fill:#ddf,stroke:#333
     style B fill:#f96,stroke:#333
     style C fill:#99f,stroke:#333
-```
+</div>
 
 **Best practices:**
 - Place Prometheus behind a reverse proxy (Nginx, Apache)
@@ -481,14 +486,14 @@ Be careful about what data is exposed in metrics:
 
 Exporters are specialized applications that collect metrics from a specific system and expose them in Prometheus format. They bridge the gap between systems that don't natively support Prometheus and the Prometheus server.
 
-```mermaid
+<div class="mermaid">
 graph LR
     A[System/Application] -->|Native metrics| B[Exporter]
     B -->|Prometheus format| C[Prometheus Server]
     style A fill:#ddf,stroke:#333
     style B fill:#fdd,stroke:#333
     style C fill:#f96,stroke:#333
-```
+</div>
 
 **Example:** MySQL doesn't natively expose Prometheus metrics. The MySQL Exporter connects to the database, collects various statistics (connections, queries, cache hits, etc.), and exposes them in Prometheus format for scraping.
 
@@ -738,8 +743,8 @@ For environments where local storage isn't sufficient:
    ```
    
    **Common federation pattern:**
-   ```mermaid
-   graph TD
+<div class="mermaid">
+graph TD
      A[Global Prometheus] -->|Federates from| B[Region A Prometheus]
      A -->|Federates from| C[Region B Prometheus]
      B -->|Scrapes| D[Region A Services]
@@ -749,7 +754,7 @@ For environments where local storage isn't sufficient:
      style C fill:#99f,stroke:#333
      style D fill:#ddf,stroke:#333
      style E fill:#ddf,stroke:#333
-   ```
+</div>
 
 2. **Remote Storage Integration**
    - Send metrics to external long-term storage
@@ -778,7 +783,7 @@ For environments where local storage isn't sufficient:
    - Support for object storage backends (S3, GCS)
    
    **Thanos architecture:**
-   ```mermaid
+<div class="mermaid">
    graph TD
      A[Thanos Querier] -->|Queries| B[Thanos Store Gateway]
      A -->|Queries| C[Prometheus + Thanos Sidecar]
@@ -788,7 +793,7 @@ For environments where local storage isn't sufficient:
      style B fill:#99f,stroke:#333
      style C fill:#99f,stroke:#333
      style D fill:#ddf,stroke:#333
-   ```
+</div>
    
    **When to use:** When you need global querying, high availability, and long-term storage for Prometheus metrics.
 

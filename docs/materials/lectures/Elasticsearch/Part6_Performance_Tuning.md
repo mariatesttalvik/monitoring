@@ -3,7 +3,8 @@
 ## 1. Performance Basics
 
 ### What affects performance?
-```mermaid
+
+<div class="mermaid">
 graph TD
     A[Performance] --> B[Hardware]
     A --> C[Configuration]
@@ -12,7 +13,7 @@ graph TD
     B --> F[CPU]
     B --> G[Memory]
     B --> H[Disk]
-```
+</div>
 
 ### Key Metrics Table
 

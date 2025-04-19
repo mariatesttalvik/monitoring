@@ -23,13 +23,13 @@ Indekseerimine on protsess, mille käigus teie andmed salvestatakse Elasticsearc
 - **Index (Indeks)**: Indeks on nagu andmebaas traditsioonilistes relatsioonilistes andmebaasides. See on kogum dokumente, millel on ühsugused omadused.
 - **Document (Dokument)**: Dokument on põhiline üksus, mida saab indekseerida. See on JSON-formaadis ja sisaldab andmeväljasid koos vastavate väärtustega.
 
-```mermaid
+<div class="mermaid">
 graph TD
     A[Document] --> B[Analysis]
     B --> C[Tokenization]
     C --> D[Index]
     D --> E[Searchable Data]
-```
+</div>
 
 ## Query Types Overview (Päringutüübid)
 
@@ -102,14 +102,14 @@ Otsing Elasticsearchis hõlmab dokumentide kättesaamist, mis vastavad konkreets
 - **Range Query (Vahemiku päring):** Otsib dokumente, mille väljad sisaldavad väärtusi määratud vahemikus.
 - **Bool Query (Booli päring):** Võimaldab kombineerida mitmeid päringu tingimusi (AND, OR, NOT).
 
-```mermaid
+<div class="mermaid">
 graph TD
     A[Client Request] --> B[Query Parsing]
     B --> C[Query Execution]
     C --> D[Document Matching]
     D --> E[Scoring]
     E --> F[Results]
-```
+</div>
 
 ## Aggregations (Agregeerimised)
 

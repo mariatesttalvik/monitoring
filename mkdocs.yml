@@ -4,6 +4,7 @@ theme:
   name: material
   features:
   # Navigation
+  - mermaid
   - navigation.tabs # Top-level sections as tabs
   - navigation.top # Back-to-top button
   - navigation.expand # Left sidebar sections expanded
@@ -48,7 +49,10 @@ plugins:
 - search
 - git-revision-date-localized:
     fallback_to_build_date: true
-- mermaid2
+
+extra_javascript:
+- https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js
+- js/extra.js
 
 nav:
 - Home: index.md

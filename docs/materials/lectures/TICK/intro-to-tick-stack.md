@@ -24,8 +24,7 @@ TICK Stack on avatud lähtekoodiga tarkvara kogum, mis on mõeldud ajaseeria and
 - **C**hronograf - visuaalne kasutajaliides (Visualization)
 - **K**apacitor - andmete töötlemise ja häirete süsteem (Processing)
 
-![TICK components](
-https://itcommunity.stanford.edu/sites/default/files/unconference/attachments/2019-11/tick_stack_components.png)
+![TICK components](https://itcommunity.stanford.edu/sites/default/files/unconference/attachments/2019-11/tick_stack_components.png)
 
 ## TICK Stack komponendid tabelina
 
@@ -36,8 +35,7 @@ https://itcommunity.stanford.edu/sites/default/files/unconference/attachments/20
 | **Chronograf** | Visualiseerimine | Grafana, Kibana, Datadog UI | 8888 |
 | **Kapacitor** | Andmetöötlus ja häired | Prometheus Alertmanager, Nagios, ElastAlert | 9092 |
 
-![TICK components 2](
-https://www.innodeed.com/wp-content/uploads/2023/02/tick-stack-Vs-elk-stack-1-1024x576.png)
+![TICK components 2](https://miro.medium.com/v2/resize:fit:720/format:webp/0*Ku-ohmJKRGswMqhH.png)
 
 ## Andmetüübid, mida saab jälgida
 
