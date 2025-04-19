@@ -5,34 +5,34 @@
   - [Sisukord](#sisukord)
 - [1. Sissejuhatus Linux logimisse](#1-sissejuhatus-linux-logimisse)
   - [Mis on logimine?](#mis-on-logimine)
-  - [Logimise tähtsus Linux süsteemides](#logimise-tähtsus-linux-süsteemides)
+  - [Logimise tahtsus Linux süsteemides](#logimise-tahtsus-linux-süsteemides)
   - [Logimise ajalugu Linuxis](#logimise-ajalugu-linuxis)
-- [2. Linux logimise põhikomponendid](#2-linux-logimise-põhikomponendid)
+- [2. Linux logimise pohikomponendid](#2-linux-logimise-pohikomponendid)
   - [2.1 rsyslog](#21-rsyslog)
   - [2.2 logrotate](#22-logrotate)
   - [2.3 journald](#23-journald)
   - [2.4 auditd](#24-auditd)
   - [2.5 abrtd](#25-abrtd)
   - [2.6 kdump](#26-kdump)
-  - [2.7 Kokkuvõte](#27-kokkuvõte)
+  - [2.7 Kokkuvote](#27-kokkuvote)
 - [3. Logifailide haldamine](#3-logifailide-haldamine)
   - [3.1 Logide vaatamine](#31-logide-vaatamine)
   - [3.2 Logides otsimine](#32-logides-otsimine)
-    - [Keerukamad otsingud ja analüüsid](#keerukamad-otsingud-ja-analüüsid)
+    - [Keerukamad otsingud ja analuusid](#keerukamad-otsingud-ja-analuusid)
   - [3.3 Logide roteerumine](#33-logide-roteerumine)
 - [4. Keskne logiserver](#4-keskne-logiserver)
   - [4.1 Keskse logiserveri eelised](#41-keskse-logiserveri-eelised)
   - [4.2 Keskse logiserveri seadistamine](#42-keskse-logiserveri-seadistamine)
-- [5. Logide indekseerimine ja analüüs](#5-logide-indekseerimine-ja-analüüs)
-  - [5.1 Indekseerimise põhimõtted](#51-indekseerimise-põhimõtted)
+- [5. Logide indekseerimine ja analuus](#5-logide-indekseerimine-ja-analuus)
+  - [5.1 Indekseerimise pohimotted](#51-indekseerimise-pohimotted)
   - [5.2 Indeksi struktuur Linuxis](#52-indeksi-struktuur-linuxis)
     - [Elasticsearch'i indeksi struktuur:](#elasticsearchi-indeksi-struktuur)
     - [Indeksi kasutamine:](#indeksi-kasutamine)
     - [Indeksi eelised:](#indeksi-eelised)
 - [6. Parimad praktikad Linux logimises](#6-parimad-praktikad-linux-logimises)
   - [6.1 Turvalisus](#61-turvalisus)
-  - [6.2 Jõudlus](#62-jõudlus)
-  - [6.3 Säilitamine ja arhiveerimine](#63-säilitamine-ja-arhiveerimine)
+  - [6.2 Joudlus](#62-joudlus)
+  - [6.3 Sailitamine ja arhiveerimine](#63-sailitamine-ja-arhiveerimine)
 
 # 1. Sissejuhatus Linux logimisse
 
@@ -56,7 +56,7 @@ Näide logisõnumist:
 May 7 10:23:45 myserver sshd[12345]: Failed password for invalid user test from 192.168.1.100 port 54321 ssh2
 ```
 
-## Logimise tähtsus Linux süsteemides
+## Logimise tahtsus Linux süsteemides
 Logimine on kriitilise tähtsusega mitmel põhjusel:
 
 1. **Vigade tuvastamine ja lahendamine**
@@ -107,7 +107,7 @@ Logimine on kriitilise tähtsusega mitmel põhjusel:
 2010 - systemd (koos journald'iga) tutvustamine
 ```
 
-# 2. Linux logimise põhikomponendid
+# 2. Linux logimise pohikomponendid
 
 ## 2.1 rsyslog
 
@@ -289,7 +289,7 @@ Kasutage `crash` utiliiti mälutõmmise analüüsimiseks:
 crash /usr/lib/debug/lib/modules/$(uname -r)/vmlinux /var/crash/127.0.0.1-2019-03-15-11:32:23/vmcore
 ```
 
-## 2.7 Kokkuvõte
+## 2.7 Kokkuvote
 
 Nende tööriistade kombinatsioon - rsyslog, logrotate, journald, auditd, abrtd ja kdump - moodustab tervikliku logimise ja süsteemi monitoorimise lahenduse Linuxis. Igal tööriistal on oma spetsiifiline roll:
 
@@ -342,7 +342,7 @@ Efektiivseks logide analüüsiks on vajalik oskus neis otsida:
   ```bash
   awk '/error/ {print $1, $2, $3}' /var/log/syslog
   ```
-### Keerukamad otsingud ja analüüsid
+### Keerukamad otsingud ja analuusid
 
 Linuxi käsurea tööriistad võimaldavad teha ka keerukamaid otsinguid ja analüüse, kombineerides erinevaid käske. Näiteks:
 
@@ -439,9 +439,9 @@ See konfiguratsioon tagab, et Nginx logid roteeritakse regulaarselt, säilitades
    ```
 3. Tulemüüri seadistamine, et lubada logiliiklus
 
-# 5. Logide indekseerimine ja analüüs
+# 5. Logide indekseerimine ja analuus
 
-## 5.1 Indekseerimise põhimõtted
+## 5.1 Indekseerimise pohimotted
 
 - Kiire otsing suurtes logikogumites
 - Struktureeritud andmete salvestamine
@@ -540,14 +540,14 @@ Indekseerimine muudab logide haldamise ja analüüsi Linuxis oluliselt efektiivs
 - Jälgi logisid regulaarselt kahtlase tegevuse suhtes
 - Kasuta turvalist protokolli (nagu TLS) logide edastamiseks võrgus
 
-## 6.2 Jõudlus
+## 6.2 Joudlus
 
 - Optimeeri logimise taset, et vältida liigset infot
 - Kasuta efektiivseid logimismeetodeid (nt. journald)
 - Monitoori logimise mõju süsteemi ressurssidele
 - Kasuta logide pööramist, et vältida suuri logifaile
 
-## 6.3 Säilitamine ja arhiveerimine
+## 6.3 Sailitamine ja arhiveerimine
 
 - Määra selge logide säilitamise poliitika
 - Arhiveeri vanad logid pikaajalise säilitamise jaoks
