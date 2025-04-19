@@ -30,7 +30,7 @@ Feel free to explore in any order if you're more experienced. Happy learning!
 ---
 
 ### Additional Sections for Easy Access:
-- **[Linux Logging Fundamentals](fundamentals/intro-to-linux-logging.md)**  
+- **[Linux logging fundamentals](materials/lectures/Linux/intro-to-linux-logging.md)**  
 - **[Prometheus Labs](labs/02_prometheus/lab02_prometheus_part1.md)**  
 - **[Observability Overview](materials/lectures/Observability/intro_logging_monitoring_observability.md)**
 

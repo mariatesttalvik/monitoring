@@ -28,9 +28,9 @@ plugins:
 nav:
 - Home: index.md
 
-- Fundamentals:
-  - Intro to Linux Logging: fundamentals/intro-to-linux-logging.md
-  - Logging, Monitoring, Observability: fundamentals/intro-to-logging-monitoring-observability.md
+- Observability:
+  - Foundations: materials/lectures/Observability/intro_logging_monitoring_observability.md
+  - Wrap-Up: materials/lectures/Observability/wrap-up-observability.md
 
 - Final Project:
   - Overview: final_project/final_project_building_monsystem.md
