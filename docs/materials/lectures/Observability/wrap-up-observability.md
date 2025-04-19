@@ -274,5 +274,3 @@ graph TD
 - 👥 Stack Overflow
 - 👥 Reddit
 - 👥 Discord
-
-This overview encapsulates the key aspects of modern monitoring solutions, helping guide decisions based on specific needs and circumstances.

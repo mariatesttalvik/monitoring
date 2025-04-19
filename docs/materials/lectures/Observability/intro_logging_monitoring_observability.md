@@ -1,22 +1,6 @@
-Siin on tõlge eesti keelde, säilitades kogu Markdown-formaadi, logid, URL-id ja jättes alles professionaalse tooni IT-õppijatele:
-
 # 🔍 Sissejuhatus logimisesse, seiresse ja vaatlusesse
 
 > 💡 "Kaasaegses IT-maailmas ei ole süsteemi tervise pimeduses olemine valik"
-
-## 📚 Sisukord
-
-- [Mis on logimine?](#what-is-logging)
-- [Mis on seire?](#what-is-monitoring)
-- [Mis on vaatlus?](#what-is-observability)
-- [Mis on jälgimine?](#what-is-tracing)
-- [Logimise ja seire tähtsus](#the-importance)
-- [Ajalugu ja areng](#history)
-- [Logihalduse protsessid](#processes)
-- [Linuxi logimise tööriistad](#linux-tools)
-- [Seire ja vaatluse tööriistad](#monitoring-tools)
-
----
 
 # 🌟 Sissejuhatus
 

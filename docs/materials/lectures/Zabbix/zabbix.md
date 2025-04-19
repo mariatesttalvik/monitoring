@@ -1,4 +1,3 @@
-# Zabbix
 ## Zabbix. Paigaldamine ja seadistamine
 
 - Zabbixi ajalugu ja arhitektuur
