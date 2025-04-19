@@ -134,8 +134,6 @@ nav:
     - Zabbix Overview: materials/lectures/Zabbix/zabbix.md
     - Zabbix Reading: materials/lectures/Zabbix/zabbix_reading.md
 
-- Observability Wrap-Up: materials/lectures/Observability/wrap-up-observability.md
-
 - Resources:
   - GitHub Guide: resources/github-guide.md
   - DigitalOcean Account: resources/konto-digital_ocean.md
