@@ -1,80 +1,68 @@
 # Lecture 7: Elasticsearch Monitoring and Alerting
 
-- [Lecture 7: Elasticsearch Monitoring and Alerting](#lecture-7-elasticsearch-monitoring-and-alerting)
-  - [Sissejuhatus](#sissejuhatus)
-  - [Jälgimistööriistad](#jälgimistööriistad)
-    - [1. Elasticsearch Monitooringu API](#1-elasticsearch-monitooringu-api)
-    - [2. Prometheus](#2-prometheus)
-    - [3. Grafana](#3-grafana)
-  - [Põhilised Mõõdikud](#põhilised-mõõdikud)
-    - [Klastri Tervise Indikaatorid](#klastri-tervise-indikaatorid)
-  - [Täiendavad Võimalused](#täiendavad-võimalused)
-    - [Anomaaliate Tuvastamine](#anomaaliate-tuvastamine)
-    - [Soovitatavad Häiresignaalide Lävend](#soovitatavad-häiresignaalide-lävend)
+## Introduction
+Monitoring the health and performance of an Elasticsearch cluster is critical for maintaining system reliability and efficiency. This lecture introduces the key tools and techniques for monitoring Elasticsearch and setting up alerting mechanisms.
 
-## Sissejuhatus
-Elasticsearch'i klastri tervise ja jõudluse jälgimine on süsteemi usaldusväärsuse ja tõhususe säilitamisel ülioluline. See loeng tutvustab peamisi tööriistu ja tehnikaid Elasticsearch'i jälgimiseks ning häiresignaalide seadistamiseks.
+## Monitoring Tools
 
-## Jälgimistööriistad
+### 1. Elasticsearch Monitoring API
 
-### 1. Elasticsearch Monitooringu API
-
-| Funktsioon | Kirjeldus |
-|------------|-----------|
-| Peamine otstarve | Sisseehitatud API klastri tervise ja jõudluse jälgimiseks |
-| Põhimõõdikud | Node'ide statistika, indeksite jõudlus, JVM mälukasutus |
-| Kasutamine | API päringud tõrkeotsinguks ja jõudluse optimeerimiseks |
+| Feature         | Description                                             |
+|-----------------|---------------------------------------------------------|
+| Main Purpose    | Built-in API for monitoring cluster health and performance |
+| Key Metrics     | Node statistics, index performance, JVM memory usage     |
+| Usage           | API queries for troubleshooting and performance optimization |
 
 ### 2. Prometheus
 
-| Omadus | Kirjeldus |
-|---------|-----------|
-| Tüüp | Avatud lähtekoodiga jälgimis- ja hoiatussüsteem |
-| Võimalused | Kogub mõõdikuid ja salvestab ajaseeria andmebaasi |
-| Integratsioon | Konfigureeritav Elasticsearch API-ga ühendumiseks |
+| Feature         | Description                                             |
+|-----------------|---------------------------------------------------------|
+| Type            | Open-source monitoring and alerting system              |
+| Capabilities    | Collects metrics and stores them in a time-series database |
+| Integration     | Configurable to connect with Elasticsearch API           |
 
 ### 3. Grafana
 
-| Funktsioon | Kirjeldus |
-|------------|-----------|
-| Otstarve | Visualiseerimis- ja analüütikaplatvorm |
-| Võimalused | Kohandatud armatuurlauad ja hoiatused |
-| Kasutamine | Ühendub Prometheusega reaalajas visualiseerimiseks |
+| Feature         | Description                                             |
+|-----------------|---------------------------------------------------------|
+| Purpose         | Visualization and analytics platform                    |
+| Capabilities    | Custom dashboards and alerts                            |
+| Usage           | Connects with Prometheus for real-time visualization    |
 
-## Põhilised Mõõdikud
+## Key Metrics
 
 ```mermaid
 graph TB
-    A[Klastri Tervis] --> B[Roheline: Terve]
-    A --> C[Kollane: Riskis]
-    A --> D[Punane: Kriitiline]
+    A[Cluster Health] --> B[Green: Healthy]
+    A --> C[Yellow: At Risk]
+    A --> D[Red: Critical]
     
-    E[Põhilised Mõõdikud] --> F[Node Statistika]
-    E --> G[Indeksi Jõudlus]
-    E --> H[Otsingu Latentsus]
+    E[Key Metrics] --> F[Node Statistics]
+    E --> G[Index Performance]
+    E --> H[Search Latency]
     
-    F --> I[JVM Mälukasutus]
-    F --> J[CPU Koormus]
-    F --> K[Ketta I/O]
+    F --> I[JVM Memory Usage]
+    F --> J[CPU Load]
+    F --> K[Disk I/O]
 ```
 
-### Klastri Tervise Indikaatorid
+### Cluster Health Indicators
 
-| Staatus | Kirjeldus | Tegevus |
-|---------|-----------|----------|
-| 🟢 Roheline | Täielikult toimiv | Tavapärane jälgimine |
-| 🟡 Kollane | Mõned probleemid | Uurimine vajalik |
-| 🟥 Punane | Kriitilised probleemid | Kohene sekkumine |
+| Status | Description              | Action Required     |
+|--------|--------------------------|---------------------|
+| 🟢 Green  | Fully functional         | Regular monitoring  |
+| 🟡 Yellow | Some issues detected     | Investigation needed |
+| 🟥 Red    | Critical issues detected | Immediate intervention |
 
-## Täiendavad Võimalused
+## Advanced Features
 
-### Anomaaliate Tuvastamine
+### Anomaly Detection
 
 ```javascript
-// Näide anomaalia tuvastamise reeglist
+// Example anomaly detection rule
 {
   "monitor": {
-    "name": "JVM mälu anomaalia",
+    "name": "JVM memory anomaly",
     "type": "metric",
     "schedule": "0 */5 * * * ?",
     "inputs": [{
@@ -91,7 +79,7 @@ graph TB
       }
     }],
     "triggers": [{
-      "name": "JVM mälu kõrge",
+      "name": "High JVM memory usage",
       "severity": "high",
       "condition": {
         "script": {
@@ -103,11 +91,11 @@ graph TB
 }
 ```
 
-### Soovitatavad Häiresignaalide Lävend
+### Recommended Alert Thresholds
 
-| Mõõdik | Hoiatus | Kriitiline |
-|--------|----------|------------|
-| CPU Kasutus | > 75% | > 90% |
-| Mälu Kasutus | > 80% | > 90% |
-| Ketta Kasutus | > 75% | > 85% |
-| Otsingu Latentsus | > 500ms | > 1000ms |
+| Metric           | Warning Threshold | Critical Threshold |
+|------------------|-------------------|--------------------|
+| CPU Usage        | > 75%             | > 90%              |
+| Memory Usage     | > 80%             | > 90%              |
+| Disk Usage       | > 75%             | > 85%              |
+| Search Latency   | > 500ms           | > 1000ms           |

@@ -1,7 +1,5 @@
 ### Guide to Certificates, Keystore, Truststore, and CA
 
----
-
 ### 1. Introduction
 Digital certificates are a key element in ensuring security when using Elastic Stack. They are used for:
 - Data encryption (SSL/TLS).

@@ -1,17 +1,5 @@
 # Splunk Overview
 
-- [Splunk Overview](#splunk-overview)
-  - [Introduction to Splunk](#introduction-to-splunk)
-    - [Key Use Cases:](#key-use-cases)
-  - [Splunk Architecture](#splunk-architecture)
-  - [Splunk Pricing](#splunk-pricing)
-    - [Example of Splunk Pricing Based on Data Volume](#example-of-splunk-pricing-based-on-data-volume)
-  - [Main Features of Splunk](#main-features-of-splunk)
-  - [Comparison with Other Monitoring Tools](#comparison-with-other-monitoring-tools)
-  - [Benefits of Using Splunk](#benefits-of-using-splunk)
-  - [Challenges and Considerations](#challenges-and-considerations)
-  - [Conclusion](#conclusion)
-
 ## Introduction to Splunk
 Splunk is a powerful platform for collecting, analyzing, and visualizing machine-generated data in real-time. It is widely used for IT operations, security, and business analytics.
 

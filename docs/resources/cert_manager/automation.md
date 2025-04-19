@@ -1,11 +1,5 @@
 # Certificate Automation with GitLab and Ansible
 
-## Table of Contents
-1. [GitLab CI/CD Configuration](#gitlab-cicd-configuration)
-2. [Storing Certificates in GitLab](#storing-certificates-in-gitlab)
-3. [Ansible Integration](#ansible-integration)
-4. [Deployment Examples](#deployment-examples)
-
 ## Automation Flow
 
 ```mermaid

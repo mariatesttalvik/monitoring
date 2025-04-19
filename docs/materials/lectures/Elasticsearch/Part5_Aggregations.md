@@ -1,28 +1,17 @@
 # Lecture 5: Elasticsearch Agregatsioonid
 
-- [Lecture 5: Elasticsearch Agregatsioonid](#lecture-5-elasticsearch-agregatsioonid)
-    - [1. Sissejuhatus Agregatsionidesse](#1-sissejuhatus-agregatsionidesse)
-      - [1.1 Mis on Elasticsearch agregatsioonid?](#11-mis-on-elasticsearch-agregatsioonid)
-      - [1.2 Põhilised kasutusjuhud](#12-põhilised-kasutusjuhud)
-    - [2. Agregatsiooni Tüübid](#2-agregatsiooni-tüübid)
-      - [2.1 Meetrika Agregatsioonid](#21-meetrika-agregatsioonid)
-      - [2.2 Bucketing Agregatsioonid](#22-bucketing-agregatsioonid)
-    - [3. Praktiline Näide: Müügiandmete Analüüs](#3-praktiline-näide-müügiandmete-analüüs)
-    - [4. Visualiseerimine Kibanas](#4-visualiseerimine-kibanas)
-    - [5. Harjutused](#5-harjutused)
-
 ### 1. Sissejuhatus Agregatsionidesse
 
 #### 1.1 Mis on Elasticsearch agregatsioonid?
 
-Agregatsioonid on Elasticsearchi võimas funktsioon, mis võimaldab andmeid reaalajas analüüsida ja koondada. Need on võrreldavad SQL-i GROUP BY operatsioonidega, kuid pakuvad märksa rohkem võimalusi.
+Agregatsioonid on Elasticsearchi võimas funktsioon, mis võimaldab andmeid reaalajas analüüsida ja koondada. Need on võrreldavad SQL-i `GROUP BY` operatsioonidega, kuid pakuvad märksa rohkem võimalusi.
 
-| Omadus | Kirjeldus |
-|--------|-----------|
-| Reaalajas töötlus | Tulemused arvutatakse päringute ajal |
-| Paindlikkus | Võimalik kombineerida erinevaid agregatsioone |
-| Skaleeruvus | Töötab efektiivselt suurte andmemahtudega |
-| Täpsus | Võimaldab täpset analüütikat |
+| Omadus           | Kirjeldus                              |
+|------------------|----------------------------------------|
+| Reaalajas töötlus | Tulemused arvutatakse päringute ajal  |
+| Paindlikkus      | Võimalik kombineerida erinevaid agregatsioone |
+| Skaleeruvus      | Töötab efektiivselt suurte andmemahtudega |
+| Täpsus           | Võimaldab täpset analüütikat          |
 
 #### 1.2 Põhilised kasutusjuhud
 
@@ -45,12 +34,12 @@ Agregatsioonid on Elasticsearchi võimas funktsioon, mis võimaldab andmeid reaa
 
 Meetrika agregatsioonid arvutavad numbrilisi väärtusi dokumentide põhjal.
 
-| Agregatsioon | Kirjeldus | Näide |
-|--------------|-----------|--------|
-| avg | Keskmine väärtus | Toodete keskmine hind |
-| sum | Summa | Päeva müügitulu |
-| min/max | Miinimum/maksimum | Madalaim/kõrgeim temperatuur |
-| stats | Põhilised statistikud | Täielik ülevaade hindadest |
+| Agregatsioon | Kirjeldus         | Näide                  |
+|--------------|-------------------|------------------------|
+| avg          | Keskmine väärtus   | Toodete keskmine hind  |
+| sum          | Summa             | Päeva müügitulu        |
+| min/max      | Miinimum/maksimum  | Madalaim/kõrgeim temperatuur |
+| stats        | Põhilised statistikud | Täielik ülevaade hindadest |
 
 #### 2.2 Bucketing Agregatsioonid
 
@@ -96,14 +85,14 @@ Vaatame reaalset näidet e-poe müügiandmete analüüsist:
 
 Kibana võimaldab agregatsioone visualiseerida erinevate diagrammidena:
 
-- Tulpdiagrammid (müük kategooriate kaupa)
-- Joondiagrammid (ajalised trendid)
-- Sektordiagrammid (turuosad)
-- Soojuskaardid (geograafiline jaotus)
+- **Tulpdiagrammid** (müük kategooriate kaupa)
+- **Joondiagrammid** (ajalised trendid)
+- **Sektordiagrammid** (turuosad)
+- **Soojuskaardid** (geograafiline jaotus)
 
 ### 5. Harjutused
 
-1. Põhiline agregatsioon:
+1. **Põhiline agregatsioon:**
    ```json
    // Leia keskmine tellimuse suurus
    {
@@ -117,7 +106,7 @@ Kibana võimaldab agregatsioone visualiseerida erinevate diagrammidena:
    }
    ```
 
-2. Kompleksne agregatsioon:
+2. **Kompleksne agregatsioon:**
    ```json
    // Analüüsi müüke piirkondade ja toodete lõikes
    {

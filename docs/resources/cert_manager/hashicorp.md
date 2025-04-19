@@ -1,11 +1,5 @@
 # HashiCorp Vault Integration for Certificate Management
 
-## Table of Contents
-1. [Vault Setup](#vault-setup)
-2. [Ansible Integration](#ansible-integration)
-3. [GitLab Integration](#gitlab-integration)
-4. [Common Patterns](#common-patterns)
-
 ## Vault Integration Architecture
 
 ```mermaid
