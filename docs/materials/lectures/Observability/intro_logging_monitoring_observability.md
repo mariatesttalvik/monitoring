@@ -694,7 +694,7 @@ Mõelge sellest kui GPS-st teie mikroteenuste jaoks:
 
 ### Praktiline rakendamine
 
-```mermaid
+<div class="mermaid">
 graph TB
     subgraph Phase1[Faas 1: Alus]
         A1[Põhilogimine]
@@ -723,7 +723,7 @@ graph TB
     classDef stepStyle fill:#fff,stroke:#666
     class Phase1,Phase2,Phase3 phaseStyle
     class A1,A2,A3,B1,B2,B3,C1,C2,C3 stepStyle
-```
+</div>
 
 ## Mis on jälgimine?
 

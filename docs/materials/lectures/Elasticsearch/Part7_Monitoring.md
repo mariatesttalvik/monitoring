@@ -31,7 +31,7 @@ Monitoring the health and performance of an Elasticsearch cluster is critical fo
 
 ## Key Metrics
 
-```mermaid
+<div class="mermaid">
 graph TB
     A[Cluster Health] --> B[Green: Healthy]
     A --> C[Yellow: At Risk]
@@ -44,7 +44,7 @@ graph TB
     F --> I[JVM Memory Usage]
     F --> J[CPU Load]
     F --> K[Disk I/O]
-```
+</div>
 
 ### Cluster Health Indicators
 

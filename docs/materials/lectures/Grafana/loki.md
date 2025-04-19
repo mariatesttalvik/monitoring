@@ -19,7 +19,8 @@ Loki töötab kolmes põhietapis:
 Siin on lihtne diagramm, mis näitab, kuidas Loki töötab:
 
 ![@loki-architecture](https://grafana.com/static/img/logs/loki-tabs-with-console.svg)
-```mermaid
+
+<div class="mermaid">
 flowchart TB
     subgraph "Andmete kogumine"
         A[Rakendused ja teenused] --> B[Promtail kogumisgent]
@@ -47,7 +48,7 @@ flowchart TB
     class A,B green
     class C,D,E,F,G blue
     class H purple
-```
+</div>
 
 ## Loki vs teised lahendused - võrdlus
 

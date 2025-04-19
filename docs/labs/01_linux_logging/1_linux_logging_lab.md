@@ -7,7 +7,8 @@ We'll build a centralized logging system using:
 - rsyslog for log management
 
 ### What We'll Build
-```mermaid
+
+<div class="mermaid">
 flowchart TD
     subgraph Client["Client VM (VM2)"]
         A[Log Generator] --> B[Local rsyslog]
@@ -19,7 +20,7 @@ flowchart TD
     end
 
     B -->|Forward Logs| F
-```
+</div>
 
 ## Part 1: Environment Setup (30-45 minutes)
 

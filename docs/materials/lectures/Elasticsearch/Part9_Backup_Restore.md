@@ -2,7 +2,7 @@
 
 ## Basic Concepts Visualization
 
-```mermaid
+<div class="mermaid">
 graph LR
     A[Elasticsearch Cluster] --> B[Snapshot]
     B --> C[Repository]
@@ -11,7 +11,7 @@ graph LR
     C --> F[File System]
     C --> G[Cloud Storage]
     C --> H[Shared Storage]
-```
+</div>
 
 ## Key Terms
 
@@ -201,7 +201,7 @@ POST /_snapshot/my_backup/_verify
 
 ## Monitoring Dashboard
 
-```mermaid
+<div class="mermaid">
 gantt
     title Backup Schedule Overview
     dateFormat  YYYY-MM-DD
@@ -212,7 +212,7 @@ gantt
     Full Backup + Cleanup :2024-01-07, 1d
     section Monthly
     Retention Check      :2024-01-30, 1d
-```
+</div>
 
 ---
 
