@@ -1,20 +1,6 @@
-# Lecture 2: Elasticsearch Data Modeling and Indexing
+# Loeng 2: Elasticsearchi andmemodelleerimise ja indekseerimise alused
 
-- [Lecture 2: Elasticsearch Data Modeling and Indexing](#lecture-2-elasticsearch-data-modeling-and-indexing)
-    - [**Elasticsearchi andmemodelleerimise alused**](#elasticsearchi-andmemodelleerimise-alused)
-      - [**Skeemitus struktuur (Schema-less Design)**](#skeemitus-struktuur-schema-less-design)
-      - [**JSON-põhised dokumendid**](#json-põhised-dokumendid)
-      - [**Dünaamiline ja eksplitsiitne skeem (Dynamic and Explicit Mapping)**](#dünaamiline-ja-eksplitsiitne-skeem-dynamic-and-explicit-mapping)
-    - [**Elasticsearchi andmetüüpide ülevaade**](#elasticsearchi-andmetüüpide-ülevaade)
-    - [**Indekseerimine ja CRUD-tegevused**](#indekseerimine-ja-crud-tegevused)
-      - [**Dokumentide indekseerimine (Indexing Documents)**](#dokumentide-indekseerimine-indexing-documents)
-      - [**Dokumentide päring**](#dokumentide-päring)
-      - [**Dokumentide uuendamine**](#dokumentide-uuendamine)
-      - [**Dokumentide kustutamine**](#dokumentide-kustutamine)
-    - [**Pesastatud dokumendid ja dünaamilised mallid**](#pesastatud-dokumendid-ja-dünaamilised-mallid)
-    - [**Jõudluse optimeerimine**](#jõudluse-optimeerimine)
-
-### **Elasticsearchi andmemodelleerimise alused**
+## Elasticsearchi andmemodelleerimise alused
 
 ![Elasticsearch Clusters](https://s3.amazonaws.com/media-p.slid.es/uploads/239568/images/5067910/es_clusters.jpg)
 
@@ -22,7 +8,7 @@
 
 Elasticsearchi andmemodelleerimine on protsess, mille käigus struktuuritakse andmeid selliselt, et need oleksid tõhusalt salvestatavad ja hõlpsasti otsitavad. Võrreldes traditsiooniliste relatsioonandmebaasidega pakub Elasticsearch rohkem paindlikkust ja võimalust hallata suuri, mitmekesiseid andmemahtusid.
 
-#### **Skeemitus struktuur (Schema-less Design)**
+## Skeemitus struktuur (Schema-less Design)
 
 ![Legacy and Up-to-Date Entities in NoSQL Databases](https://figures.semanticscholar.org/fbf995276f7454aaed71c2172040932cb636f901/1-Figure1-1.png)
 
@@ -30,14 +16,15 @@ Elasticsearchi andmemodelleerimine on protsess, mille käigus struktuuritakse an
 
 Elasticsearch järgib nn skeemitut lähenemist, mis tähendab, et enne andmete indekseerimist ei ole vaja kindlaks määrata jäika skeemi. See võimaldab samas indeksis salvestada erineva struktuuriga dokumente. Kuid kuigi see lähenemine on paindlik, võib dünaamiline skeem mõnikord viia ootamatute tulemusteni, seega on oluline mõista, kuidas Elasticsearch automaatselt tüüpe tuvastab.
 
-#### **JSON-põhised dokumendid**
+## JSON-põhised dokumendid
+
 ![Elasticsearch Data Mapping](https://aravind.dev/static/3768f3f352da47aad193daae9e2df260/c0566/es-data-mapping.png)
 
 *Source: [Aravind's Blog](https://aravind.dev/static/3768f3f352da47aad193daae9e2df260/c0566/es-data-mapping.png)*
 
 Elasticsearchis esitatakse andmed JSON-dokumentidena. Iga dokument esindab üksikut objekti või kirjet, kus andmed on määratletud võtme-väärtuse paaridena. Näiteks toodete kataloogi loomisel võib iga dokument sisaldada toote nime, hinda, kategooriat ja saadavust.
 
-#### **Dünaamiline ja eksplitsiitne skeem (Dynamic and Explicit Mapping)**
+## Dünaamiline ja eksplitsiitne skeem (Dynamic and Explicit Mapping)
 
 Kui dokumente indekseeritakse ilma spetsiaalse skeemita, loob Elasticsearch automaatselt dünaamilise skeemi, määrates andmetüüpidele sobivad väärtused. See on mugav, kuid keerukamate otsingute või analüüside puhul on kasulikum määratleda eksplitsiitne skeem. Eksplitsiitne skeem võimaldab täpselt kontrollida, kuidas andmeväljad on indekseeritud ja analüüsitud, parandades otsingutulemuste asjakohasust ja jõudlust.
 
@@ -45,7 +32,7 @@ Kui dokumente indekseeritakse ilma spetsiaalse skeemita, loob Elasticsearch auto
 
 *Source: [Elasticsearch Arbitrary Data Visualization](https://smnh.me/resized-images/elasticsearch/)*
 
-### **Elasticsearchi andmetüüpide ülevaade**
+## Elasticsearchi andmetüüpide ülevaade
 
 Elasticsearch toetab mitmesuguseid andmetüüpe, mis võimaldavad erinevaid otsingu- ja analüüsivõimalusi. Peamised tüübid on:
 
@@ -59,9 +46,9 @@ Elasticsearch toetab mitmesuguseid andmetüüpe, mis võimaldavad erinevaid otsi
 
 *Source: [Understanding Elasticsearch Field Datatypes](https://medium.com/your-article-link-here)*
 
-### **Indekseerimine ja CRUD-tegevused**
+## Indekseerimine ja CRUD-tegevused
 
-#### **Dokumentide indekseerimine (Indexing Documents)**
+### Dokumentide indekseerimine (Indexing Documents)
 
 Dokumentide indekseerimine on protsess, kus JSON-põhised dokumendid lisatakse Elasticsearchi indeksisse. Näiteks järgmine päring lisab toote nimega "Juhtmevaba hiir":
 
@@ -82,14 +69,14 @@ POST /tooted/_doc/1
 
 [Elasticsearch Index Management Guide](https://www.elastic.co/guide/en/elasticsearch/reference/current/index-mgmt.html)
 
-#### **Dokumentide päring**
+### Dokumentide päring
 
 Andmete otsimiseks kasutatakse GET-meetodit. Näiteks järgmine päring otsib ülaltoodud dokumendi:
 ```bash
 GET /tooted/_doc/1
 ```
 
-#### **Dokumentide uuendamine**
+### Dokumentide uuendamine
 
 Dokumentide uuendamine võimaldab muuta olemasolevaid välju. Näiteks toote hinna muutmine:
 ```bash
@@ -101,14 +88,14 @@ POST /tooted/_doc/1/_update
 }
 ```
 
-#### **Dokumentide kustutamine**
+### Dokumentide kustutamine
 
 Dokumentide eemaldamiseks kasutatakse DELETE-meetodit. Näiteks:
 ```bash
 DELETE /tooted/_doc/1
 ```
 
-### **Pesastatud dokumendid ja dünaamilised mallid**
+## Pesastatud dokumendid ja dünaamilised mallid
 
 Pesastatud dokumente kasutatakse hierarhiliste andmestruktuuride, nagu toodete arvustuste, haldamiseks. Näiteks:
 
@@ -128,9 +115,10 @@ PUT /tooted/_mapping
 }
 ```
 
-### **Jõudluse optimeerimine**
+## Jõudluse optimeerimine
 
 Elasticsearchi jõudluse optimeerimiseks tuleks tähelepanu pöörata:
+
 1. Shardide ja replikaatide konfiguratsioonile.
 2. Kohandatud analüsaatorite määratlusele, mis võimaldavad tõhusat tekstianalüüsi.
 3. Jälgimisvahenditele, nagu `_cat/nodes` ja `_cluster/health`.

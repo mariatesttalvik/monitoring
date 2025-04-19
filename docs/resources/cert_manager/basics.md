@@ -1,14 +1,5 @@
 # Understanding Certificates, Keystore, and Truststore
 
-## Table of Contents
-1. [Introduction](#introduction)
-2. [Components](#components)
-3. [Types of Storage](#types-of-storage)
-4. [Manual Certificate Operations](#manual-certificate-operations)
-5. [Working with Different Formats](#working-with-different-formats)
-6. [Troubleshooting](#troubleshooting)
-7. [Best Practices](#best-practices)
-
 ## Certificate Distribution and Multi-Node Setup
 
 ### Understanding Certificate Complexity

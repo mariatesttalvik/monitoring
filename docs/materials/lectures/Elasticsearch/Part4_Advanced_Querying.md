@@ -1,77 +1,131 @@
 # Lecture 4: Elasticsearchi päringud
 
-- [Lecture 4: Elasticsearchi päringud](#lecture-4-elasticsearchi-päringud)
-  - [1. Query DSL põhikomponendid](#1-query-dsl-põhikomponendid)
-  - [2. Liitpäringud](#2-liitpäringud)
-  - [3. Täistekstotsing ja hägus otsing](#3-täistekstotsing-ja-hägus-otsing)
-  - [4. Lehekülgede kaupa kuvamine ja sorteerimine](#4-lehekülgede-kaupa-kuvamine-ja-sorteerimine)
-
-
 ## 1. Query DSL põhikomponendid
 
-Query DSL on Elasticsearchi enda päringukeel, mis võimaldab meil luua keerukaid otsinguid. See koosneb neljast põhikomponendist:
+Elasticsearchi Query DSL (Domain Specific Language) on võimas päringukeel, mis võimaldab luua keerukaid otsinguid ja filtreid. See koosneb neljast põhikomponendist:
 
 | Komponent | Kirjeldus | Näide |
 |-----------|-----------|--------|
-| Query | Põhiline otsingu element | `{"match": {...}}` |
-| Filter | Filtreerib tulemusi | `{"term": {...}}` |
-| Aggregations | Statistilised operatsioonid | `{"aggs": {...}}` |
-| Sort | Tulemuste sorteerimine | `{"sort": [...]}` |
+| Query | Põhiline otsingu element, mis arvutab iga dokumendi jaoks vastavusskoori | `{"match": {"field": "value"}}` |
+| Filter | Filtreerib dokumente ilma skoori arvutamata (kiirem kui query) | `{"term": {"status": "active"}}` |
+| Aggregations | Statistilised operatsioonid andmete kohta | `{"aggs": {"avg_price": {"avg": {"field": "price"}}}}` |
+| Sort | Tulemuste järjestamine | `{"sort": [{"price": {"order": "desc"}}]}` |
 
-Vaatame lihtsat Query DSL näidet:
+### Lihtsa päringu näide
+
 ```json
 {
   "query": {
     "match": {
-      "title": "Elasticsearch"
+      "log_message": "error"
     }
   }
 }
 ```
 
-See päring otsib kõiki dokumente, mille pealkirjas esineb sõna "Elasticsearch".
+See päring otsib kõiki dokumente, mille `log_message` väljal esineb sõna "error".
+
+### Terminipäring vs match päring
+
+Elasticsearchis on oluline mõista erinevust `term` ja `match` päringute vahel:
+
+- **Term päring**: Otsib täpset vastavust, ei analüüsi sisendteksti
+  ```json
+  {"term": {"field": "value"}}
+  ```
+
+- **Match päring**: Analüüsib sisendteksti enne otsingut, sobilik täistekstotsinguteks
+  ```json
+  {"match": {"field": "value"}}
+  ```
 
 ## 2. Liitpäringud
 
-Liitpäringud võimaldavad meil kombineerida mitu erinevat otsingutingimust. Need on eriti kasulikud keerukamate otsingute jaoks.
+Liitpäringud võimaldavad kombineerida mitu erinevat otsingutingimust. Kõige levinumad on bool päringud:
 
-| Päringu tüüp | Kirjeldus | Kasutus |
-|--------------|-----------|---------|
-| bool | Kombineerib mitu päringut | Keerukad otsingud |
-| must | Peab vastama kõigile tingimustele | AND operatsioon |
-| must_not | Ei tohi vastata tingimustele | NOT operatsioon |
-| should | Võib vastata tingimustele | OR operatsioon |
+| Bool operaator | Kirjeldus | Loogika |
+|----------------|-----------|---------|
+| must | Dokument peab vastama kõigile tingimustele | AND |
+| must_not | Dokument ei tohi vastata ühelegi tingimustele | NOT |
+| should | Dokument võib vastata tingimustele (suurendab skoori) | OR |
+| filter | Sarnane must'ile, aga ei mõjuta skoori | AND (ilma skoorita) |
 
-Näiteks kui soovime leida Elasticsearchi artikleid, millel on vähemalt 1000 vaatamist:
+### Bool päringu näide
+
 ```json
 {
   "query": {
     "bool": {
       "must": [
-        { "match": { "title": "Elasticsearch" }},
-        { "range": { "views": { "gte": 1000 }}}
+        { "match": { "service": "authentication" }},
+        { "match": { "level": "error" }}
+      ],
+      "must_not": [
+        { "match": { "environment": "test" }}
+      ],
+      "should": [
+        { "match": { "priority": "high" }}
+      ],
+      "filter": [
+        { "range": { "timestamp": { "gte": "now-1d" }}}
       ]
     }
   }
 }
 ```
 
+See päring:
+1. **Peab leidma** logid, kus teenus on "authentication" JA tase on "error"
+2. **Ei tohi leida** logisid, kus keskkond on "test"
+3. **Võiks leida** (eelistatud) logid, kus prioriteet on "high"
+4. **Filtreerib** ainult viimase päeva logid
+
 ## 3. Täistekstotsing ja hägus otsing
 
-Täistekstotsing on üks Elasticsearchi võimsamaid funktsioone. See võimaldab meil otsida teksti dokumentide sisust.
+Elasticsearchis on mitmeid võimalusi teksti otsinguteks, mis on olulised logide analüüsimisel.
 
-| Otsingu tüüp | Kasutus | Näide |
-|--------------|---------|--------|
-| Match | Tavaline tekstiotsing | `{"match": {"description": "otsing"}}` |
-| Fuzzy | Hägus otsing | `{"fuzzy": {"title": {"value": "elastik"}}}` |
+### Match päring
 
-Hägus otsing on eriti kasulik, kui kasutajad teevad trükivigu. Näiteks:
+Põhiline täistekstotsingu päring:
+
+```json
+{
+  "query": {
+    "match": {
+      "message": "connection refused"
+    }
+  }
+}
+```
+
+See otsib dokumente, kus väljal "message" on kas "connection" VÕI "refused".
+
+### Match phrase päring
+
+Kui vajad täpset fraasi samas järjekorras:
+
+```json
+{
+  "query": {
+    "match_phrase": {
+      "message": "connection refused"
+    }
+  }
+}
+```
+
+See otsib dokumente, kus "connection" ja "refused" esinevad kõrvuti, samas järjekorras.
+
+### Hägus otsing
+
+Hägus otsing on kasulik, kui otsinguterminites võib esineda trükivigu:
+
 ```json
 {
   "query": {
     "fuzzy": {
-      "title": {
-        "value": "elastiksearch",
+      "message": {
+        "value": "conection",
         "fuzziness": "AUTO"
       }
     }
@@ -79,30 +133,111 @@ Hägus otsing on eriti kasulik, kui kasutajad teevad trükivigu. Näiteks:
 }
 ```
 
-See päring leiab dokumendid isegi kui kasutaja kirjutas "Elasticsearch" valesti.
+See võib leida "connection", isegi kui otsingusõnas on trükiviga.
+
+| Fuzziness väärtus | Kirjeldus |
+|-------------------|-----------|
+| 0 | Täpne vaste |
+| 1 | Lubatud maksimaalselt 1 muudatus (tähe lisamine, eemaldamine või asendamine) |
+| 2 | Lubatud maksimaalselt 2 muudatust |
+| AUTO | Automaatselt määratud fuzziness sõna pikkuse põhjal |
 
 ## 4. Lehekülgede kaupa kuvamine ja sorteerimine
 
-Suurte andmehulkade puhul on oluline tulemusi lehekülgede kaupa kuvada ja sorteerida.
+Logide analüüsimisel on sageli vaja tulemusi lehekülgede kaupa kuvada ja sorteerida.
 
-| Parameeter | Kirjeldus | Vaikeväärtus |
-|------------|-----------|--------------|
-| from | Alguspositsioon | 0 |
-| size | Tulemuste arv | 10 |
-| sort | Sorteerimise väli | _score |
+### Lehekülgede kaupa kuvamine
 
-Näide kuidas kuvada 20 tehnoloogia kategooria artiklit, sorteerituna kuupäeva järgi:
 ```json
 {
-  "from": 0,
-  "size": 20,
-  "sort": [
-    { "date": { "order": "desc" }}
-  ],
+  "from": 0,  // Alguspositsioon
+  "size": 20, // Tulemuste arv
   "query": {
     "match": {
-      "category": "Technology"
+      "level": "error"
     }
   }
 }
 ```
+
+See päring tagastab esimesed 20 dokumenti, mis vastavad päringule.
+
+### Sorteerimine
+
+```json
+{
+  "sort": [
+    { "timestamp": { "order": "desc" }},
+    { "_score": { "order": "desc" }}
+  ],
+  "query": {
+    "match": {
+      "message": "error"
+    }
+  }
+}
+```
+
+See päring sorteerib tulemused esmalt ajatempli järgi kahanevas järjekorras, seejärel skoori järgi kahanevas järjekorras.
+
+### Väljad ja nende filtreerimine
+
+Kui tahad, et päring tagastaks ainult teatud väljad, saad kasutada `_source` parameetrit:
+
+```json
+{
+  "_source": ["timestamp", "level", "message"],
+  "query": {
+    "match_all": {}
+  }
+}
+```
+
+See päring tagastab kõigi dokumentide puhul ainult timestamp, level ja message väljad.
+
+## 5. Praktiline näide: logide otsing
+
+Kujutame ette, et meil on logid, kus on järgmised väljad:
+- timestamp: aja märge
+- service: teenuse nimi
+- level: logi tase (error, warn, info, debug)
+- message: logi sõnum
+- host: serveri nimi
+
+Otsime kõiki kriitilisi vigu mitmest teenusest viimase tunni jooksul:
+
+```json
+{
+  "size": 100,
+  "sort": [
+    { "timestamp": { "order": "desc" }}
+  ],
+  "_source": ["timestamp", "service", "level", "message", "host"],
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "level": "error" }}
+      ],
+      "should": [
+        { "match": { "message": "critical" }},
+        { "match": { "message": "failure" }},
+        { "match": { "message": "crashed" }}
+      ],
+      "minimum_should_match": 1,
+      "filter": [
+        { "terms": { "service": ["authentication", "payment", "database"] }},
+        { "range": { "timestamp": { "gte": "now-1h" }}}
+      ]
+    }
+  }
+}
+```
+
+See päring:
+1. Otsib error-tasemel logisid
+2. Annab kõrgema skoori logidele, mis sisaldavad "critical", "failure" või "crashed"
+3. Filtreerib ainult authentication, payment ja database teenuste logid
+4. Filtreerib ainult viimase tunni logid
+5. Tagastab kuni 100 tulemust
+6. Sorteerib tulemused ajatempli järgi kahanevas järjekorras
+7. Tagastab ainult olulisemad väljad

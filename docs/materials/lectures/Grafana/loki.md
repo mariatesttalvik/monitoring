@@ -1,16 +1,5 @@
 # Loki
 
-- [Loki](#loki)
-  - [Mis on Loki?](#mis-on-loki)
-  - [Loki arhitektuur lihtsas keeles](#loki-arhitektuur-lihtsas-keeles)
-  - [Loki vs teised lahendused - võrdlus](#loki-vs-teised-lahendused---võrdlus)
-  - [Miks Loki on nii populaarne?](#miks-loki-on-nii-populaarne)
-  - [LogQL päringute näited - kuidas logidest infot leida](#logql-päringute-näited---kuidas-logidest-infot-leida)
-  - [Kuidas Loki lisatud meiel?](#kuidas-loki-lisatud-meiel)
-  - [Nipid ja trikid](#nipid-ja-trikid)
-  - [Kasulikud lingid](#kasulikud-lingid)
-
-
 ## Mis on Loki?
 
 Loki on lahe tööriist, mis aitab koguda, säilitada ja uurida logisid - ehk siis teated, mida su rakendused ja programmid kirjutavad oma tegevuse kohta. Loki teeb selle mega-efektiivseks ja odavaks!
@@ -59,6 +48,7 @@ flowchart TB
     class C,D,E,F,G blue
     class H purple
 ```
+
 ## Loki vs teised lahendused - võrdlus
 
 | Võrdlus | Ilma Lokita | Lokiga |
@@ -98,7 +88,6 @@ sum(count_over_time({app="myapp", status="500"}[1h]))
 ```
 
 ## Kuidas Loki lisatud meiel?
-
 
 1. **Promtail konfiguratsioon** - `./data/promtail/config.yml` fail, mis sisaldab:
 

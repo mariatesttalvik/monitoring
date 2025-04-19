@@ -1,15 +1,6 @@
-# Lecture 3: Elasticsearch Otsing ja Päringud
+# Loeng 3: Elasticsearchi Otsing ja Päringud
 
-- [Lecture 3: Elasticsearch Otsing ja Päringud](#lecture-3-elasticsearch-otsing-ja-päringud)
-    - [Basic Search Concepts (Põhilised otsingukontseptsioonid)](#basic-search-concepts-põhilised-otsingukontseptsioonid)
-    - [Query Types Overview (Päringutüübid)](#query-types-overview-päringutüübid)
-    - [Common Query Examples:](#common-query-examples)
-    - [Aggregation Types and Use Cases](#aggregation-types-and-use-cases)
-    - [Relevance Scoring Components](#relevance-scoring-components)
-    - [Advanced Query Scenarios](#advanced-query-scenarios)
-    - [Best Practices Summary](#best-practices-summary)
-
-### Basic Search Concepts (Põhilised otsingukontseptsioonid)
+## Basic Search Concepts (Põhilised otsingukontseptsioonid)
 
 ![Indexing and Searching in Elasticsearch](https://cdn-gcp.new.marutitech.com/indexing_and_searching_in_elasticsearch_7df72c7685.png)
 
@@ -25,7 +16,8 @@ Põhilised otsingukontseptsioonid Elasticsearchis moodustavad otsingufunktsionaa
 | Performance | Optimized for search | General purpose |
 | Schema | Dynamic, flexible | Fixed |
 
-**1. Indexing (Indekseerimine):**
+## Indexing (Indekseerimine)
+
 Indekseerimine on protsess, mille käigus teie andmed salvestatakse Elasticsearchi struktureeritud formaadis. Elasticsearch korraldab andmeid indeksitesse, mis on sarnaste omadustega dokumentide loogilised kogumid. Iga dokument esindab üht andmeüksust ja see salvestatakse JSON-formaadis.
 
 - **Index (Indeks)**: Indeks on nagu andmebaas traditsioonilistes relatsioonilistes andmebaasides. See on kogum dokumente, millel on ühsugused omadused.
@@ -39,7 +31,7 @@ graph TD
     D --> E[Searchable Data]
 ```
 
-### Query Types Overview (Päringutüübid)
+## Query Types Overview (Päringutüübid)
 
 | Query Type | Description | Example Use Case | Complexity |
 |------------|-------------|-----------------|------------|
@@ -50,12 +42,13 @@ graph TD
 | Fuzzy Query | Approximate matching | Spell correction | Medium |
 | Prefix Query | Starts with pattern | Autocomplete | Low |
 
-**2. Querying (Päringud):**
+## Querying (Päringud)
+
 Kui andmed on indekseeritud, saate teha otsinguid konkreetsete dokumentide leidmiseks või andmete kokkuvõtteks. Elasticsearch pakub võimsat Query DSL-i (Domain Specific Language), et koostada päringu.
 
 - **Query DSL (Päringu DSL)**: Elasticsearchi päringu DSL on JSON-põhine keel, mida kasutatakse päringute määratlemiseks. See pakub laia valikut päringutüüpe ja valikuid andmete filtreerimiseks, agregeerimiseks ja sorteerimiseks.
 
-### Common Query Examples:
+### Common Query Examples
 
 ```json
 // Match Query
@@ -89,7 +82,7 @@ Kui andmed on indekseeritud, saate teha otsinguid konkreetsete dokumentide leidm
 }
 ```
 
-### Aggregation Types and Use Cases
+## Aggregation Types and Use Cases
 
 | Aggregation Type | Purpose | Example Use Case | Output Type |
 |-----------------|---------|------------------|-------------|
@@ -100,7 +93,8 @@ Kui andmed on indekseeritud, saate teha otsinguid konkreetsete dokumentide leidm
 | Stats | Statistical analysis | Price statistics | Multiple values |
 | Cardinality | Unique count | Unique visitors | Single value |
 
-**3. Searching (Otsing):**
+## Searching (Otsing)
+
 Otsing Elasticsearchis hõlmab dokumentide kättesaamist, mis vastavad konkreetsetele kriteeriumidele. Elasticsearch toetab erinevat tüüpi otsinguid, sealhulgas:
 
 - **Match Query (Match-päring):** Otsib dokumente, mis sisaldavad määratud terminit või termineid.
@@ -117,7 +111,8 @@ graph TD
     E --> F[Results]
 ```
 
-**4. Aggregations (Agregeerimised):**
+## Aggregations (Agregeerimised)
+
 Agregeerimised Elasticsearchis võimaldavad teil oma andmeid analüüsida ja saada ülevaateid. Agregeerimisi saab kasutada meetrikate arvutamiseks, histogrammide loomiseks ja palju muudeks.
 
 ```json
@@ -146,7 +141,7 @@ Agregeerimised Elasticsearchis võimaldavad teil oma andmeid analüüsida ja saa
 }
 ```
 
-### Relevance Scoring Components
+## Relevance Scoring Components
 
 | Component | Description | Impact on Score |
 |-----------|-------------|----------------|
@@ -155,7 +150,8 @@ Agregeerimised Elasticsearchis võimaldavad teil oma andmeid analüüsida ja saa
 | Field Length | Length of the field | Shorter = Better |
 | Boost Values | Custom importance multiplier | Manual control |
 
-**5. Relevance Scoring and Boosting (Relevantsuse skoorimine ja tõstmine):**
+## Relevance Scoring and Boosting (Relevantsuse skoorimine ja tõstmine)
+
 Elasticsearch arvutab iga päringu tagastatud dokumendi jaoks relevantsuse skoori, mis näitab, kui hästi see vastab otsingu kriteeriumidele. Relevantsuse skoori mõjutavad tegurid nagu terminite sagedus, välja pikkus ja terminite haruldus.
 
 ```json
@@ -177,7 +173,7 @@ Elasticsearch arvutab iga päringu tagastatud dokumendi jaoks relevantsuse skoor
 
 *Source: [Maruti Tech](https://cdn-gcp.new.marutitech.com)*
 
-### Advanced Query Scenarios
+## Advanced Query Scenarios
 
 | Scenario | Query Type | Example |
 |----------|------------|---------|
@@ -188,7 +184,7 @@ Elasticsearch arvutab iga päringu tagastatud dokumendi jaoks relevantsuse skoor
 | Fuzzy Search | Fuzzy | Spell corrections |
 | Prefix Search | Prefix | Autocomplete |
 
-### Best Practices Summary
+## Best Practices Summary
 
 1. Use the right query type for your use case
 2. Implement proper analyzers for text fields

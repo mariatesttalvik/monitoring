@@ -1,35 +1,22 @@
 # Lecture 1: Elasticsearch Introduction
 
-- [Lecture 1: Elasticsearch Introduction](#lecture-1-elasticsearch-introduction)
-    - [Mis on ELK?](#mis-on-elk)
-    - [Mis on ELK Cluster?](#mis-on-elk-cluster)
-  - [Kibana – andmete visualiseerimine](#kibana--andmete-visualiseerimine)
-  - [Logstash – andmete töötlemine](#logstash--andmete-töötlemine)
-  - [Beats – andmete saatmine](#beats--andmete-saatmine)
-    - [Beats Family Table](#beats-family-table)
-    - [Mis on Elasticsearch?](#mis-on-elasticsearch)
-    - [Elasticsearchi põhifunktsioonid:](#elasticsearchi-põhifunktsioonid)
-    - [Elasticsearchi roll DevOpsis:](#elasticsearchi-roll-devopsis)
-    - [Olulised mõisted:](#olulised-mõisted)
-    - [Key Concepts:](#key-concepts)
-
-### Mis on ELK?
+### What is ELK?
 
 ![ELK](https://www.guru99.com/images/tensorflow/082918_1504_ELKStackTut1.png)
 
-Elastic Stack on avatud lähtekoodiga tööriistade komplekt andmete analüüsiks, töötlemiseks, salvestamiseks ja visualiseerimiseks. Seda tuntakse kui ELK Stack (Elasticsearch, Logstash, Kibana), kuhu kuulub ka Beats.
+Elastic Stack is an open-source collection of tools for data analysis, processing, storage, and visualization. It is known as the ELK Stack (Elasticsearch, Logstash, Kibana), which also includes Beats.
 
-### Mis on ELK Cluster?
+### What is an ELK Cluster?
 ![3+ Nodes System](../../media/nodes-diagram.svg)
 
 
 ![Cluster Sizing Requirements](../../media/cluster-sizing.svg)
 
-## Kibana – andmete visualiseerimine
-**Kibana** pakub sektordiagramme, joondiagramme, histogramme ja kaarte. Sellega saab visualiseerida Elasticsearchi andmeid ja kujundada soovitud viisil.
+## Kibana – data visualization
+**Kibana** provides pie charts, line charts, histograms, and maps. It can visualize Elasticsearch data and format it as desired.
 
-## Logstash – andmete töötlemine
-**Logstash** kogub ja töötleb andmeid erinevatest allikatest ning saadab need Elasticsearchi.
+## Logstash – data processing
+**Logstash** collects and processes data from various sources and sends it to Elasticsearch.
 
 ![Introduction to Elasticsearch Architecture](https://miro.medium.com/v2/resize:fit:720/format:webp/1*rfcn4XSrNI1KZFbq89l7Jw.png)
 
@@ -44,12 +31,12 @@ Elastic Stack on avatud lähtekoodiga tööriistade komplekt andmete analüüsik
 *Source: [Medium](https://medium.com)*
 
 
-## Beats – andmete saatmine
-**Beats** on kergkaalulised agendid, mis saadavad andmeid masinatest Logstashi või otse Elasticsearchi. Näiteks: **Filebeat** jälgib logifaile ja impordib need.
+## Beats – data sending
+**Beats** are lightweight agents that send data from machines to Logstash or directly to Elasticsearch. For example: **Filebeat** monitors log files and imports them.
 
-Elastic Stack tsentraliseerib andmed ja pakub võimsaid tööriistu analüüsiks ja visualiseerimiseks.
+Elastic Stack centralizes data and provides powerful tools for analysis and visualization.
 
-![Elasticsearchi](https://www.bigdatawire.com/wp-content/uploads/2019/03/elasticsearch_logo.png)
+![Elasticsearch](https://www.bigdatawire.com/wp-content/uploads/2019/03/elasticsearch_logo.png)
 
 ![ELK TLS Docker Diagram](https://raw.githubusercontent.com/wiki/swimlane/elk-tls-docker/images/elk-tls-docker-diagram.png)
 
@@ -68,19 +55,19 @@ Elastic Stack tsentraliseerib andmed ja pakub võimsaid tööriistu analüüsiks
 | **Auditbeat**  | Lightweight shipper for audit data, designed for security auditing and compliance monitoring.                                                                              |
 | **Heartbeat**  | Lightweight shipper for uptime monitoring. Automates anomaly detection and accelerates root cause analysis with AIOps. (9)                                                |
 
-### Mis on Elasticsearch?
+### What is Elasticsearch?
 
-Elasticsearch on avatud lähtekoodiga hajutatud otsingu- ja analüüsimootor, mis on loodud horisontaalseks skaleeritavuseks, reaalajas otsinguks ja kõrgeks töökindluseks. Kuuludes NoSQL-andmebaaside hulka, on see ehitatud Apache Lucene otsingumootori raamatukogu peale.
+Elasticsearch is an open-source distributed search and analytics engine designed for horizontal scalability, real-time search, and high reliability. Being part of NoSQL databases, it is built on the Apache Lucene search engine library.
 
-Elasticsearchi kasutatakse laialdaselt:
-- Logide ja sündmuste andmete analüüsiks
-- Täistekstiotsinguks
-- Ärilisteks analüütikateks
-- Rakenduste jälgimiseks
+Elasticsearch is widely used for:
+- Log and event data analysis
+- Full-text search
+- Business analytics
+- Application monitoring
 
-Elasticsearch salvestab andmeid skeemivabas JSON-formaadis, mis teeb selle paindlikuks ja kohanemisvõimeliseks erinevate andmemudelite ja struktuuridega. Hajutatud RESTful API abil saavad arendajad hõlpsasti teostada keerukaid otsinguid, koondamisi ja analüüse suurte andmekogumite põhjal.
+Elasticsearch stores data in a schema-free JSON format, making it flexible and adaptable to different data models and structures. Through a distributed RESTful API, developers can easily perform complex searches, aggregations, and analyses on large datasets.
 
-### Elasticsearchi põhifunktsioonid:
+### Core Functions of Elasticsearch:
 
 | Feature | Description |
 |---------|-------------|
@@ -94,7 +81,7 @@ Elasticsearch salvestab andmeid skeemivabas JSON-formaadis, mis teeb selle paind
 
 ---
 
-### Elasticsearchi roll DevOpsis:
+### Elasticsearch's Role in DevOps:
 
 | Area | Description | Examples |
 |------|-------------|----------|
@@ -107,7 +94,7 @@ Elasticsearch salvestab andmeid skeemivabas JSON-formaadis, mis teeb selle paind
 
 ---
 
-### Olulised mõisted: 
+### Important Concepts: 
 
 ![Component Relation](https://www.elastic.co/guide/en/elasticsearch/reference/current/images/data_processing_flow.png)
 

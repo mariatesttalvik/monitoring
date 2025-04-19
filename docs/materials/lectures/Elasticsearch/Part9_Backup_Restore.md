@@ -1,37 +1,5 @@
 # Elasticsearch Backup & Restore: Complete Documentation Suite
 
-- [Elasticsearch Backup \& Restore: Complete Documentation Suite](#elasticsearch-backup--restore-complete-documentation-suite)
-  - [Basic Concepts Visualization](#basic-concepts-visualization)
-  - [Key Terms](#key-terms)
-  - [Quick Start Tutorial](#quick-start-tutorial)
-- [Technical Documentation](#technical-documentation)
-  - [Repository Configuration](#repository-configuration)
-  - [Repository Types](#repository-types)
-  - [File System Repository](#file-system-repository)
-  - [S3 Repository](#s3-repository)
-  - [Snapshot Management](#snapshot-management)
-    - [Snapshot Lifecycle](#snapshot-lifecycle)
-  - [Snapshot Creation Options](#snapshot-creation-options)
-- [Administrator's Manual](#administrators-manual)
-  - [Backup Strategy Planning](#backup-strategy-planning)
-    - [RPO and RTO Considerations](#rpo-and-rto-considerations)
-    - [Automated Backup Configuration](#automated-backup-configuration)
-  - [Monitoring and Maintenance](#monitoring-and-maintenance)
-    - [Snapshot Status Monitoring](#snapshot-status-monitoring)
-    - [Repository Maintenance](#repository-maintenance)
-- [Troubleshooting Guide](#troubleshooting-guide)
-  - [Common Issues and Solutions](#common-issues-and-solutions)
-    - [Failed Snapshots](#failed-snapshots)
-    - [Failed Restores](#failed-restores)
-  - [Monitoring Dashboard](#monitoring-dashboard)
-- [Quick Reference](#quick-reference)
-  - [Essential Commands](#essential-commands)
-    - [Repository Management](#repository-management)
-    - [Snapshot Operations](#snapshot-operations)
-    - [Restore Operations](#restore-operations)
-
-Elasticsearch backup and restore functionality ensures data safety and business continuity. This guide will help you understand and implement backup strategies.
-
 ## Basic Concepts Visualization
 
 ```mermaid
@@ -46,14 +14,16 @@ graph LR
 ```
 
 ## Key Terms
-- **Snapshot**: Point-in-time backup of indices and cluster state
-- **Repository**: Storage location for snapshots
-- **Incremental Backup**: Only backs up changes since last snapshot
-- **Recovery Point Objective (RPO)**: Maximum acceptable data loss
-- **Recovery Time Objective (RTO)**: Maximum acceptable downtime
+
+- **Snapshot**: A point-in-time backup of indices and cluster state.
+- **Repository**: The storage location where snapshots are saved.
+- **Incremental Backup**: A backup that only includes changes since the last snapshot.
+- **Recovery Point Objective (RPO)**: The maximum acceptable data loss.
+- **Recovery Time Objective (RTO)**: The maximum acceptable downtime.
 
 ## Quick Start Tutorial
-1. Configure Repository
+
+1. **Configure Repository**
 ```json
 PUT /_snapshot/my_backup
 {
@@ -64,7 +34,7 @@ PUT /_snapshot/my_backup
 }
 ```
 
-2. Create First Snapshot
+2. **Create First Snapshot**
 ```json
 PUT /_snapshot/my_backup/snapshot_1
 {
@@ -74,27 +44,29 @@ PUT /_snapshot/my_backup/snapshot_1
 }
 ```
 
-3. Basic Restore
+3. **Basic Restore**
 ```json
 POST /_snapshot/my_backup/snapshot_1/_restore
 ```
+
+---
 
 # Technical Documentation
 
 ## Repository Configuration
 
-## Repository Types
+### Repository Types
 
-| Repository Type | Configuration | Description | Example |
-|----------------|---------------|-------------|---------|
-| Shared File System | `type: "fs"` | Local or shared filesystem storage | ```PUT /_snapshot/my_fs_backup { "type": "fs", "settings": { "location": "/backup" }}``` |
-| Amazon S3 | `type: "s3"` | Amazon S3 cloud storage | ```PUT /_snapshot/my_s3_backup { "type": "s3", "settings": { "bucket": "my-bucket" }}``` |
-| HDFS | `type: "hdfs"` | Hadoop distributed filesystem | ```PUT /_snapshot/my_hdfs_backup { "type": "hdfs", "settings": { "uri": "hdfs://..." }}``` |
-| Azure | `type: "azure"` | Azure Blob storage | ```PUT /_snapshot/my_azure_backup { "type": "azure", "settings": { "container": "my-container" }}``` |
-| Google Cloud Storage | `type: "gcs"` | Google Cloud Storage | ```PUT /_snapshot/my_gcs_backup { "type": "gcs", "settings": { "bucket": "my-bucket" }}``` |
-
+| Repository Type        | Configuration         | Description                             | Example                                      |
+|------------------------|-----------------------|-----------------------------------------|----------------------------------------------|
+| Shared File System      | `type: "fs"`          | Local or shared filesystem storage      | ```PUT /_snapshot/my_fs_backup { "type": "fs", "settings": { "location": "/backup" }}``` |
+| Amazon S3              | `type: "s3"`          | Amazon S3 cloud storage                 | ```PUT /_snapshot/my_s3_backup { "type": "s3", "settings": { "bucket": "my-bucket" }}``` |
+| HDFS                   | `type: "hdfs"`         | Hadoop distributed filesystem           | ```PUT /_snapshot/my_hdfs_backup { "type": "hdfs", "settings": { "uri": "hdfs://..." }}``` |
+| Azure                  | `type: "azure"`        | Azure Blob storage                      | ```PUT /_snapshot/my_azure_backup { "type": "azure", "settings": { "container": "my-container" }}``` |
+| Google Cloud Storage   | `type: "gcs"`          | Google Cloud Storage                    | ```PUT /_snapshot/my_gcs_backup { "type": "gcs", "settings": { "bucket": "my-bucket" }}``` |
 
 ## File System Repository
+
 ```json
 PUT /_snapshot/fs_backup
 {
@@ -109,6 +81,7 @@ PUT /_snapshot/fs_backup
 ```
 
 ## S3 Repository
+
 ```json
 PUT /_snapshot/s3_backup
 {
@@ -129,7 +102,7 @@ PUT /_snapshot/s3_backup
 
 *Source: [Opster](https://opster.com)*
 
-## Snapshot Creation Options
+### Snapshot Creation Options
 ```json
 PUT /_snapshot/my_backup/snapshot_2
 {
@@ -143,6 +116,8 @@ PUT /_snapshot/my_backup/snapshot_2
   }
 }
 ```
+
+---
 
 # Administrator's Manual
 
@@ -179,6 +154,7 @@ PUT /_slm/policy/nightly-snapshots
   }
 }
 ```
+
 ![Elasticsearch SLM](https://mlbtihvv1ztx.i.optimole.com/cb:MU-o.1a801/w:770/h:388/q:90/f:best/ig:avif/https://opster.com/wp-content/uploads/2023/10/Logistics-kibana-1.png)
 
 *Source: [Opster](https://opster.com)*
@@ -190,7 +166,6 @@ PUT /_slm/policy/nightly-snapshots
 ![Snapshot Retention Diagram](https://mlbtihvv1ztx.i.optimole.com/cb:MU-o.1a801/w:770/h:214/q:90/f:best/ig:avif/https://opster.com/wp-content/uploads/2023/10/Snapshot-retention-1.png)
 
 *Source: [Opster](https://opster.com)*
-
 
 ## Monitoring and Maintenance
 
@@ -206,21 +181,23 @@ POST /_snapshot/my_backup/_cleanup
 POST /_snapshot/my_backup/_verify
 ```
 
+---
+
 # Troubleshooting Guide
 
 ## Common Issues and Solutions
 
 ### Failed Snapshots
-1. Check repository accessibility
-2. Verify storage space
-3. Review cluster health
-4. Check network connectivity
+1. Check repository accessibility.
+2. Verify storage space.
+3. Review cluster health.
+4. Check network connectivity.
 
 ### Failed Restores
-1. Verify snapshot availability
-2. Check index name conflicts
-3. Verify cluster state
-4. Review error logs
+1. Verify snapshot availability.
+2. Check index name conflicts.
+3. Verify cluster state.
+4. Review error logs.
 
 ## Monitoring Dashboard
 
@@ -236,6 +213,8 @@ gantt
     section Monthly
     Retention Check      :2024-01-30, 1d
 ```
+
+---
 
 # Quick Reference
 

@@ -1,94 +1,11 @@
 # Elasticsearch Turvalisus
 
-- [Elasticsearch Turvalisus](#elasticsearch-turvalisus)
-  - [1. Autentimine ja Autoriseerimine](#1-autentimine-ja-autoriseerimine)
-  - [2. Sertifikaadid ja CA (Certificate Authority)](#2-sertifikaadid-ja-ca-certificate-authority)
-  - [3. Võrgu Turvalisus](#3-võrgu-turvalisus)
-  - [4. Andmete Turvalisus](#4-andmete-turvalisus)
-    - [Krüpteerimine:](#krüpteerimine)
-    - [Auditi Logimine:](#auditi-logimine)
-  - [5. Parimad Turvalisuse Tavad](#5-parimad-turvalisuse-tavad)
-  - [6. Levinud Turvaprobleemid](#6-levinud-turvaprobleemid)
-  - [7. Turvatestid ja Monitooring](#7-turvatestid-ja-monitooring)
-
-## 1. Autentimine ja Autoriseerimine
-
-Elasticsearch kasutab kasutajate tuvastamiseks mitut meetodit:
-* Native Realm - sisseehitatud kasutajahaldus
-* LDAP/Active Directory integratsioon
-* Single Sign-On (SSO)
-* OpenID Connect
-* SAML autentimine
-
-Kasutajate õiguste haldamiseks kasutatakse rollipõhist juurdepääsukontrolli (RBAC). See võimaldab määrata täpselt, milliseid toiminguid kasutaja teha saab. Näiteks:
-* Andmeanalüütik - ainult lugemisõigused konkreetsetele indeksitele
-* Süsteemiadministraator - täielik klastri haldamise õigus
-* Monitooringu kasutaja - ainult jälgimise õigused
-
-## 2. Sertifikaadid ja CA (Certificate Authority)
-
-Elasticsearch'i CA süsteem toimib usalduse alusena kogu klastrile. Peamised komponendid:
-* Root CA - peamine sertifitseerimiskeskus
-* Vahe-CA-d - täiendav turvakiht
-* Node'ide sertifikaadid - iga node'i unikaalne identiteet
-* Kliendisertifikaadid - välist juurdepääsu vajavate rakenduste jaoks
-
-## 3. Võrgu Turvalisus
-
-Transport Layer Security (TLS) tagab turvalise suhtluse:
-* Node'ide vaheline krüpteering
-* Klient-node krüpteering
-* Sertifikaatide valideerimine
-
-IP filtreerimine võimaldab:
-* Juurdepääsu piiramist IP-aadresside põhjal
-* Võrgu segmenteerimist
-* Tulemüüri reeglite seadistamist
-
-## 4. Andmete Turvalisus
-
-### Krüpteerimine:
-* Node'i tasemel krüpteering
-* Indeksi tasemel krüpteering
-* Võtmete turvaline haldamine
-
-### Auditi Logimine:
-* Kasutajate tegevuste jälgimine
-* Turvasündmuste logimine
-* Vastavuse jälgimine regulatsioonidele
-
-## 5. Parimad Turvalisuse Tavad
-
-Paroolihaldus:
-* Tugevad parooli nõuded
-* Regulaarne paroolide uuendamine
-* Parooli ajaloo jälgimine
-
-Süsteemi Hooldus:
-* Elasticsearch'i uuenduste paigaldamine
-* Turvaparanduste haldamine
-* Versiooniühilduvuse tagamine
-
-## 6. Levinud Turvaprobleemid
-
-Konfiguratsiooni Vead:
-* Vaikimisi paroolide kasutamine
-* Väljalülitatud turvafunktsioonid
-* Liiga laialdased õigused
-
-Võrgu Haavatavused:
-* Avalikult ligipääsetavad klastrid
-* Turvamata pordid
-* Puuduv TLS
-
-## 7. Turvatestid ja Monitooring
-
-Regulaarsed turvatestid aitavad tuvastada:
-* Turvaauke
-* Valesid konfiguratsioone
-* Potentsiaalseid ohte
-
-Monitooring peab jälgima:
-* Ebatavalisi juurdepääsukatseid
-* Ressursikasutust
-* Turvaintsidente
+| **Section** | **Details** |
+|-------------|-------------|
+| **1. Autentimine ja Autoriseerimine** | **Meetodid kasutajate tuvastamiseks:**<br> - Native Realm (sisseehitatud kasutajahaldus)<br> - LDAP/Active Directory integratsioon<br> - Single Sign-On (SSO)<br> - OpenID Connect<br> - SAML autentimine <br> **Rollipõhine juurdepääsukontroll (RBAC):**<br> - Andmeanalüütik: ainult lugemisõigused<br> - Süsteemiadministraator: täielik klastri haldamise õigus<br> - Monitooringu kasutaja: ainult jälgimise õigused |
+| **2. Sertifikaadid ja CA** | **Komponendid:**<br> - Root CA: peamine sertifitseerimiskeskus<br> - Vahe-CA-d: täiendav turvakiht<br> - Node'ide sertifikaadid: iga node'i unikaalne identiteet<br> - Kliendisertifikaadid: välist juurdepääsu vajavad rakendused |
+| **3. Võrgu Turvalisus** | **TLS (Transport Layer Security):**<br> - Node'ide vaheline krüpteering<br> - Klient-node krüpteering<br> - Sertifikaatide valideerimine<br> **IP filtreerimine:**<br> - Juurdepääsu piiramist IP-aadresside põhjal<br> - Võrgu segmenteerimist<br> - Tulemüüri reeglite seadistamine |
+| **4. Andmete Turvalisus** | **Krüpteerimine:**<br> - Node'i tasemel krüpteering<br> - Indeksi tasemel krüpteering<br> - Võtmete turvaline haldamine<br> **Auditi Logimine:**<br> - Kasutajate tegevuste jälgimine<br> - Turvasündmuste logimine<br> - Vastavuse jälgimine regulatsioonidele |
+| **5. Parimad Turvalisuse Tavad** | **Paroolihaldus:**<br> - Tugevad parooli nõuded<br> - Regulaarne paroolide uuendamine<br> - Parooli ajaloo jälgimine<br> **Süsteemi Hooldus:**<br> - Elasticsearch'i uuenduste paigaldamine<br> - Turvaparanduste haldamine<br> - Versiooniühilduvuse tagamine |
+| **6. Levinud Turvaprobleemid** | **Konfiguratsiooni Vead:**<br> - Vaikimisi paroolide kasutamine<br> - Väljalülitatud turvafunktsioonid<br> - Liiga laialdased õigused<br> **Võrgu Haavatavused:**<br> - Avalikult ligipääsetavad klastrid<br> - Turvamata pordid<br> - Puuduv TLS |
+| **7. Turvatestid ja Monitooring** | **Regulaarsed turvatestid:**<br> - Turvaaukude tuvastamine<br> - Vale konfiguratsioonide leidmine<br> - Potentsiaalsete ohtude tuvastamine<br> **Monitooring:**<br> - Ebatavaliste juurdepääsukatsete jälgimine<br> - Ressursikasutuse jälgimine<br> - Turvaintsidentide jälgimine |

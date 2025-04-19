@@ -1,43 +1,9 @@
 # Linux Logimine ja Haldamine: Põhitõed
 
-## Sisukord
-
-- [Linux Logimine ja Haldamine: Põhitõed](#linux-logimine-ja-haldamine-põhitõed)
-  - [Sisukord](#sisukord)
-- [1. Sissejuhatus Linux logimisse](#1-sissejuhatus-linux-logimisse)
-  - [Mis on logimine?](#mis-on-logimine)
-  - [Logimise tahtsus Linux süsteemides](#logimise-tahtsus-linux-süsteemides)
-  - [Logimise ajalugu Linuxis](#logimise-ajalugu-linuxis)
-- [2. Linux logimise pohikomponendid](#2-linux-logimise-pohikomponendid)
-  - [2.1 rsyslog](#21-rsyslog)
-  - [2.2 logrotate](#22-logrotate)
-  - [2.3 journald](#23-journald)
-  - [2.4 auditd](#24-auditd)
-  - [2.5 abrtd](#25-abrtd)
-  - [2.6 kdump](#26-kdump)
-  - [2.7 Kokkuvote](#27-kokkuvote)
-- [3. Logifailide haldamine](#3-logifailide-haldamine)
-  - [3.1 Logide vaatamine](#31-logide-vaatamine)
-  - [3.2 Logides otsimine](#32-logides-otsimine)
-    - [Keerukamad otsingud ja analuusid](#keerukamad-otsingud-ja-analuusid)
-  - [3.3 Logide roteerumine](#33-logide-roteerumine)
-- [4. Keskne logiserver](#4-keskne-logiserver)
-  - [4.1 Keskse logiserveri eelised](#41-keskse-logiserveri-eelised)
-  - [4.2 Keskse logiserveri seadistamine](#42-keskse-logiserveri-seadistamine)
-- [5. Logide indekseerimine ja analuus](#5-logide-indekseerimine-ja-analuus)
-  - [5.1 Indekseerimise pohimotted](#51-indekseerimise-pohimotted)
-  - [5.2 Indeksi struktuur Linuxis](#52-indeksi-struktuur-linuxis)
-    - [Elasticsearch'i indeksi struktuur:](#elasticsearchi-indeksi-struktuur)
-    - [Indeksi kasutamine:](#indeksi-kasutamine)
-    - [Indeksi eelised:](#indeksi-eelised)
-- [6. Parimad praktikad Linux logimises](#6-parimad-praktikad-linux-logimises)
-  - [6.1 Turvalisus](#61-turvalisus)
-  - [6.2 Joudlus](#62-joudlus)
-  - [6.3 Sailitamine ja arhiveerimine](#63-sailitamine-ja-arhiveerimine)
-
 # 1. Sissejuhatus Linux logimisse
 
 ## Mis on logimine?
+
 Logimine on protsess, mille käigus salvestatakse süsteemi või rakenduse sündmused, tegevused ja teated. See on oluline osa igast operatsioonisüsteemist, sealhulgas Linuxist.
 
 **Logimise põhiomadused:**
@@ -57,7 +23,8 @@ Näide logisõnumist:
 May 7 10:23:45 myserver sshd[12345]: Failed password for invalid user test from 192.168.1.100 port 54321 ssh2
 ```
 
-## Logimise tahtsus Linux süsteemides
+## Logimise tähtsus Linux süsteemides
+
 Logimine on kriitilise tähtsusega mitmel põhjusel:
 
 1. **Vigade tuvastamine ja lahendamine**
@@ -66,18 +33,16 @@ Logimine on kriitilise tähtsusega mitmel põhjusel:
 4. **Vastavus regulatsioonidele ja auditeerimise võimaldamine**
 
 ```
-
-    /var/log/syslog or /var/log/messages — global system log
-    /var/log/auth.log or /var/log/secure — user authentication information
-    /var/log/dmesg — hardware and device driver logs
-    /var/log/anaconda.log — system installation log
-    /var/log/audit — logs from the auditd daemon
-    /var/log/boot.log — system boot log
-    /var/log/cron — cron daemon logs
-    /var/log/mysql — MySQL database logs
-    /var/log/apache2 — Apache web server logs
-    /var/log/nginx — NGINX web server logs
-
+/var/log/syslog or /var/log/messages — global system log
+/var/log/auth.log or /var/log/secure — user authentication information
+/var/log/dmesg — hardware and device driver logs
+/var/log/anaconda.log — system installation log
+/var/log/audit — logs from the auditd daemon
+/var/log/boot.log — system boot log
+/var/log/cron — cron daemon logs
+/var/log/mysql — MySQL database logs
+/var/log/apache2 — Apache web server logs
+/var/log/nginx — NGINX web server logs
 ```
 
 ## Logimise ajalugu Linuxis
@@ -108,7 +73,7 @@ Logimine on kriitilise tähtsusega mitmel põhjusel:
 2010 - systemd (koos journald'iga) tutvustamine
 ```
 
-# 2. Linux logimise pohikomponendid
+# 2. Linux logimise põhikomponendid
 
 ## 2.1 rsyslog
 
@@ -290,7 +255,7 @@ Kasutage `crash` utiliiti mälutõmmise analüüsimiseks:
 crash /usr/lib/debug/lib/modules/$(uname -r)/vmlinux /var/crash/127.0.0.1-2019-03-15-11:32:23/vmcore
 ```
 
-## 2.7 Kokkuvote
+## 2.7 Kokkuvõte
 
 Nende tööriistade kombinatsioon - rsyslog, logrotate, journald, auditd, abrtd ja kdump - moodustab tervikliku logimise ja süsteemi monitoorimise lahenduse Linuxis. Igal tööriistal on oma spetsiifiline roll:
 
@@ -343,7 +308,7 @@ Efektiivseks logide analüüsiks on vajalik oskus neis otsida:
   ```bash
   awk '/error/ {print $1, $2, $3}' /var/log/syslog
   ```
-### Keerukamad otsingud ja analuusid
+### Keerukamad otsingud ja analüüsid
 
 Linuxi käsurea tööriistad võimaldavad teha ka keerukamaid otsinguid ja analüüse, kombineerides erinevaid käske. Näiteks:
 
@@ -392,28 +357,19 @@ Vaatame lähemalt tüüpilist Nginx logrotate konfiguratsiooni ja selgitame iga 
     endscript
 }
 ```
+
 Selgitus:
 
 1. `/var/log/nginx/*.log`: See rida määrab, milliseid logifaile roteeritakse (kõik .log laiendiga failid Nginx logikaustas).
-
 2. `daily`: Logifaile roteeritakse iga päev.
-
 3. `missingok`: Kui logifail puudub, jätkab logrotate ilma veateadet genereerimata.
-
 4. `rotate 52`: Säilitatakse 52 roteeritud logifaili, mis tähendab umbes aasta jagu logisid (kui roteeritakse iga päev).
-
 5. `compress`: Roteeritud logifailid kompresseeritakse.
-
 6. `delaycompress`: Kompressimine lükatakse edasi järgmise rotatsioonitsüklini. See on kasulik, kui rakendus võib veel kirjutada eelmisesse logifaili.
-
 7. `notifempty`: Tühje logifaile ei roteerita.
-
 8. `create 0640 www-data adm`: Pärast rotatsiooni luuakse uus tühi logifail õigustega 0640, omanikuks www-data ja grupiks adm.
-
 9. `sharedscripts`: Käivitab pre- ja post-rotatsiooniskriptid ainult üks kord, isegi kui roteeritakse mitu logifaili.
-
 10. `prerotate` ... `endscript`: Skript, mis käivitatakse enne logide roteerimist. Siin kontrollitakse, kas eksisteerib teatud kaust ja käivitatakse seal olevad skriptid.
-
 11. `postrotate` ... `endscript`: Skript, mis käivitatakse pärast logide roteerimist. Siin saadetakse Nginx protsessile signaal USR1, mis põhjustab logifailide uuesti avamise.
 
 See konfiguratsioon tagab, et Nginx logid roteeritakse regulaarselt, säilitades piisava ajaloo, hoides kettaruumi kontrolli all ja tagades, et Nginx jätkab korrektselt logimist pärast rotatsiooni.
@@ -433,16 +389,20 @@ See konfiguratsioon tagab, et Nginx logid roteeritakse regulaarselt, säilitades
    ```bash
    *.* @@keskne-logiserver:514
    ```
+
 2. rsyslog konfigureerimine serveris:
    ```bash
    $ModLoad imtcp
    $InputTCPServerRun 514
    ```
-3. Tulemüüri seadistamine, et lubada logiliiklus
 
-# 5. Logide indekseerimine ja analuus
+3. Tulemüü
 
-## 5.1 Indekseerimise pohimotted
+ri seadistamine, et lubada logiliiklus
+
+# 5. Logide indekseerimine ja analüüs
+
+## 5.1 Indekseerimise põhimõtted
 
 - Kiire otsing suurtes logikogumites
 - Struktureeritud andmete salvestamine
@@ -455,7 +415,6 @@ Linuxis võib logide indekseerimine varieeruda sõltuvalt kasutatavast tarkvaras
 ### Elasticsearch'i indeksi struktuur:
 
 1. **Indeks**: Elasticsearch'is on indeks sarnane relatsioonilise andmebaasi tabeliga. Näiteks võib olla indeks nimega "syslog-2023.05.24" päeva logide jaoks.
-
 2. **Dokument**: Iga logikirje on dokument indeksis. Dokument on JSON-vormingus ja võib välja näha nii:
 
    ```json
@@ -470,7 +429,6 @@ Linuxis võib logide indekseerimine varieeruda sõltuvalt kasutatavast tarkvaras
    ```
 
 3. **Väljad**: Iga dokumendi atribuut (nagu "host", "level", "message") on väli, mida saab indekseerida ja mille järgi saab otsida.
-
 4. **Mappingud**: Määravad, kuidas dokumendi välju tuleks indekseerida. Näiteks:
 
    ```json
@@ -541,14 +499,14 @@ Indekseerimine muudab logide haldamise ja analüüsi Linuxis oluliselt efektiivs
 - Jälgi logisid regulaarselt kahtlase tegevuse suhtes
 - Kasuta turvalist protokolli (nagu TLS) logide edastamiseks võrgus
 
-## 6.2 Joudlus
+## 6.2 Jõudlus
 
 - Optimeeri logimise taset, et vältida liigset infot
 - Kasuta efektiivseid logimismeetodeid (nt. journald)
 - Monitoori logimise mõju süsteemi ressurssidele
 - Kasuta logide pööramist, et vältida suuri logifaile
 
-## 6.3 Sailitamine ja arhiveerimine
+## 6.3 Säilitamine ja arhiveerimine
 
 - Määra selge logide säilitamise poliitika
 - Arhiveeri vanad logid pikaajalise säilitamise jaoks
