@@ -1,0 +1,3659 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/lab_04/tick_lab_part1/">
+      
+      
+        <link rel="prev" href="../../lab_03/prometheus_lab_part2/">
+      
+      
+        <link rel="next" href="../tick_lab_part2/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>TICK Part 1 - Monitoring Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.4af4bdda.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tick-stack-with-chuck-norris-monitor-lab-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Monitoring Guide" class="md-header__button md-logo" aria-label="Monitoring Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Monitoring Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              TICK Part 1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../archive/2_TICK_Stack_Local/" class="md-tabs__link">
+          
+  
+  
+  Archive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../final_project/final_project_building_monsystem/" class="md-tabs__link">
+          
+  
+  
+  Final Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../lab_01/lab2/Simple_Linux_Logging_Lab/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../materials/lectures/Elasticsearch/Part1_Introduction/" class="md-tabs__link">
+          
+  
+  
+  Materials
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../resources/github-guide/" class="md-tabs__link">
+          
+  
+  
+  Resources
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Monitoring Guide" class="md-nav__button md-logo" aria-label="Monitoring Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Monitoring Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../archive/2_TICK_Stack_Local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack Local
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../archive/lab04/1_InfluxDB_Cloud_Observability_Lab_Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lab 04 Cloud
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Linux Logging Labs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Linux Logging Labs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../archive/lab1/1_linux_logging_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../archive/lab1/2_linux_logging_lab_advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../archive/lab1/3_linux_logging_lab_testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Final Project
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Final Project
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/final_project_building_monsystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/topology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Topology
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Help
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Help
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/elk_stack_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ELK Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/hints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hints
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/virtualbox_wsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox WSL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/kibana_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kibana Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/networking_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Networking Debug
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/starter_code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Starter Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Labs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Labs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 01
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 01
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_01/lab2/Simple_Linux_Logging_Lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simple Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 02
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 02
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_02/lab1/monitoring-lab-manual-part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_02/lab1/monitoring-lab-manual-part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_02/lab1/monitoring-lab-manual-part3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_02/lab1/monitoring-lab-manual-extra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Extra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 03
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 03
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_03/prometheus_lab_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_03/prometheus_lab_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 04
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 04
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    TICK Part 1
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Part 1
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding The Components
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding The Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-telegraf" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Telegraf
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-influxdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. InfluxDB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-chronograf" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Chronograf
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-kapacitor-optional-for-alerting" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Kapacitor (Optional for Alerting)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-setup-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Setup Steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lab Setup Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initial-server-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Initial Server Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Create Project Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-environment-variables-and-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Environment Variables and Docker Compose
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-telegraf-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Telegraf Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-nginx-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Nginx Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-flask-application-with-chuck-norris-api-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 6: Flask Application with Chuck Norris API Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-launch-the-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 7: Launch the Stack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-using-the-monitoring-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 8: Using the Monitoring Stack
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8: Using the Monitoring Stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-chuck-norris-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Chuck Norris Application
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-chronograf" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Chronograf
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-examining-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Examining Logs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tick_lab_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 05
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 05
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_05/part_1/adding_logstash_and_filebeat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Filebeat & Logstash
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_05/part_8/Lab8_Security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 06
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 06
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_06/splunk_cloud_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Cloud
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_06/splunk_cluster_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Cluster
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab_07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lab 07
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Materials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Materials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Elasticsearch
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Elasticsearch
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/Part1_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/Part2_Data_Modeling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/Part3_Search_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Search & Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/Part9_Backup_Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backup & Restore
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Prometheus/intro-to-prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Grafana
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Grafana/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Grafana/loki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Loki
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Splunk
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Splunk
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Splunk/intro-to-splunk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Linux/intro-to-linux-logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Linux Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            Observability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Observability/intro-to-logging-monitoring-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Observability/wrap-up-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wrap-Up
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/TICK/intro-to-tick-stack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Zabbix/zabbix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/github-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/konto-digital_ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DigitalOcean Account
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/vscode-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VS Code Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Cert Manager
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cert Manager
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/elastic-cert_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Elastic Certs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/hashicorp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HashiCorp
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding The Components
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding The Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-telegraf" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Telegraf
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-influxdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. InfluxDB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-chronograf" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Chronograf
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-kapacitor-optional-for-alerting" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Kapacitor (Optional for Alerting)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-setup-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Setup Steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lab Setup Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initial-server-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Initial Server Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Create Project Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-environment-variables-and-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Environment Variables and Docker Compose
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-telegraf-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Telegraf Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-nginx-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Nginx Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-flask-application-with-chuck-norris-api-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 6: Flask Application with Chuck Norris API Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-launch-the-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 7: Launch the Stack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-using-the-monitoring-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 8: Using the Monitoring Stack
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8: Using the Monitoring Stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-chuck-norris-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Chuck Norris Application
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-chronograf" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Chronograf
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-examining-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Examining Logs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="tick-stack-with-chuck-norris-monitor-lab-guide">TICK Stack with Chuck Norris Monitor - Lab Guide<a class="headerlink" href="#tick-stack-with-chuck-norris-monitor-lab-guide" title="Permanent link">&para;</a></h1>
+<p>This guide explains how to set up the TICK stack (Telegraf, InfluxDB, Chronograf, Kapacitor) to monitor a web application that integrates with the Chuck Norris API. Each component plays a specific role in the monitoring pipeline, and we'll explore how they work together.</p>
+<p><img alt="Topology" src="../tick-topology.svg" /> </p>
+<h2 id="understanding-the-components">Understanding The Components<a class="headerlink" href="#understanding-the-components" title="Permanent link">&para;</a></h2>
+<h3 id="1-telegraf">1. Telegraf<a class="headerlink" href="#1-telegraf" title="Permanent link">&para;</a></h3>
+<p><strong>What it is:</strong> A collection agent that gathers metrics from various sources.</p>
+<p><strong>Why we need it:</strong> Telegraf serves as our "collector" that gathers all the data we want to monitor. It can collect:
+- System metrics (CPU, memory, disk)
+- Docker container metrics
+- HTTP endpoint performance 
+- Log files</p>
+<p><strong>How it works:</strong> Telegraf uses plugins to collect data from different sources, then sends this data to InfluxDB in a format it can understand.</p>
+<h3 id="2-influxdb">2. InfluxDB<a class="headerlink" href="#2-influxdb" title="Permanent link">&para;</a></h3>
+<p><strong>What it is:</strong> A time-series database optimized for high-write and query loads.</p>
+<p><strong>Why we need it:</strong> Monitoring data is time-based (metrics collected at specific timestamps), making InfluxDB ideal for storing this information efficiently. It handles:
+- Storing metrics with timestamps
+- Retaining historical data
+- Querying time-series data quickly</p>
+<p><strong>How it works:</strong> InfluxDB stores data in "buckets" (collections of related time-series data) and uses a SQL-like query language called Flux.</p>
+<h3 id="3-chronograf">3. Chronograf<a class="headerlink" href="#3-chronograf" title="Permanent link">&para;</a></h3>
+<p><strong>What it is:</strong> A visualization and dashboard tool.</p>
+<p><strong>Why we need it:</strong> Raw metrics aren't useful without visualization. Chronograf provides:
+- Interactive dashboards 
+- Data exploration tools
+- Admin interfaces for InfluxDB and Kapacitor</p>
+<p><strong>How it works:</strong> Chronograf connects to InfluxDB, queries the data, and displays it in customizable dashboards.</p>
+<h3 id="4-kapacitor-optional-for-alerting">4. Kapacitor (Optional for Alerting)<a class="headerlink" href="#4-kapacitor-optional-for-alerting" title="Permanent link">&para;</a></h3>
+<p><strong>What it is:</strong> A real-time streaming data processing engine.</p>
+<p><strong>Why it's useful:</strong> Kapacitor allows you to:
+- Create alerts based on thresholds
+- Process data in real-time
+- Execute custom logic on your metrics</p>
+<p><strong>How it works:</strong> Kapacitor subscribes to data from InfluxDB and can perform calculations, transformations, and trigger alerts.</p>
+<h2 id="lab-setup-steps">Lab Setup Steps<a class="headerlink" href="#lab-setup-steps" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-initial-server-setup">Step 1: Initial Server Setup<a class="headerlink" href="#step-1-initial-server-setup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Update system packages</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>upgrade<span class="w"> </span>-y
+
+<span class="c1"># Install required packages</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>apt-transport-https<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>ca-certificates<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>curl<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>git
+
+<span class="c1"># Install Docker</span>
+curl<span class="w"> </span>-fsSL<span class="w"> </span>https://get.docker.com<span class="w"> </span>-o<span class="w"> </span>get-docker.sh
+sudo<span class="w"> </span>sh<span class="w"> </span>get-docker.sh
+
+<span class="c1"># Install Docker Compose</span>
+sudo<span class="w"> </span>curl<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;https://github.com/docker/compose/releases/latest/download/docker-compose-</span><span class="k">$(</span>uname<span class="w"> </span>-s<span class="k">)</span><span class="s2">-</span><span class="k">$(</span>uname<span class="w"> </span>-m<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>-o<span class="w"> </span>/usr/local/bin/docker-compose
+sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/docker-compose
+
+<span class="c1"># Add your user to the docker group (why: to run docker without sudo)</span>
+sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>docker<span class="w"> </span><span class="nv">$USER</span>
+newgrp<span class="w"> </span>docker
+</code></pre></div>
+<h3 id="step-2-create-project-structure">Step 2: Create Project Structure<a class="headerlink" href="#step-2-create-project-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create main project directory</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/tick-stack
+<span class="nb">cd</span><span class="w"> </span>~/tick-stack
+
+<span class="c1"># Create directories for each component</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="o">{</span>telegraf,kapacitor,influxdb,nginx/conf.d,flask-app<span class="o">}</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>flask-app/logs
+
+<span class="c1"># Create log file for the Flask application</span>
+touch<span class="w"> </span>flask-app/logs/app.log
+chmod<span class="w"> </span><span class="m">666</span><span class="w"> </span>flask-app/logs/app.log
+</code></pre></div>
+<p><strong>Why this structure:</strong> Each component needs its own configuration files and persistent storage. This directory structure keeps everything organized and allows Docker to mount these directories as volumes.</p>
+<h3 id="step-3-environment-variables-and-docker-compose">Step 3: Environment Variables and Docker Compose<a class="headerlink" href="#step-3-environment-variables-and-docker-compose" title="Permanent link">&para;</a></h3>
+<p>Create the environment file with configuration variables:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>~/tick-stack/.env<span class="w"> </span><span class="s">&lt;&lt; &#39;EOL&#39;</span>
+<span class="s"># InfluxDB Configuration</span>
+<span class="s">DOCKER_INFLUXDB_INIT_MODE=setup</span>
+<span class="s">DOCKER_INFLUXDB_INIT_USERNAME=admin</span>
+<span class="s">DOCKER_INFLUXDB_INIT_PASSWORD=your_secure_password</span>
+<span class="s">DOCKER_INFLUXDB_INIT_ORG=my_org</span>
+<span class="s">DOCKER_INFLUXDB_INIT_BUCKET=my_bucket</span>
+<span class="s">DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=your_secure_token</span>
+<span class="s">INFLUX_TOKEN=your_secure_token</span>
+<span class="s">INFLUX_ORG=my_org</span>
+
+<span class="s"># Flask App Configuration</span>
+<span class="s">FLASK_ENV=production</span>
+<span class="s">LOG_LEVEL=INFO</span>
+
+<span class="s"># Get Docker GID - automatically detect your Docker group ID</span>
+<span class="s">DOCKER_GID=$(getent group docker | cut -d: -f3)</span>
+<span class="s">EOL</span>
+</code></pre></div>
+<p><strong>Why these variables:</strong> 
+- InfluxDB requires initialization parameters for the first run
+- The admin token is needed for secure API access
+- FLASK_ENV controls debugging features
+- LOG_LEVEL determines what gets logged
+- DOCKER_GID gives Telegraf access to Docker metrics</p>
+<p>Create the Docker Compose file:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>~/tick-stack/docker-compose.yml<span class="w"> </span><span class="s">&lt;&lt; &#39;EOL&#39;</span>
+<span class="s">version: &#39;3&#39;</span>
+
+<span class="s">services:</span>
+<span class="s">  influxdb:</span>
+<span class="s">    image: influxdb:latest</span>
+<span class="s">    container_name: influxdb</span>
+<span class="s">    restart: always</span>
+<span class="s">    ports:</span>
+<span class="s">      - &quot;8086:8086&quot;</span>
+<span class="s">    volumes:</span>
+<span class="s">      - ./influxdb:/var/lib/influxdb2</span>
+<span class="s">    environment:</span>
+<span class="s">      - DOCKER_INFLUXDB_INIT_MODE=${DOCKER_INFLUXDB_INIT_MODE}</span>
+<span class="s">      - DOCKER_INFLUXDB_INIT_USERNAME=${DOCKER_INFLUXDB_INIT_USERNAME}</span>
+<span class="s">      - DOCKER_INFLUXDB_INIT_PASSWORD=${DOCKER_INFLUXDB_INIT_PASSWORD}</span>
+<span class="s">      - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}</span>
+<span class="s">      - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}</span>
+<span class="s">      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}</span>
+<span class="s">    networks:</span>
+<span class="s">      - monitoring_net</span>
+
+<span class="s">  telegraf:</span>
+<span class="s">    image: telegraf:latest</span>
+<span class="s">    container_name: telegraf</span>
+<span class="s">    restart: always</span>
+<span class="s">    volumes:</span>
+<span class="s">      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro</span>
+<span class="s">      - /var/run/docker.sock:/var/run/docker.sock:ro</span>
+<span class="s">      - /proc:/host/proc:ro</span>
+<span class="s">      - /sys:/host/sys:ro</span>
+<span class="s">      - ./flask-app/logs:/app/logs:ro</span>
+<span class="s">    environment:</span>
+<span class="s">      - INFLUX_TOKEN=${INFLUX_TOKEN}</span>
+<span class="s">      - INFLUX_ORG=${DOCKER_INFLUXDB_INIT_ORG}</span>
+<span class="s">      - INFLUX_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}</span>
+<span class="s">    group_add:</span>
+<span class="s">      - &quot;${DOCKER_GID:-999}&quot;</span>
+<span class="s">    depends_on:</span>
+<span class="s">      - influxdb</span>
+<span class="s">    networks:</span>
+<span class="s">      - monitoring_net</span>
+
+<span class="s">  chronograf:</span>
+<span class="s">    image: chronograf:latest</span>
+<span class="s">    container_name: chronograf</span>
+<span class="s">    restart: always</span>
+<span class="s">    ports:</span>
+<span class="s">      - &quot;8888:8888&quot;</span>
+<span class="s">    volumes:</span>
+<span class="s">      - ./chronograf:/var/lib/chronograf</span>
+<span class="s">    depends_on:</span>
+<span class="s">      - influxdb</span>
+<span class="s">    environment:</span>
+<span class="s">      - INFLUXDB_URL=http://influxdb:8086</span>
+<span class="s">      - INFLUXDB_TOKEN=${INFLUX_TOKEN}</span>
+<span class="s">      - INFLUXDB_ORG=${DOCKER_INFLUXDB_INIT_ORG}</span>
+<span class="s">    networks:</span>
+<span class="s">      - monitoring_net</span>
+
+<span class="s">  kapacitor:</span>
+<span class="s">    image: kapacitor:latest</span>
+<span class="s">    container_name: kapacitor</span>
+<span class="s">    restart: always</span>
+<span class="s">    volumes:</span>
+<span class="s">      - ./kapacitor/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro</span>
+<span class="s">    depends_on:</span>
+<span class="s">      - influxdb</span>
+<span class="s">    networks:</span>
+<span class="s">      - monitoring_net</span>
+
+<span class="s">  flask-app:</span>
+<span class="s">    build: ./flask-app</span>
+<span class="s">    container_name: flask-app</span>
+<span class="s">    restart: always</span>
+<span class="s">    volumes:</span>
+<span class="s">      - ./flask-app:/app</span>
+<span class="s">      - ./flask-app/logs:/app/logs</span>
+<span class="s">    environment:</span>
+<span class="s">      - FLASK_ENV=${FLASK_ENV}</span>
+<span class="s">      - LOG_LEVEL=${LOG_LEVEL}</span>
+<span class="s">    networks:</span>
+<span class="s">      - monitoring_net</span>
+
+<span class="s">  nginx:</span>
+<span class="s">    image: nginx:latest</span>
+<span class="s">    container_name: nginx</span>
+<span class="s">    restart: always</span>
+<span class="s">    ports:</span>
+<span class="s">      - &quot;80:80&quot;</span>
+<span class="s">    volumes:</span>
+<span class="s">      - ./nginx/conf.d:/etc/nginx/conf.d</span>
+<span class="s">    depends_on:</span>
+<span class="s">      - flask-app</span>
+<span class="s">      - chronograf</span>
+<span class="s">    networks:</span>
+<span class="s">      - monitoring_net</span>
+
+<span class="s">networks:</span>
+<span class="s">  monitoring_net:</span>
+<span class="s">    driver: bridge</span>
+<span class="s">EOL</span>
+</code></pre></div>
+<p><strong>Why this configuration:</strong>
+- <strong>Volume mounts:</strong> Each container needs access to its configuration and persistent data
+- <strong>Networks:</strong> All services are on the same network so they can communicate
+- <strong>Dependencies:</strong> Some services need to wait for others to start
+- <strong>Environment variables:</strong> Passed from the .env file to configure the services
+- <strong>Restart policy:</strong> Services automatically restart if they crash
+- <strong>Port mappings:</strong> Only expose the necessary ports to the host</p>
+<h3 id="step-4-telegraf-configuration">Step 4: Telegraf Configuration<a class="headerlink" href="#step-4-telegraf-configuration" title="Permanent link">&para;</a></h3>
+<p>Telegraf is the data collector. Its configuration defines what metrics to collect and where to send them:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>~/tick-stack/telegraf/telegraf.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOL&#39;</span>
+<span class="s"># Global Agent Configuration</span>
+<span class="s">[agent]</span>
+<span class="s">  interval = &quot;10s&quot;           # How often to collect metrics</span>
+<span class="s">  round_interval = true      # Round collection interval</span>
+<span class="s">  metric_batch_size = 1000   # Batch size for writes to InfluxDB</span>
+<span class="s">  metric_buffer_limit = 10000 # Buffer size if InfluxDB is unavailable</span>
+<span class="s">  collection_jitter = &quot;0s&quot;   # Add random delays to prevent thundering herd</span>
+<span class="s">  flush_interval = &quot;10s&quot;     # How often to send metrics to outputs</span>
+<span class="s">  flush_jitter = &quot;0s&quot;        # Add random delays to flush interval</span>
+<span class="s">  precision = &quot;&quot;            # Timestamp precision</span>
+<span class="s">  hostname = &quot;&quot;             # Override default hostname</span>
+<span class="s">  omit_hostname = false     # Include hostname in metrics</span>
+
+<span class="s"># Output to InfluxDB v2</span>
+<span class="s">[[outputs.influxdb_v2]]</span>
+<span class="s">  urls = [&quot;http://influxdb:8086&quot;]</span>
+<span class="s">  token = &quot;${INFLUX_TOKEN}&quot;</span>
+<span class="s">  organization = &quot;${INFLUX_ORG}&quot;</span>
+<span class="s">  bucket = &quot;${DOCKER_INFLUXDB_INIT_BUCKET}&quot;</span>
+
+<span class="s"># Docker Metrics Collection</span>
+<span class="s">[[inputs.docker]]</span>
+<span class="s">  endpoint = &quot;unix:///var/run/docker.sock&quot;</span>
+<span class="s">  gather_services = false</span>
+<span class="s">  container_names = []</span>
+<span class="s">  container_name_include = []</span>
+<span class="s">  container_name_exclude = []</span>
+<span class="s">  timeout = &quot;5s&quot;</span>
+<span class="s">  perdevice = true</span>
+<span class="s">  total = false</span>
+
+<span class="s"># System Metrics Collection</span>
+<span class="s">[[inputs.cpu]]</span>
+<span class="s">  percpu = true</span>
+<span class="s">  totalcpu = true</span>
+<span class="s">  collect_cpu_time = false</span>
+<span class="s">  report_active = false</span>
+
+<span class="s">[[inputs.disk]]</span>
+<span class="s">  ignore_fs = [&quot;tmpfs&quot;, &quot;devtmpfs&quot;, &quot;devfs&quot;, &quot;iso9660&quot;, &quot;overlay&quot;, &quot;aufs&quot;, &quot;squashfs&quot;]</span>
+
+<span class="s">[[inputs.diskio]]</span>
+
+<span class="s">[[inputs.mem]]</span>
+
+<span class="s">[[inputs.net]]</span>
+
+<span class="s">[[inputs.processes]]</span>
+
+<span class="s">[[inputs.swap]]</span>
+
+<span class="s">[[inputs.system]]</span>
+
+<span class="s"># HTTP Response Monitoring (Flask App)</span>
+<span class="s">[[inputs.http_response]]</span>
+<span class="s">  urls = [&quot;http://flask-app:5000&quot;]</span>
+<span class="s">  response_timeout = &quot;5s&quot;</span>
+<span class="s">  method = &quot;GET&quot;</span>
+<span class="s">  follow_redirects = true</span>
+
+<span class="s"># Monitor the Chuck Norris API</span>
+<span class="s">[[inputs.http_response]]</span>
+<span class="s">  urls = [&quot;https://api.chucknorris.io/jokes/random&quot;]</span>
+<span class="s">  response_timeout = &quot;5s&quot;</span>
+<span class="s">  method = &quot;GET&quot;</span>
+<span class="s">  follow_redirects = true</span>
+<span class="s">  name_override = &quot;chuck_norris_api&quot;</span>
+
+<span class="s"># Log File Monitoring</span>
+<span class="s">[[inputs.file]]</span>
+<span class="s">  files = [&quot;/app/logs/app.log&quot;]</span>
+<span class="s">  from_beginning = true</span>
+<span class="s">  data_format = &quot;grok&quot;</span>
+<span class="s">  grok_patterns = [&quot;%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:level} %{GREEDYDATA:message}&quot;]</span>
+
+<span class="s"># Real-time Log Monitoring</span>
+<span class="s">[[inputs.tail]]</span>
+<span class="s">  files = [&quot;/app/logs/app.log&quot;]</span>
+<span class="s">  from_beginning = true</span>
+<span class="s">  pipe = false</span>
+<span class="s">  data_format = &quot;grok&quot;</span>
+<span class="s">  grok_patterns = [&quot;%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:level} %{GREEDYDATA:message}&quot;]</span>
+<span class="s">  name_override = &quot;chuck_norris_logs&quot;</span>
+<span class="s">EOL</span>
+</code></pre></div>
+<p><strong>Key aspects of this configuration:</strong>
+- <strong>agent section</strong>: Controls how often Telegraf collects and sends data
+- <strong>outputs.influxdb_v2</strong>: Configures the connection to InfluxDB
+- <strong>inputs</strong>: These are the data collection plugins
+  - <strong>docker</strong>: Gathers metrics from Docker containers
+  - <strong>cpu, disk, mem, etc.</strong>: Collect system metrics
+  - <strong>http_response</strong>: Monitors HTTP endpoints
+  - <strong>file/tail</strong>: Parses log files using Grok patterns</p>
+<p><strong>Why these metrics are important:</strong>
+- System metrics help identify resource bottlenecks
+- HTTP response metrics show application availability and performance
+- Log metrics help identify errors and patterns
+- Docker metrics show container health</p>
+<h3 id="step-5-nginx-configuration">Step 5: Nginx Configuration<a class="headerlink" href="#step-5-nginx-configuration" title="Permanent link">&para;</a></h3>
+<p>Nginx serves as a reverse proxy to make all services accessible through a single entry point:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>~/tick-stack/nginx/conf.d/default.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOL&#39;</span>
+<span class="s">server {</span>
+<span class="s">    listen 80;</span>
+<span class="s">    server_name _;</span>
+
+<span class="s">    # Flask Application (Chuck Norris Facts)</span>
+<span class="s">    location / {</span>
+<span class="s">        proxy_pass http://flask-app:5000;</span>
+<span class="s">        proxy_set_header Host $host;</span>
+<span class="s">        proxy_set_header X-Real-IP $remote_addr;</span>
+<span class="s">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span>
+<span class="s">        proxy_set_header X-Forwarded-Proto $scheme;</span>
+<span class="s">    }</span>
+
+<span class="s">    # Chronograf UI </span>
+<span class="s">    location /chronograf/ {</span>
+<span class="s">        proxy_pass http://chronograf:8888/;</span>
+<span class="s">        proxy_set_header Host $host;</span>
+<span class="s">        proxy_set_header X-Real-IP $remote_addr;</span>
+<span class="s">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span>
+<span class="s">        proxy_set_header X-Forwarded-Proto $scheme;</span>
+<span class="s">    }</span>
+
+<span class="s">    # InfluxDB API</span>
+<span class="s">    location /influxdb/ {</span>
+<span class="s">        proxy_pass http://influxdb:8086/;</span>
+<span class="s">        proxy_set_header Host $host;</span>
+<span class="s">        proxy_set_header X-Real-IP $remote_addr;</span>
+<span class="s">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span>
+<span class="s">        proxy_set_header X-Forwarded-Proto $scheme;</span>
+<span class="s">    }</span>
+<span class="s">}</span>
+<span class="s">EOL</span>
+</code></pre></div>
+<p><strong>Why this configuration:</strong>
+- All services are accessible through a single port (80)
+- Path-based routing makes each service available at its own URL
+- Headers are properly forwarded, ensuring services receive the correct client information
+- Reduces the number of ports that need to be opened in firewalls</p>
+<h3 id="step-6-flask-application-with-chuck-norris-api-integration">Step 6: Flask Application with Chuck Norris API Integration<a class="headerlink" href="#step-6-flask-application-with-chuck-norris-api-integration" title="Permanent link">&para;</a></h3>
+<p>Now we'll create the Flask application that will be monitored. First, let's make the requirements.txt file:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>~/tick-stack/flask-app/requirements.txt<span class="w"> </span><span class="s">&lt;&lt; &#39;EOL&#39;</span>
+<span class="s">flask==2.0.1</span>
+<span class="s">requests==2.28.1</span>
+<span class="s">EOL</span>
+</code></pre></div>
+<p>Next, create the Dockerfile:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>~/tick-stack/flask-app/Dockerfile<span class="w"> </span><span class="s">&lt;&lt; &#39;EOL&#39;</span>
+<span class="s">FROM python:3.9-slim</span>
+
+<span class="s">WORKDIR /app</span>
+
+<span class="s">COPY requirements.txt .</span>
+<span class="s">RUN pip install --no-cache-dir -r requirements.txt</span>
+
+<span class="s">COPY . .</span>
+
+<span class="s"># Create logs directory if it doesn&#39;t exist</span>
+<span class="s">RUN mkdir -p /app/logs &amp;&amp; touch /app/logs/app.log &amp;&amp; chmod 666 /app/logs/app.log</span>
+
+<span class="s">ENV FLASK_APP=app.py</span>
+<span class="s">ENV FLASK_ENV=production</span>
+
+<span class="s">CMD [&quot;python&quot;, &quot;app.py&quot;]</span>
+<span class="s">EOL</span>
+</code></pre></div>
+<p>Finally, create the Flask application:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>~/tick-stack/flask-app/app.py<span class="w"> </span><span class="s">&lt;&lt; &#39;EOL&#39;</span>
+<span class="s">import logging</span>
+<span class="s">import os</span>
+<span class="s">import random</span>
+<span class="s">import time</span>
+<span class="s">import requests</span>
+<span class="s">from datetime import datetime</span>
+<span class="s">from flask import Flask, jsonify, request, render_template_string</span>
+<span class="s">from logging.handlers import RotatingFileHandler</span>
+
+<span class="s"># Configure logging</span>
+<span class="s">log_level = os.environ.get(&#39;LOG_LEVEL&#39;, &#39;INFO&#39;).upper()</span>
+<span class="s">log_formatter = logging.Formatter(&#39;%(asctime)s %(levelname)s %(message)s&#39;)</span>
+
+<span class="s"># Create file handler</span>
+<span class="s">file_handler = RotatingFileHandler(&#39;/app/logs/app.log&#39;, maxBytes=10485760, backupCount=10)</span>
+<span class="s">file_handler.setFormatter(log_formatter)</span>
+
+<span class="s"># Create console handler</span>
+<span class="s">console_handler = logging.StreamHandler()</span>
+<span class="s">console_handler.setFormatter(log_formatter)</span>
+
+<span class="s"># Set up app logger</span>
+<span class="s">logger = logging.getLogger()</span>
+<span class="s">logger.setLevel(getattr(logging, log_level))</span>
+<span class="s">logger.addHandler(file_handler)</span>
+<span class="s">logger.addHandler(console_handler)</span>
+
+<span class="s">app = Flask(__name__)</span>
+
+<span class="s"># Chuck Norris facts stats</span>
+<span class="s">chuck_stats = {</span>
+<span class="s">    &quot;total_requests&quot;: 0,</span>
+<span class="s">    &quot;categories&quot;: {},</span>
+<span class="s">    &quot;last_fact&quot;: &quot;&quot;,</span>
+<span class="s">    &quot;errors&quot;: 0</span>
+<span class="s">}</span>
+
+<span class="s"># HTML template for the main page</span>
+<span class="s">HTML_TEMPLATE = &quot;&quot;&quot;</span>
+<span class="s">&lt;!DOCTYPE html&gt;</span>
+<span class="s">&lt;html&gt;</span>
+<span class="s">&lt;head&gt;</span>
+<span class="s">    &lt;title&gt;Chuck Norris Facts Monitor&lt;/title&gt;</span>
+<span class="s">    &lt;style&gt;</span>
+<span class="s">        body {</span>
+<span class="s">            font-family: Arial, sans-serif;</span>
+<span class="s">            max-width: 800px;</span>
+<span class="s">            margin: 0 auto;</span>
+<span class="s">            padding: 20px;</span>
+<span class="s">            background-color: #f5f5f5;</span>
+<span class="s">        }</span>
+<span class="s">        .container {</span>
+<span class="s">            background-color: white;</span>
+<span class="s">            border-radius: 8px;</span>
+<span class="s">            padding: 20px;</span>
+<span class="s">            box-shadow: 0 2px 4px rgba(0,0,0,0.1);</span>
+<span class="s">        }</span>
+<span class="s">        .fact {</span>
+<span class="s">            font-size: 24px;</span>
+<span class="s">            margin: 20px 0;</span>
+<span class="s">            padding: 15px;</span>
+<span class="s">            background-color: #fffacd;</span>
+<span class="s">            border-left: 5px solid #ffd700;</span>
+<span class="s">            border-radius: 4px;</span>
+<span class="s">        }</span>
+<span class="s">        .buttons {</span>
+<span class="s">            margin: 20px 0;</span>
+<span class="s">        }</span>
+<span class="s">        button {</span>
+<span class="s">            background-color: #4CAF50;</span>
+<span class="s">            border: none;</span>
+<span class="s">            color: white;</span>
+<span class="s">            padding: 10px 20px;</span>
+<span class="s">            text-align: center;</span>
+<span class="s">            text-decoration: none;</span>
+<span class="s">            display: inline-block;</span>
+<span class="s">            font-size: 16px;</span>
+<span class="s">            margin: 4px 2px;</span>
+<span class="s">            cursor: pointer;</span>
+<span class="s">            border-radius: 4px;</span>
+<span class="s">        }</span>
+<span class="s">        .stats {</span>
+<span class="s">            margin-top: 30px;</span>
+<span class="s">            padding: 15px;</span>
+<span class="s">            background-color: #e6f7ff;</span>
+<span class="s">            border-left: 5px solid #1890ff;</span>
+<span class="s">            border-radius: 4px;</span>
+<span class="s">        }</span>
+<span class="s">        .categories {</span>
+<span class="s">            display: flex;</span>
+<span class="s">            flex-wrap: wrap;</span>
+<span class="s">            gap: 10px;</span>
+<span class="s">            margin: 20px 0;</span>
+<span class="s">        }</span>
+<span class="s">        .category-button {</span>
+<span class="s">            background-color: #1890ff;</span>
+<span class="s">        }</span>
+<span class="s">        .error-button {</span>
+<span class="s">            background-color: #ff4d4f;</span>
+<span class="s">        }</span>
+<span class="s">        .slow-button {</span>
+<span class="s">            background-color: #faad14;</span>
+<span class="s">        }</span>
+<span class="s">    &lt;/style&gt;</span>
+<span class="s">&lt;/head&gt;</span>
+<span class="s">&lt;body&gt;</span>
+<span class="s">    &lt;div class=&quot;container&quot;&gt;</span>
+<span class="s">        &lt;h1&gt;Chuck Norris Facts Monitor&lt;/h1&gt;</span>
+
+<span class="s">        &lt;div class=&quot;fact&quot;&gt;</span>
+<span class="s">            {{ fact }}</span>
+<span class="s">        &lt;/div&gt;</span>
+
+<span class="s">        &lt;div class=&quot;buttons&quot;&gt;</span>
+<span class="s">            &lt;button onclick=&quot;window.location.href=&#39;/&#39;&quot;&gt;Random Fact&lt;/button&gt;</span>
+<span class="s">            &lt;button onclick=&quot;window.location.href=&#39;/health&#39;&quot;&gt;Health Check&lt;/button&gt;</span>
+<span class="s">            &lt;button class=&quot;error-button&quot; onclick=&quot;window.location.href=&#39;/error&#39;&quot;&gt;Trigger Error&lt;/button&gt;</span>
+<span class="s">            &lt;button class=&quot;slow-button&quot; onclick=&quot;window.location.href=&#39;/slow&#39;&quot;&gt;Slow Response&lt;/button&gt;</span>
+<span class="s">        &lt;/div&gt;</span>
+
+<span class="s">        &lt;div class=&quot;categories&quot;&gt;</span>
+<span class="s">            &lt;h3&gt;Get fact by category:&lt;/h3&gt;</span>
+<span class="s">            {% for category in categories %}</span>
+<span class="s">                &lt;button class=&quot;category-button&quot; onclick=&quot;window.location.href=&#39;/category/{{ category }}&#39;&quot;&gt;{{ category }}&lt;/button&gt;</span>
+<span class="s">            {% endfor %}</span>
+<span class="s">        &lt;/div&gt;</span>
+
+<span class="s">        &lt;div class=&quot;stats&quot;&gt;</span>
+<span class="s">            &lt;h2&gt;Monitoring Stats&lt;/h2&gt;</span>
+<span class="s">            &lt;p&gt;&lt;strong&gt;Total Requests:&lt;/strong&gt; {{ stats.total_requests }}&lt;/p&gt;</span>
+<span class="s">            &lt;p&gt;&lt;strong&gt;Errors:&lt;/strong&gt; {{ stats.errors }}&lt;/p&gt;</span>
+<span class="s">            &lt;p&gt;&lt;strong&gt;Categories Requested:&lt;/strong&gt;&lt;/p&gt;</span>
+<span class="s">            &lt;ul&gt;</span>
+<span class="s">                {% for category, count in stats.categories.items() %}</span>
+<span class="s">                    &lt;li&gt;{{ category }}: {{ count }}&lt;/li&gt;</span>
+<span class="s">                {% endfor %}</span>
+<span class="s">            &lt;/ul&gt;</span>
+<span class="s">        &lt;/div&gt;</span>
+<span class="s">    &lt;/div&gt;</span>
+<span class="s">&lt;/body&gt;</span>
+<span class="s">&lt;/html&gt;</span>
+<span class="s">&quot;&quot;&quot;</span>
+
+<span class="s">@app.route(&#39;/&#39;)</span>
+<span class="s">def index():</span>
+<span class="s">    logger.info(&quot;Index page accessed - fetching random Chuck Norris fact&quot;)</span>
+<span class="s">    try:</span>
+<span class="s">        response = requests.get(&#39;https://api.chucknorris.io/jokes/random&#39;)</span>
+<span class="s">        if response.status_code == 200:</span>
+<span class="s">            fact = response.json()[&#39;value&#39;]</span>
+<span class="s">            chuck_stats[&quot;last_fact&quot;] = fact</span>
+<span class="s">            chuck_stats[&quot;total_requests&quot;] += 1</span>
+<span class="s">            logger.info(f&quot;Successfully fetched Chuck Norris fact: {fact[:30]}...&quot;)</span>
+
+<span class="s">            # Get categories for display</span>
+<span class="s">            categories_response = requests.get(&#39;https://api.chucknorris.io/jokes/categories&#39;)</span>
+<span class="s">            categories = categories_response.json() if categories_response.status_code == 200 else []</span>
+
+<span class="s">            return render_template_string(</span>
+<span class="s">                HTML_TEMPLATE, </span>
+<span class="s">                fact=fact, </span>
+<span class="s">                stats=chuck_stats,</span>
+<span class="s">                categories=categories</span>
+<span class="s">            )</span>
+<span class="s">        else:</span>
+<span class="s">            logger.error(f&quot;Failed to fetch Chuck Norris fact, status code: {response.status_code}&quot;)</span>
+<span class="s">            chuck_stats[&quot;errors&quot;] += 1</span>
+<span class="s">            return render_template_string(</span>
+<span class="s">                HTML_TEMPLATE, </span>
+<span class="s">                fact=&quot;Chuck Norris is currently unavailable. Even APIs fear him.&quot;, </span>
+<span class="s">                stats=chuck_stats,</span>
+<span class="s">                categories=[]</span>
+<span class="s">            )</span>
+<span class="s">    except Exception as e:</span>
+<span class="s">        logger.error(f&quot;Error fetching Chuck Norris fact: {str(e)}&quot;)</span>
+<span class="s">        chuck_stats[&quot;errors&quot;] += 1</span>
+<span class="s">        return render_template_string(</span>
+<span class="s">            HTML_TEMPLATE, </span>
+<span class="s">            fact=&quot;Error fetching Chuck Norris fact. Chuck is investigating.&quot;, </span>
+<span class="s">            stats=chuck_stats,</span>
+<span class="s">            categories=[]</span>
+<span class="s">        )</span>
+
+<span class="s">@app.route(&#39;/category/&lt;category&gt;&#39;)</span>
+<span class="s">def category_fact(category):</span>
+<span class="s">    logger.info(f&quot;Category fact requested: {category}&quot;)</span>
+<span class="s">    try:</span>
+<span class="s">        response = requests.get(f&#39;https://api.chucknorris.io/jokes/random?category={category}&#39;)</span>
+<span class="s">        if response.status_code == 200:</span>
+<span class="s">            fact = response.json()[&#39;value&#39;]</span>
+<span class="s">            chuck_stats[&quot;last_fact&quot;] = fact</span>
+<span class="s">            chuck_stats[&quot;total_requests&quot;] += 1</span>
+
+<span class="s">            # Update category stats</span>
+<span class="s">            if category in chuck_stats[&quot;categories&quot;]:</span>
+<span class="s">                chuck_stats[&quot;categories&quot;][category] += 1</span>
+<span class="s">            else:</span>
+<span class="s">                chuck_stats[&quot;categories&quot;][category] = 1</span>
+
+<span class="s">            logger.info(f&quot;Successfully fetched {category} Chuck Norris fact&quot;)</span>
+
+<span class="s">            # Get categories for display</span>
+<span class="s">            categories_response = requests.get(&#39;https://api.chucknorris.io/jokes/categories&#39;)</span>
+<span class="s">            categories = categories_response.json() if categories_response.status_code == 200 else []</span>
+
+<span class="s">            return render_template_string(</span>
+<span class="s">                HTML_TEMPLATE, </span>
+<span class="s">                fact=fact, </span>
+<span class="s">                stats=chuck_stats,</span>
+<span class="s">                categories=categories</span>
+<span class="s">            )</span>
+<span class="s">        else:</span>
+<span class="s">            logger.error(f&quot;Failed to fetch {category} Chuck Norris fact, status code: {response.status_code}&quot;)</span>
+<span class="s">            chuck_stats[&quot;errors&quot;] += 1</span>
+<span class="s">            return render_template_string(</span>
+<span class="s">                HTML_TEMPLATE, </span>
+<span class="s">                fact=f&quot;Chuck Norris {category} facts are too powerful to display right now.&quot;, </span>
+<span class="s">                stats=chuck_stats,</span>
+<span class="s">                categories=[]</span>
+<span class="s">            )</span>
+<span class="s">    except Exception as e:</span>
+<span class="s">        logger.error(f&quot;Error fetching {category} Chuck Norris fact: {str(e)}&quot;)</span>
+<span class="s">        chuck_stats[&quot;errors&quot;] += 1</span>
+<span class="s">        return render_template_string(</span>
+<span class="s">            HTML_TEMPLATE, </span>
+<span class="s">            fact=f&quot;Error fetching {category} Chuck Norris fact.&quot;, </span>
+<span class="s">            stats=chuck_stats,</span>
+<span class="s">            categories=[]</span>
+<span class="s">        )</span>
+
+<span class="s">@app.route(&#39;/slow&#39;)</span>
+<span class="s">def slow_response():</span>
+<span class="s">    logger.warning(&quot;Slow response endpoint accessed - simulating delay&quot;)</span>
+<span class="s">    # Simulate a slow response</span>
+<span class="s">    sleep_time = random.uniform(3, 8)</span>
+<span class="s">    time.sleep(sleep_time)</span>
+<span class="s">    logger.warning(f&quot;Slow response completed after {sleep_time:.2f} seconds&quot;)</span>
+
+<span class="s">    # Get a fact after the delay</span>
+<span class="s">    try:</span>
+<span class="s">        response = requests.get(&#39;https://api.chucknorris.io/jokes/random&#39;)</span>
+<span class="s">        if response.status_code == 200:</span>
+<span class="s">            fact = response.json()[&#39;value&#39;]</span>
+<span class="s">            chuck_stats[&quot;last_fact&quot;] = fact</span>
+<span class="s">            chuck_stats[&quot;total_requests&quot;] += 1</span>
+
+<span class="s">            # Get categories for display</span>
+<span class="s">            categories_response = requests.get(&#39;https://api.chucknorris.io/jokes/categories&#39;)</span>
+<span class="s">            categories = categories_response.json() if categories_response.status_code == 200 else []</span>
+
+<span class="s">            return render_template_string(</span>
+<span class="s">                HTML_TEMPLATE, </span>
+<span class="s">                fact=f&quot;SLOW RESPONSE: {fact}&quot;, </span>
+<span class="s">                stats=chuck_stats,</span>
+<span class="s">                categories=categories</span>
+<span class="s">            )</span>
+<span class="s">        else:</span>
+<span class="s">            chuck_stats[&quot;errors&quot;] += 1</span>
+<span class="s">            return &quot;Error fetching Chuck Norris fact&quot;, 500</span>
+<span class="s">    except Exception as e:</span>
+<span class="s">        logger.error(f&quot;Error in slow response: {str(e)}&quot;)</span>
+<span class="s">        chuck_stats[&quot;errors&quot;] += 1</span>
+<span class="s">        return &quot;Server error&quot;, 500</span>
+
+<span class="s">@app.route(&#39;/error&#39;)</span>
+<span class="s">def simulate_error():</span>
+<span class="s">    # Route to test error logging</span>
+<span class="s">    error_type = request.args.get(&#39;type&#39;, &#39;error&#39;)</span>
+
+<span class="s">    if error_type == &#39;warning&#39;:</span>
+<span class="s">        logger.warning(&quot;This is a test warning from Chuck Norris&quot;)</span>
+<span class="s">        return render_template_string(</span>
+<span class="s">            HTML_TEMPLATE, </span>
+<span class="s">            fact=&quot;WARNING: Chuck Norris doesn&#39;t warn, he informs fate.&quot;, </span>
+<span class="s">            stats=chuck_stats,</span>
+<span class="s">            categories=[]</span>
+<span class="s">        )</span>
+<span class="s">    elif error_type == &#39;critical&#39;:</span>
+<span class="s">        logger.critical(&quot;This is a test critical error from Chuck Norris&quot;)</span>
+<span class="s">        chuck_stats[&quot;errors&quot;] += 1</span>
+<span class="s">        return &quot;Chuck Norris critical error&quot;, 500</span>
+<span class="s">    else:</span>
+<span class="s">        logger.error(&quot;This is a test error from Chuck Norris&quot;)</span>
+<span class="s">        chuck_stats[&quot;errors&quot;] += 1</span>
+<span class="s">        return &quot;Chuck Norris error&quot;, 500</span>
+
+<span class="s">@app.route(&#39;/health&#39;)</span>
+<span class="s">def health_check():</span>
+<span class="s">    # Simulate occasional health check failures</span>
+<span class="s">    if random.random() &lt; 0.05:</span>
+<span class="s">        logger.error(&quot;Health check failed&quot;)</span>
+<span class="s">        return jsonify({&quot;status&quot;: &quot;error&quot;, &quot;message&quot;: &quot;Chuck Norris is currently busy roundhouse kicking the server&quot;}), 500</span>
+
+<span class="s">    logger.info(&quot;Health check passed&quot;)</span>
+<span class="s">    return jsonify({</span>
+<span class="s">        &quot;status&quot;: &quot;ok&quot;, </span>
+<span class="s">        &quot;message&quot;: &quot;Chuck Norris approves of this server&#39;s health&quot;, </span>
+<span class="s">        &quot;stats&quot;: chuck_stats</span>
+<span class="s">    })</span>
+
+<span class="s">@app.route(&#39;/api/stats&#39;)</span>
+<span class="s">def api_stats():</span>
+<span class="s">    logger.info(&quot;API stats requested&quot;)</span>
+<span class="s">    return jsonify(chuck_stats)</span>
+
+<span class="s"># Generate random logs periodically</span>
+<span class="s">def generate_logs():</span>
+<span class="s">    while True:</span>
+<span class="s">        # Generate random log every 20-60 seconds</span>
+<span class="s">        sleep_time = random.randint(20, 60)</span>
+<span class="s">        time.sleep(sleep_time)</span>
+
+<span class="s">        # Try to get a Chuck Norris fact for the log</span>
+<span class="s">        try:</span>
+<span class="s">            response = requests.get(&#39;https://api.chucknorris.io/jokes/random&#39;)</span>
+<span class="s">            if response.status_code == 200:</span>
+<span class="s">                fact = response.json()[&#39;value&#39;]</span>
+<span class="s">                fact_snippet = fact[:50] + &quot;...&quot; if len(fact) &gt; 50 else fact</span>
+<span class="s">            else:</span>
+<span class="s">                fact_snippet = &quot;Could not fetch Chuck Norris fact&quot;</span>
+<span class="s">        except:</span>
+<span class="s">            fact_snippet = &quot;Error fetching Chuck Norris fact&quot;</span>
+
+<span class="s">        # Random log level distribution</span>
+<span class="s">        rand = random.random()</span>
+<span class="s">        if rand &lt; 0.7:  # 70% INFO</span>
+<span class="s">            logger.info(f&quot;Chuck Norris fact logged: {fact_snippet}&quot;)</span>
+<span class="s">        elif rand &lt; 0.85:  # 15% WARNING</span>
+<span class="s">            logger.warning(f&quot;Chuck Norris warning: {fact_snippet}&quot;)</span>
+<span class="s">        elif rand &lt; 0.95:  # 10% ERROR</span>
+<span class="s">            logger.error(f&quot;Chuck Norris error: {fact_snippet}&quot;)</span>
+<span class="s">        else:  # 5% CRITICAL</span>
+<span class="s">            logger.critical(f&quot;Chuck Norris critical situation: {fact_snippet}&quot;)</span>
+
+<span class="s"># Start log generator in a separate thread</span>
+<span class="s">import threading</span>
+<span class="s">log_thread = threading.Thread(target=generate_logs, daemon=True)</span>
+<span class="s">log_thread.start()</span>
+
+<span class="s">if __name__ == &#39;__main__&#39;:</span>
+<span class="s">    logger.info(&quot;Chuck Norris Facts application starting&quot;)</span>
+<span class="s">    app.run(host=&#39;0.0.0.0&#39;, port=5000)</span>
+<span class="s">EOL</span>
+</code></pre></div>
+<p><strong>Why this app is designed this way:</strong>
+- <strong>HTML template:</strong> Simple, single-page application that doesn't require separate HTML files
+- <strong>Routes:</strong>
+  - <code>/</code> - Displays random Chuck Norris facts
+  - <code>/category/&lt;category&gt;</code> - Shows facts from specific categories
+  - <code>/slow</code> - Simulates slow responses (great for testing timeouts)
+  - <code>/error</code> - Generates errors (perfect for testing error monitoring)
+  - <code>/health</code> - Health check endpoint (important for monitoring availability)
+  - <code>/api/stats</code> - JSON endpoint for monitoring stats
+- <strong>Logging:</strong> All operations are logged with appropriate severity levels
+- <strong>Background thread:</strong> Continuously generates log entries based on Chuck Norris facts</p>
+<h3 id="step-7-launch-the-stack">Step 7: Launch the Stack<a class="headerlink" href="#step-7-launch-the-stack" title="Permanent link">&para;</a></h3>
+<p>Start all the containers:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/tick-stack
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Check that everything is running:</p>
+<div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>ps
+</code></pre></div>
+<h3 id="step-8-using-the-monitoring-stack">Step 8: Using the Monitoring Stack<a class="headerlink" href="#step-8-using-the-monitoring-stack" title="Permanent link">&para;</a></h3>
+<h4 id="1-chuck-norris-application">1. Chuck Norris Application<a class="headerlink" href="#1-chuck-norris-application" title="Permanent link">&para;</a></h4>
+<p>Access the Chuck Norris application at: <code>http://your-server-ip/</code></p>
+<p>Try these interactions to generate different metrics:
+- Get a random fact by clicking the "Random Fact" button
+- Try different categories
+- Click "Slow Response" to simulate a performance issue
+- Click "Trigger Error" to generate error logs</p>
+<h4 id="2-chronograf">2. Chronograf<a class="headerlink" href="#2-chronograf" title="Permanent link">&para;</a></h4>
+<p>Access the Chronograf dashboard at: <code>http://your-server-ip/chronograf/</code></p>
+<p>When you first open Chronograf:
+1. Set up the connection to InfluxDB:
+   - URL: <code>http://influxdb:8086</code>
+   - Organization: <code>my_org</code> (from your .env file)
+   - Token: Your token from the .env file
+   - Default Bucket: <code>my_bucket</code></p>
+<ol>
+<li>Explore the data:</li>
+<li>Click on "Explore" in the left menu</li>
+<li>Select a measurement (e.g., <code>http_response</code>)</li>
+<li>
+<p>Build queries to analyze your data</p>
+</li>
+<li>
+<p>Create dashboards:</p>
+</li>
+<li>Click "Dashboards" in the left menu</li>
+<li>Create a new dashboard</li>
+<li>Add panels for different metrics</li>
+</ol>
+<p><strong>Example metrics to monitor:</strong>
+- CPU and memory usage of containers
+- HTTP response times for the Flask app
+- Error rates from logs
+- Chuck Norris API response times
+- Category popularity from the application stats</p>
+<h4 id="3-examining-logs">3. Examining Logs<a class="headerlink" href="#3-examining-logs" title="Permanent link">&para;</a></h4>
+<p>Check the logs from different components:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># View logs from the Flask application</span>
+docker-compose<span class="w"> </span>logs<span class="w"> </span>flask-app
+
+<span class="c1"># View Telegraf logs</span>
+docker-compose<span class="w"> </span>logs<span class="w"> </span>telegraf
+
+<span class="c1"># View InfluxDB logs</span>
+docker-compose<span class="w"> </span>logs<span class="w"> </span>influxdb
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
