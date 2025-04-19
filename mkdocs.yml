@@ -94,7 +94,6 @@ nav:
     - Backup & Restore: materials/lectures/Elasticsearch/Part9_Backup_Restore.md
     - CI/CD Deployment: materials/lectures/Elasticsearch/Part10_Deployment_CI_CD.md
     - HTTP & REST APIs: materials/lectures/Elasticsearch/Intro_HTTP_RESTful_API.md
-    - README: materials/lectures/Elasticsearch/README.md
   - Grafana:
     - Grafana: materials/lectures/Grafana/grafana.md
     - Loki: materials/lectures/Grafana/loki.md
