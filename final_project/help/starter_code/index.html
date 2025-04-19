@@ -14,7 +14,7 @@
         <link rel="prev" href="../networking_debug/">
       
       
-        <link rel="next" href="../../../labs/lab_01/lab2/Simple_Linux_Logging_Lab/">
+        <link rel="next" href="../virtualbox_wsl/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Starter Code - Monitoring Guide</title>
+        <title>Starter Code - Logging, Monitoring, and Observability Guide</title>
       
     
     
@@ -73,7 +73,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="Monitoring Guide" class="md-header__button md-logo" aria-label="Monitoring Guide" data-md-component="logo">
+    <a href="../../.." title="Logging, Monitoring, and Observability Guide" class="md-header__button md-logo" aria-label="Logging, Monitoring, and Observability Guide" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -87,7 +87,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Monitoring Guide
+            Logging, Monitoring, and Observability Guide
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -189,11 +189,11 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../archive/2_TICK_Stack_Local/" class="md-tabs__link">
+        <a href="../../../fundamentals/intro-to-linux-logging/" class="md-tabs__link">
           
   
   
-  Archive
+  Fundamentals
 
         </a>
       </li>
@@ -238,7 +238,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../labs/lab_01/lab2/Simple_Linux_Logging_Lab/" class="md-tabs__link">
+        <a href="../../../labs/01_linux_logging/Simple_Linux_Logging_Lab/" class="md-tabs__link">
           
   
   
@@ -268,7 +268,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../materials/lectures/Elasticsearch/Part1_Introduction/" class="md-tabs__link">
+        <a href="../../../lectures/Part1_Introduction/" class="md-tabs__link">
           
   
   
@@ -280,6 +280,25 @@
   
 
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../materials/lectures/Observability/wrap-up-observability/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Observability Wrap-Up
+
+      </a>
+    </li>
   
 
       
@@ -325,13 +344,13 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Monitoring Guide" class="md-nav__button md-logo" aria-label="Monitoring Guide" data-md-component="logo">
+    <a href="../../.." title="Logging, Monitoring, and Observability Guide" class="md-nav__button md-logo" aria-label="Logging, Monitoring, and Observability Guide" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    Monitoring Guide
+    Logging, Monitoring, and Observability Guide
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -384,7 +403,7 @@
   
   
   <span class="md-ellipsis">
-    Archive
+    Fundamentals
     
   </span>
   
@@ -395,7 +414,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            Archive
+            Fundamentals
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -406,12 +425,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../archive/2_TICK_Stack_Local/" class="md-nav__link">
+      <a href="../../../fundamentals/intro-to-linux-logging/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    TICK Stack Local
+    Intro to Linux Logging
     
   </span>
   
@@ -429,135 +448,17 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../archive/lab04/1_InfluxDB_Cloud_Observability_Lab_Setup/" class="md-nav__link">
+      <a href="../../../fundamentals/intro-to-logging-monitoring-observability/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Lab 04 Cloud
+    Logging, Monitoring, Observability
     
   </span>
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Linux Logging Labs
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3">
-            <span class="md-nav__icon md-icon"></span>
-            Linux Logging Labs
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../archive/lab1/1_linux_logging_lab/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Basic
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../archive/lab1/2_linux_logging_lab_advanced/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Advanced
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../archive/lab1/3_linux_logging_lab_testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Testing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -758,29 +659,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../virtualbox_wsl/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    VirtualBox WSL
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../kibana_starter/" class="md-nav__link">
         
   
@@ -846,6 +724,29 @@
 
       </a>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../virtualbox_wsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox & WSL
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -933,7 +834,7 @@
   
   
   <span class="md-ellipsis">
-    Lab 01
+    Lab 01 Linux Logging
     
   </span>
   
@@ -944,7 +845,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_1">
             <span class="md-nav__icon md-icon"></span>
-            Lab 01
+            Lab 01 Linux Logging
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -955,12 +856,81 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_01/lab2/Simple_Linux_Logging_Lab/" class="md-nav__link">
+      <a href="../../../labs/01_linux_logging/Simple_Linux_Logging_Lab/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Simple Logging
+    Simple
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/01_linux_logging/1_linux_logging_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/01_linux_logging/2_linux_logging_lab_advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/01_linux_logging/3_linux_logging_lab_testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
     
   </span>
   
@@ -1005,7 +975,7 @@
   
   
   <span class="md-ellipsis">
-    Lab 02
+    Lab 02 Prometheus
     
   </span>
   
@@ -1016,7 +986,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            Lab 02
+            Lab 02 Prometheus
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1027,7 +997,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_02/lab1/monitoring-lab-manual-part1/" class="md-nav__link">
+      <a href="../../../labs/02_prometheus/lab02_prometheus_part1/" class="md-nav__link">
         
   
   
@@ -1050,58 +1020,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_02/lab1/monitoring-lab-manual-part2/" class="md-nav__link">
+      <a href="../../../labs/02_prometheus/lab02_prometheus_part2/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     Part 2
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../labs/lab_02/lab1/monitoring-lab-manual-part3/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Part 3
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../labs/lab_02/lab1/monitoring-lab-manual-extra/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Extra
     
   </span>
   
@@ -1146,7 +1070,7 @@
   
   
   <span class="md-ellipsis">
-    Lab 03
+    Lab 03 TICK Stack
     
   </span>
   
@@ -1157,7 +1081,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            Lab 03
+            Lab 03 TICK Stack
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1168,12 +1092,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_03/prometheus_lab_part1/" class="md-nav__link">
+      <a href="../../../labs/03_tick_stack/lab03_tick_part1/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Prometheus Part 1
+    Part 1
     
   </span>
   
@@ -1191,12 +1115,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_03/prometheus_lab_part2/" class="md-nav__link">
+      <a href="../../../labs/03_tick_stack/lab03_tick_part2/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Prometheus Part 2
+    Part 2
     
   </span>
   
@@ -1241,7 +1165,7 @@
   
   
   <span class="md-ellipsis">
-    Lab 04
+    Lab 04 ELK Stack
     
   </span>
   
@@ -1252,7 +1176,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            Lab 04
+            Lab 04 ELK Stack
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1263,12 +1187,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_04/tick_lab_part1/" class="md-nav__link">
+      <a href="../../../labs/04_elk_stack/lab04_monitoring_part1/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    TICK Part 1
+    Part 1
     
   </span>
   
@@ -1286,12 +1210,219 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_04/tick_lab_part2/" class="md-nav__link">
+      <a href="../../../labs/04_elk_stack/lab04_monitoring_part2/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    TICK Part 2
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/04_elk_stack/lab04_monitoring_part3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/04_elk_stack/monitoring-lab-manual-extra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Extra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/04_elk_stack/adding_logstash_and_filebeat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Add Logstash & Filebeat
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/04_elk_stack/Lab1_Setup_Elastic_Kibana_NoSecurity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    No Security Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/04_elk_stack/Lab8_Security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Lab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/04_elk_stack/set_up_elk_cluster_docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker Cluster Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/04_elk_stack/set_up_elk_cluster_with_security_docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Secure Docker Cluster
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/04_elk_stack/example_multipass_node_config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multipass Config
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/04_elk_stack/example_local_install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Local Example
     
   </span>
   
@@ -1336,7 +1467,7 @@
   
   
   <span class="md-ellipsis">
-    Lab 05
+    Lab 05 Elasticsearch Deep Dive
     
   </span>
   
@@ -1347,7 +1478,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            Lab 05
+            Lab 05 Elasticsearch Deep Dive
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1358,12 +1489,76 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_05/part_1/adding_logstash_and_filebeat/" class="md-nav__link">
+      <a href="../../../labs/lab_05/part_2/Lab2_DataModeling/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Filebeat & Logstash
+    Part 2 - Data Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_2" id="__nav_4_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Part 3 - Searching
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Part 3 - Searching
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_05/part_3/Lab3_Searching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lab
     
   </span>
   
@@ -1381,12 +1576,135 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_05/part_8/Lab8_Security/" class="md-nav__link">
+      <a href="../../../labs/lab_05/part_3/Shakespeare_Search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Security
+    Shakespeare Search
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_05/part_4/Lab4_Advance_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 4 - Advanced Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_05/part_5/Lab5_Aggregations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 5 - Aggregations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_05/part_6/Lab6_Tunning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 6 - Tuning
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_05/part_7/Lab7_Monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 7 - Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_05/part_9/Lab9_Backup_Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 9 - Backup & Restore
     
   </span>
   
@@ -1431,7 +1749,7 @@
   
   
   <span class="md-ellipsis">
-    Lab 06
+    Lab 06 Splunk
     
   </span>
   
@@ -1442,7 +1760,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            Lab 06
+            Lab 06 Splunk
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1453,7 +1771,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_06/splunk_cloud_lab/" class="md-nav__link">
+      <a href="../../../labs/05_splunk/splunk_cloud_lab/" class="md-nav__link">
         
   
   
@@ -1476,7 +1794,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../labs/lab_06/splunk_cluster_lab/" class="md-nav__link">
+      <a href="../../../labs/05_splunk/splunk_cluster_lab/" class="md-nav__link">
         
   
   
@@ -1495,29 +1813,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../labs/lab_07/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Lab 07
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1619,7 +1914,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../materials/lectures/Elasticsearch/Part1_Introduction/" class="md-nav__link">
+      <a href="../../../lectures/Part1_Introduction/" class="md-nav__link">
         
   
   
@@ -1642,7 +1937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../materials/lectures/Elasticsearch/Part2_Data_Modeling/" class="md-nav__link">
+      <a href="../../../lectures/Part2_Data_Modeling/" class="md-nav__link">
         
   
   
@@ -1665,7 +1960,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../materials/lectures/Elasticsearch/Part3_Search_Querying/" class="md-nav__link">
+      <a href="../../../lectures/Part3_Search_Querying/" class="md-nav__link">
         
   
   
@@ -1688,7 +1983,122 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../materials/lectures/Elasticsearch/Part9_Backup_Restore/" class="md-nav__link">
+      <a href="../../../lectures/Part4_Advanced_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lectures/Part5_Aggregations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Aggregations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lectures/Part6_Performance_Tuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance Tuning
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lectures/Part7_Monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lectures/Part8_Security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lectures/Part9_Backup_Restore/" class="md-nav__link">
         
   
   
@@ -1704,6 +2114,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lectures/Part10_Deployment_CI_CD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CI/CD Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1718,23 +2151,9 @@
   
   
   
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
+    <li class="md-nav__item">
+      <a href="../../../lectures/intro-to-prometheus/" class="md-nav__link">
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
-            
   
   
   <span class="md-ellipsis">
@@ -1743,88 +2162,12 @@
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_2">
-            <span class="md-nav__icon md-icon"></span>
-            Prometheus
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../materials/lectures/Prometheus/intro-to-prometheus/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Intro
-    
-  </span>
-  
-
       </a>
     </li>
   
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Grafana
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_3">
-            <span class="md-nav__icon md-icon"></span>
-            Grafana
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
               
                 
   
@@ -1832,7 +2175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../materials/lectures/Grafana/grafana/" class="md-nav__link">
+      <a href="../../../lectures/grafana/" class="md-nav__link">
         
   
   
@@ -1855,7 +2198,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../materials/lectures/Grafana/loki/" class="md-nav__link">
+      <a href="../../../lectures/loki/" class="md-nav__link">
         
   
   
@@ -1871,37 +2214,15 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
               
                 
   
   
   
   
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
+    <li class="md-nav__item">
+      <a href="../../../lectures/intro-to-splunk/" class="md-nav__link">
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
-            
   
   
   <span class="md-ellipsis">
@@ -1910,128 +2231,6 @@
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_4">
-            <span class="md-nav__icon md-icon"></span>
-            Splunk
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../materials/lectures/Splunk/intro-to-splunk/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Intro
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../materials/lectures/Linux/intro-to-linux-logging/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Linux Logging
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Observability
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_6">
-            <span class="md-nav__icon md-icon"></span>
-            Observability
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../materials/lectures/Observability/intro-to-logging-monitoring-observability/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Overview
-    
-  </span>
-  
-
       </a>
     </li>
   
@@ -2045,38 +2244,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../materials/lectures/Observability/wrap-up-observability/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Wrap-Up
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../materials/lectures/TICK/intro-to-tick-stack/" class="md-nav__link">
+      <a href="../../../lectures/intro-to-tick-stack/" class="md-nav__link">
         
   
   
@@ -2099,12 +2267,58 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../materials/lectures/Zabbix/zabbix/" class="md-nav__link">
+      <a href="../../../lectures/zabbix/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     Zabbix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lectures/Intro_HTTP_RESTful_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HTTP & REST
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lectures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    README
     
   </span>
   
@@ -2128,6 +2342,28 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Observability/wrap-up-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Observability Wrap-Up
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -2140,10 +2376,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -2156,8 +2392,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Resources
           </label>
@@ -2250,10 +2486,105 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
         
           
-          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reading
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reading
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/additional-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    General
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/additional-reading/zabbix-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix Reading
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
             
   
   
@@ -2266,8 +2597,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
             Cert Manager
           </label>
@@ -2355,6 +2686,101 @@
   
   <span class="md-ellipsis">
     HashiCorp
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6" id="__nav_7_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    VM Setup
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6">
+            <span class="md-nav__icon md-icon"></span>
+            VM Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_02/lab1/vm/MultipassSetupforMonitoringLab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multipass
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../labs/lab_02/lab1/vm/VirtualBoxSetupGuideforMonitoringLab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox
     
   </span>
   
@@ -2491,6 +2917,27 @@ def<span class="w"> </span>health<span class="o">()</span>:
 
 
 
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 19, 2025 09:25:02">April 19, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
 
 
 
