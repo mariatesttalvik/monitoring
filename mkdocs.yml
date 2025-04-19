@@ -3,10 +3,27 @@ site_url: https://haapsalu-kutsehariduskeskus.github.io/monitoring/
 theme:
   name: material
   features:
-  - navigation.tabs
-  - navigation.top
-  - search.suggest
-  - search.highlight
+  # Navigation
+  - navigation.tabs # Top-level sections as tabs
+  - navigation.top # Back-to-top button
+  - navigation.expand # Left sidebar sections expanded
+  - navigation.sections # Render sections as groups
+  - navigation.indexes # Section landing pages
+  - navigation.tracking # URL updates as you scroll
+  - navigation.instant # Instant page loading
+
+  # Table of Contents
+  - toc.follow # TOC follows scroll
+  - toc.sticky # Keep TOC visible while scrolling
+
+  # Search
+  - search.suggest # Search suggestions
+  - search.highlight # Highlight search terms
+
+  # Content
+  - content.tabs.link # Link tabs together
+  - content.code.copy # Add copy button to code blocks
+
   language: en
 
 markdown_extensions:
@@ -15,10 +32,19 @@ markdown_extensions:
 - admonition
 - codehilite
 - pymdownx.superfences
-- pymdownx.highlight
+- pymdownx.highlight:
+    anchor_linenums: true # Line numbers in code blocks
 - pymdownx.details
 - pymdownx.tabbed
+- pymdownx.snippets # Include code snippets
+- pymdownx.keys # Keyboard key formatting
+- pymdownx.critic # Editorial annotations
+- pymdownx.emoji:
+    # Emoji support
+    emoji_index: !!python/name:materialx.emoji.twemoji ""
+    emoji_generator:
 
+      !!python/name:materialx.emoji.to_svg ""
 plugins:
 - search
 - git-revision-date-localized:
