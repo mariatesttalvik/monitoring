@@ -1,0 +1,3461 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Zabbix/lugemiseks_zabbix/">
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>Zabbix - Algaja teejuht - Monitoring Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.4af4bdda.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#zabbix-algaja-teejuht" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Monitoring Guide" class="md-header__button md-logo" aria-label="Monitoring Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Monitoring Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Zabbix - Algaja teejuht
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../archive/2_TICK_Stack_Local/" class="md-tabs__link">
+          
+  
+  
+  Archive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../final_project/final_project_building_monsystem/" class="md-tabs__link">
+          
+  
+  
+  Final Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../labs/lab_01/lab2/Simple_Linux_Logging_Lab/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Elasticsearch/Part1_Introduction/" class="md-tabs__link">
+          
+  
+  
+  Materials
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../resources/github-guide/" class="md-tabs__link">
+          
+  
+  
+  Resources
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Monitoring Guide" class="md-nav__button md-logo" aria-label="Monitoring Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Monitoring Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2_TICK_Stack_Local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack Local
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/lab04/1_InfluxDB_Cloud_Observability_Lab_Setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lab 04 Cloud
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Linux Logging Labs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Linux Logging Labs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/lab1/1_linux_logging_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/lab1/2_linux_logging_lab_advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/lab1/3_linux_logging_lab_testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Final Project
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Final Project
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/final_project_building_monsystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/topology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Topology
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Help
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Help
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/elk_stack_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ELK Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/hints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hints
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/virtualbox_wsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox WSL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/kibana_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kibana Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/networking_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Networking Debug
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/starter_code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Starter Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Labs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Labs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 01
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 01
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_01/lab2/Simple_Linux_Logging_Lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simple Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 02
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 02
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_02/lab1/monitoring-lab-manual-part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_02/lab1/monitoring-lab-manual-part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_02/lab1/monitoring-lab-manual-part3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_02/lab1/monitoring-lab-manual-extra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Extra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 03
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 03
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_03/prometheus_lab_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_03/prometheus_lab_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 04
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 04
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_04/tick_lab_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_04/tick_lab_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 05
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 05
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_05/part_1/adding_logstash_and_filebeat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Filebeat & Logstash
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_05/part_8/Lab8_Security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 06
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 06
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_06/splunk_cloud_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Cloud
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_06/splunk_cluster_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Cluster
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/lab_07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lab 07
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Materials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Materials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Elasticsearch
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Elasticsearch
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/Part1_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/Part2_Data_Modeling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/Part3_Search_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Search & Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/Part9_Backup_Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backup & Restore
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Prometheus/intro-to-prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Grafana
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Grafana/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Grafana/loki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Loki
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Splunk
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Splunk
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Splunk/intro-to-splunk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Linux/intro-to-linux-logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Linux Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            Observability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Observability/intro-to-logging-monitoring-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Observability/wrap-up-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wrap-Up
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TICK/intro-to-tick-stack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zabbix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/github-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/konto-digital_ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DigitalOcean Account
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/vscode-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VS Code Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Cert Manager
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cert Manager
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/cert_manager/basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/cert_manager/automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/cert_manager/elastic-cert_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Elastic Certs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/cert_manager/hashicorp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HashiCorp
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mis-on-zabbix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mis on Zabbix?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#miks-me-vajame-jalgimist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Miks me vajame jälgimist?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zabbixi-pohikontseptsioonid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zabbix'i põhikontseptsioonid
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zabbixi-toopohimote" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zabbix'i tööpõhimõte
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jalgimise-tuubid-zabbixis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jälgimise tüübid Zabbix'is
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zabbixi-kasutamise-eelised" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zabbix'i kasutamise eelised
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#praktiline-naide-serveri-jalgimine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Praktiline näide: Serveri jälgimine
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="zabbix-algaja-teejuht">Zabbix - Algaja teejuht<a class="headerlink" href="#zabbix-algaja-teejuht" title="Permanent link">&para;</a></h1>
+<p><img alt="Zabbix Logo" src="https://assets.zabbix.com/img/logo/zabbix_logo_500x131.png" /></p>
+<h2 id="mis-on-zabbix">Mis on Zabbix?<a class="headerlink" href="#mis-on-zabbix" title="Permanent link">&para;</a></h2>
+<p>Zabbix on avatud lähtekoodiga jälgimistarkvara, mille eesmärk on aidata IT-spetsialiste ja meeskondi jälgida oma arvutisüsteemide, võrkude ja rakenduste toimimist. Selle lõi Alexei Vladishev 1998. aastal ning 2001. aastal avaldati see avatud lähtekoodiga projektina, mis tähendab, et seda saab kasutada ilma litsentsitasudeta. Tänapäeval on Zabbix kujunenud üheks populaarseimaks jälgimistarkvaraks, mida kasutavad nii suured ettevõtted kui ka väiksemad organisatsioonid üle kogu maailma.</p>
+<p>Kujutage ette olukorda, kus teil on suur hoone täis erinevaid seadmeid, aga teil puudub võimalus teada saada, kui mõni neist seadmetest lakkab töötamast või hakkab ebanormaalselt käituma. Zabbix on justkui valvur, kes pidevalt jälgib kõiki teie süsteeme ja annab kohe teada, kui midagi olulist juhtub. Selle asemel, et käia ja kontrollida iga seadet käsitsi, automatiseerib Zabbix kogu protsessi ja teavitab teid ainult siis, kui on vaja teie tähelepanu.</p>
+<h2 id="miks-me-vajame-jalgimist">Miks me vajame jälgimist?<a class="headerlink" href="#miks-me-vajame-jalgimist" title="Permanent link">&para;</a></h2>
+<p>Tänapäeva digitaalses maailmas on IT-süsteemid muutunud iga organisatsiooni jaoks elutähtsaks. Kui e-posti server lakkab töötamast, võib see peatada kogu organisatsiooni suhtluse. Kui veebisait muutub aeglaseks, võivad kliendid minna konkurentide juurde. Seepärast on ülimalt oluline teada, mis toimub teie süsteemides enne, kui probleemid mõjutavad kasutajaid.</p>
+<p><img alt="IT Süsteemide Jälgimine" src="https://assets.zabbix.com/img/banners/whats_new_dashboard_72.svg" /></p>
+<p>Kujutage ette, et juhite autot pimedas ilma armatuurlaual olevate näidikuteta. Te ei teaks, kui kiiresti sõidate, kui palju kütust on alles või kas mootor kuumeneb üle. IT-süsteemid ilma jälgimistarkvarata on sarnases olukorras - te ei tea, kui hästi need toimivad, kuni midagi katki läheb.</p>
+<p>Zabbix täidab seda lünka, pakkudes reaalajas ülevaadet kõikidest teie süsteemidest ja võimaldades teil tuvastada probleeme juba enne, kui need muutuvad kriitiliseks. See on nagu ööpäevaringne valvur, kes jälgib teie IT-keskkonda ja teavitab teid koheselt, kui midagi vajab tähelepanu.</p>
+<h2 id="zabbixi-pohikontseptsioonid">Zabbix'i põhikontseptsioonid<a class="headerlink" href="#zabbixi-pohikontseptsioonid" title="Permanent link">&para;</a></h2>
+<p>Zabbix'i mõistmiseks on oluline tunda mõningaid põhimõisteid:</p>
+<p><strong>Server</strong>: Zabbix'i süda on Zabbix server, mis kogub kõik andmed, töötleb neid ja salvestab andmebaasi. See on keskne komponent, mis haldab kõiki monitooringu ülesandeid.</p>
+<p><strong>Agendid</strong>: Agendid on väikesed programmid, mis paigaldatakse jälgitavatele serveritele ja seadmetele. Need koguvad kohalikke andmeid, nagu protsessori kasutus, mälu olek ja kettaruum, ning saadavad need Zabbix serverile.</p>
+<p><strong>Andmebaas</strong>: Kõik kogutud andmed salvestatakse andmebaasi, mis võimaldab ajalooliste andmete analüüsi ja trendide jälgimist.</p>
+<p><strong>Veebiliides</strong>: Zabbix'i kasutajasõbralik veebiliides võimaldab administraatoritel seadistada monitooringut, vaadata andmeid ja hallata teavitusi läbi tavalise veebibrauseri.</p>
+<p><strong>Itemid</strong>: Itemid määravad, milliseid andmeid kogutakse. Näiteks võib üks item jälgida protsessori koormust, teine kettaruumi kasutust ja kolmas võrguliiklust.</p>
+<p><strong>Triggerid</strong>: Triggerid määravad tingimused, millal peaks süsteem saatma hoiatuse. Näiteks võib trigger käivituda, kui protsessori koormus on üle 90% rohkem kui 5 minuti jooksul.</p>
+<p><strong>Teavitused</strong>: Kui trigger käivitub, saadab Zabbix teavituse määratud kanalite kaudu, näiteks e-posti, SMS-i või muude kommunikatsioonivahendite kaudu.</p>
+<h2 id="zabbixi-toopohimote">Zabbix'i tööpõhimõte<a class="headerlink" href="#zabbixi-toopohimote" title="Permanent link">&para;</a></h2>
+<p>Zabbix'i jälgimisprotsess on üsna lihtne. Kõigepealt paigaldatakse jälgitavatele serveritele Zabbix'i agendid. Need agendid koguvad erinevat tüüpi andmeid vastavalt seadistustele ja saadavad need Zabbix serverile. Server töötleb need andmed ja salvestab andmebaasi.</p>
+<p><img alt="Zabbix Arhitektuur" src="https://content.cloudthat.com/resources/wp-content/uploads/2017/03/Zabbix_Arch.png" /></p>
+<p>Veebiliides võimaldab neid andmeid visualiseerida graafikutena, mis teeb andmete mõistmise lihtsamaks. Kui mõni jälgitav väärtus ületab määratud piiri, käivitub vastav trigger ja saadetakse teavitus.</p>
+<p>Näiteks, kui soovite jälgida veebiserverit, võib Zabbix koguda andmeid selle kohta, kui kiiresti veebisait vastab, kui palju külastajaid sellel on, ja kas kõik olulised teenused töötavad. Kui veebisait muutub liiga aeglaseks või mõni teenus lakkab töötamast, saate koheselt teavituse.</p>
+<h2 id="jalgimise-tuubid-zabbixis">Jälgimise tüübid Zabbix'is<a class="headerlink" href="#jalgimise-tuubid-zabbixis" title="Permanent link">&para;</a></h2>
+<p>Zabbix pakub erinevaid jälgimismeetodeid, et katta kõik teie IT-infrastruktuuri vajadused:</p>
+<p><strong>Passiivne jälgimine</strong>: Zabbix server küsib agendilt andmeid teatud ajavahemike järel. See on lihtsaim ja levinuim jälgimisviis.</p>
+<p><strong>Aktiivne jälgimine</strong>: Agent võtab ise serveriga ühendust ja edastab andmeid. See on kasulik, kui jälgitavad seadmed asuvad tulemüüri taga või pole otse ligipääsetavad.</p>
+<p><strong>Agendita jälgimine</strong>: Zabbix saab jälgida seadmeid ka ilma agente paigaldamata, kasutades standardprotokolle nagu SNMP, ICMP (ping) või HTTP.</p>
+<p><strong>Rakenduste jälgimine</strong>: Lisaks riistvarale võib Zabbix jälgida ka rakenduste tervist ja jõudlust, näiteks andmebaase, veebiservereid või e-posti servereid.</p>
+<h2 id="zabbixi-kasutamise-eelised">Zabbix'i kasutamise eelised<a class="headerlink" href="#zabbixi-kasutamise-eelised" title="Permanent link">&para;</a></h2>
+<p>Zabbix'i kasutamisega kaasneb mitmeid eeliseid, mis teevad selle populaarseks valikuks paljudes organisatsioonides:</p>
+<p><strong>Avatud lähtekood</strong>: Zabbix on täiesti tasuta ja avatud lähtekoodiga, mis tähendab, et pole litsentsitasusid ega piiranguid.</p>
+<p><strong>Skaleeritavus</strong>: Zabbix suudab jälgida tuhandeid seadmeid ühe serveriga ja veelgi rohkem kasutades hajutatud jälgimist.</p>
+<p><strong>Paindlikkus</strong>: Zabbix pakub laia valikut jälgimismeetodeid ja võimalust luua kohandatud lahendusi spetsiifiliste vajaduste jaoks.</p>
+<p><strong>Tugev kogukond</strong>: Suure kasutajaskonna tõttu on saadaval palju ressursse, juhendeid ja toetust.</p>
+<p><strong>Kohandatavad teavitused</strong>: Saate seadistada täpselt, millal ja kuidas soovite teavitusi saada, vältides liigset infot ja keskendudes ainult olulisele.</p>
+<h2 id="praktiline-naide-serveri-jalgimine">Praktiline näide: Serveri jälgimine<a class="headerlink" href="#praktiline-naide-serveri-jalgimine" title="Permanent link">&para;</a></h2>
+<p>Kujutage ette, et soovite jälgida oma veebiserveri tervist. Zabbix'iga võite seadistada järgmised jälgimisaspektid:</p>
+<p>Esmalt jälgite põhilisi süsteemiressursse: protsessori kasutust, mälukasutust ja kettaruumi. Nii saate teada, kui server hakkab ressursse ammendama.</p>
+<p>Teiseks jälgite võrguühendust ja veebiteenuse kättesaadavust. Kui veebileht muutub aeglaseks või pole kättesaadav, saate sellest kohe teada.</p>
+<p>Kolmandaks jälgite rakenduse logisid, et tuvastada võimalikke vigu või probleeme tarkvara tasandil.</p>
+<p>Neljandaks seadistate teavitused, et saada e-kiri või SMS, kui mõni nendest näitajatest ületab kriitilise läve.</p>
+<p>Sellise lihtsaga jälgimisega saate vältida olukordi, kus kasutajad märkavad probleeme enne teid. Selle asemel saate proaktiivselt tegeleda probleemidega juba enne, kui need mõjutavad lõppkasutajaid.</p>
+<h1 id="zabbixi-implementeerimine">Zabbix'i implementeerimine<a class="headerlink" href="#zabbixi-implementeerimine" title="Permanent link">&para;</a></h1>
+<p>Zabbix on võimas monitooringulahendus, mis pakub paindlikkust erinevateks juurutusviisideks. Enne kui asute süsteemi üles seadma, on oluline läbi mõelda mitmed strateegilised valikud, mis määravad teie monitooringuinfrastruktuuri edukuse.</p>
+<p>Zabbix'i juurutamine ei ole vaid tehniline protsess - see on strateegiline tegevus, mis peaks toetama teie IT-infrastruktuuri pikaajalisi eesmärke. Hästi planeeritud monitooringsüsteem aitab vähendada intsidentide arvu ja kestust, võimaldab ennetavat probleemide lahendamist ning pakub väärtuslikku informatsiooni infrastruktuuri optimeerimiseks.</p>
+<h2 id="peamised-valikud-implementeerimisel">Peamised valikud implementeerimisel<a class="headerlink" href="#peamised-valikud-implementeerimisel" title="Permanent link">&para;</a></h2>
+<p>Alljärgnevas tabelis on toodud olulisemad valikud, mida Zabbix'i juurutamisel kaaluda:</p>
+<table>
+<thead>
+<tr>
+<th>Valikukategooria</th>
+<th>Võimalused</th>
+<th>Eelised/puudused</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Paigaldustüüp</strong></td>
+<td><strong>All-in-One</strong></td>
+<td>+ Lihtne paigaldada ja hallata<br>+ Madal alustamiskulu<br>- Piiratud skaleeritavus<br>- Üksikpunkti tõrke risk</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Hajutatud</strong></td>
+<td>+ Parem jõudlus ja skaleeritavus<br>+ Komponentide eraldamine<br>- Keerukam seadistamine<br>- Vajab rohkem ressursse</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>High-Availability</strong></td>
+<td>+ Kõrge käideldavus<br>+ Tõrketaluvus<br>- Keerukas seadistamine<br>- Kõrgem investeering</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Konteineriseeritud</strong></td>
+<td>+ Lihtne juurutada ja uuendada<br>+ Keskkonna portaablus<br>- Võib esineda jõudlusprobleeme<br>- Vajab konteinerorkestreerimist</td>
+</tr>
+<tr>
+<td><strong>Andmebaas</strong></td>
+<td><strong>MySQL/MariaDB</strong></td>
+<td>+ Hästi dokumenteeritud ja testitud<br>+ Lihtne seadistada<br>- Võib vajada täiendavat optimeerimist suurtel mahtudel</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>PostgreSQL</strong></td>
+<td>+ Parem jõudlus suurte andmemahtude korral<br>+ Täiustatud indekseerimise võimalused<br>- Vajab rohkem teadmisi optimeerimiseks</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>TimescaleDB</strong></td>
+<td>+ Optimeeritud aegridade andmete jaoks<br>+ Parem päringute jõudlus<br>- Uuem tehnoloogia, vähem levinud</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Oracle</strong></td>
+<td>+ Ettevõtte tasemel tugi<br>+ Integreerub olemasolevate Oracle süsteemidega<br>- Kõrge litsentsikulu<br>- Vajab spetsialiseeritud DBA oskusi</td>
+</tr>
+<tr>
+<td><strong>Võrgu arhitektuur</strong></td>
+<td><strong>Tsentraliseeritud</strong></td>
+<td>+ Lihtsam seadistada ja hallata<br>+ Selge liiklusvoog<br>- Ei skaleeru hästi suurtes keskondades<br>- Suurem koormus kesksel serveril</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Hierarhiline</strong></td>
+<td>+ Parem skaleeritavus<br>+ Võimaldab jälgimist eraldatud võrkudes<br>- Keerukam seadistada<br>- Vajab rohkem ressursse</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Piirangutega</strong></td>
+<td>+ Töötab läbi tulemüüride<br>+ Sobib rangete turvanõuetega keskkondadesse<br>- Piiratud funktsioonid<br>- Viivitus andmete kogumisel</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Hübriid</strong></td>
+<td>+ Paindlik erinevatele vajadustele<br>+ Optimaalne suurte ja hajutatud keskkondade jaoks<br>- Keerukas seadistada ja hallata<br>- Nõuab põhjalikku planeerimist</td>
+</tr>
+</tbody>
+</table>
+<h2 id="praktiline-lahenemine-juurutamisele">Praktiline lähenemine juurutamisele<a class="headerlink" href="#praktiline-lahenemine-juurutamisele" title="Permanent link">&para;</a></h2>
+<p>Zabbix'i juurutamine on mõistlik teostada etappidena. See võimaldab süsteemi järk-järgult arendada ja tagab, et iga etappi on võimalik põhjalikult testida enne järgmise juurde liikumist.</p>
+<h3 id="1-pilootfaas">1. Pilootfaas<a class="headerlink" href="#1-pilootfaas" title="Permanent link">&para;</a></h3>
+<p>Alustage väikesemahulise pilootprojektiga, mis hõlmab piiratud arvu süsteeme. See võimaldab teil:</p>
+<ul>
+<li>Katsetada erinevaid konfiguratsioone piiratud keskkonnas</li>
+<li>Tutvuda Zabbix'i võimaluste ja piirangutega</li>
+<li>Töötada välja jälgimisstrateegiad erinevate komponentide jaoks</li>
+<li>Koguda kogemusi ja teadmisi enne täiemahulist juurutamist</li>
+</ul>
+<p>Pilootfaasis tasub keskenduda põhilistele infrastruktuurikomponentidele nagu serverid ja võrguseadmed. Kasutage standardseid šabloone (templates) ja keskenduge kõige olulisemate näitajate jälgimisele.</p>
+<h3 id="2-laiendamine-ja-kohandamine">2. Laiendamine ja kohandamine<a class="headerlink" href="#2-laiendamine-ja-kohandamine" title="Permanent link">&para;</a></h3>
+<p>Pärast edukat pilootfaasi saate süsteemi laiendada, hõlmates järk-järgult rohkem komponente:</p>
+<div class="highlight"><pre><span></span><code>Serverid -&gt; Võrguseadmed -&gt; Rakendused -&gt; Äriprotsessid
+</code></pre></div>
+<p>Kohandage Zabbix'i vastavalt oma organisatsiooni vajadustele:</p>
+<ul>
+<li>Looge kohandatud šabloonid erinevate süsteemide jaoks</li>
+<li>Seadistage teavitussüsteemid vastavalt meeskonna struktuurile</li>
+<li>Arendage kohandatud graafikud ja dashboardid erinevate rollide jaoks</li>
+<li>Integreerige Zabbix olemasolevate süsteemidega (ITSM, tikettide haldus jne)</li>
+</ul>
+<h3 id="3-automatiseerimine-ja-optimeerimine">3. Automatiseerimine ja optimeerimine<a class="headerlink" href="#3-automatiseerimine-ja-optimeerimine" title="Permanent link">&para;</a></h3>
+<p>Kui põhiline monitooringsüsteem on toimiv, keskenduge selle haldamise automatiseerimisele ja optimeerimisele:</p>
+<ul>
+<li>Automatiseerige agentide paigaldamine ja konfigureerimine</li>
+<li>Seadistage automaatne reageerimine teatud tüüpi probleemidele</li>
+<li>Optimeerige andmebaasi jõudlust vastavalt kasvavale andmemahule</li>
+<li>Looge automaatsed raportid ja analüüside süsteem</li>
+</ul>
+<h2 id="eduka-juurutuse-votmetegurid">Eduka juurutuse võtmetegurid<a class="headerlink" href="#eduka-juurutuse-votmetegurid" title="Permanent link">&para;</a></h2>
+<p>Zabbix'i edukas juurutamine sõltub mitmest olulisest tegurist:</p>
+<ol>
+<li><strong>Põhjalik planeerimine</strong> - pühendage aega arhitektuuri ja strateegiate väljatöötamisele</li>
+<li><strong>Iteratiivne lähenemine</strong> - liikuge edasi sammhaaval, kontrollides iga etapi tulemusi</li>
+<li><strong>Piisav ressursside eraldamine</strong> - veenduge, et serveritel ja andmebaasidel on piisavalt ressursse</li>
+<li><strong>Personali väljaõpe</strong> - investeerige meeskonna teadmistesse ja oskustesse</li>
+<li><strong>Dokumenteerimine</strong> - looge põhjalik dokumentatsioon konfiguratsiooni, protseduuride ja muudatuste kohta</li>
+</ol>
+<h2 id="zabbixi-struktuur">Zabbix'i struktuur<a class="headerlink" href="#zabbixi-struktuur" title="Permanent link">&para;</a></h2>
+<p>Zabbix monitooringu ökosüsteem koosneb mitmest komponendist, mis töötavad koos, et tagada terviklik ja skaleeritav jälgimislahendus. Iga komponent täidab spetsiifilist rolli andmete kogumisel, töötlemisel ja visualiseerimisel.</p>
+<h3 id="arhitektuuri-komponendid">Arhitektuuri komponendid<a class="headerlink" href="#arhitektuuri-komponendid" title="Permanent link">&para;</a></h3>
+<p>Zabbix'i arhitektuur on paindlik ja võimaldab juurutada nii lihtsat ühes serveris lahendust kui ka keerukat hajutatud süsteemi, mis suudab monitoorida tuhandeid seadmeid. Arhitektuuri peamised komponendid on järgmised:</p>
+<p><strong>Zabbix Server</strong> on keskne komponent, mis töötleb kogutud andmeid, haldab teavitusi ja teostab kõik põhifunktsioonid.</p>
+<p><strong>Andmebaas (Database)</strong> salvestab kõik konfiguratsiooni andmed ja kogutud meetrikad.</p>
+<p><strong>Veebiserver (Web Server)</strong> majutab Zabbix'i veebiliidest, mis võimaldab administraatoritel ja kasutajatel süsteemi seadistada ning andmeid visualiseerida.</p>
+<p><strong>Zabbix Proxy</strong> on vahekomponent, mis kogub andmeid eraldatud võrgusegmentidest või kaugasukohtadest, eeltöötleb neid ja edastab serverile.</p>
+<p><strong>Zabbix Agent</strong> on kerge tarkvara, mis paigaldatakse jälgitavatele seadmetele.</p>
+<p><strong>Agentless monitooring</strong> võimaldab jälgida seadmeid ilma spetsiaalse tarkvara paigaldamiseta.</p>
+<div class="highlight"><pre><span></span><code>flowchart TD
+    subgraph &quot;Zabbix Kesksüsteem&quot;
+        ZS[Zabbix Server] --&gt; |salvestab andmeid| DB[(Andmebaas)]
+        ZS --&gt; |genereerib| AL[Teavitused/Alarmid]
+        ZS --&gt; |uuendab| HC[Ajaloo Cache]
+        WI[Veebiliides] --&gt; |konfigureerib| ZS
+        WI --&gt; |kuvab andmeid| DB
+    end
+
+    subgraph &quot;Võrk A - Peakontor&quot;
+        ZA1[Zabbix Agent] --&gt; |saadab andmeid| ZS
+        ZA2[Zabbix Agent] --&gt; |saadab andmeid| ZS
+        SA1[SNMP Seade] --&gt; |andmed| ZS
+        JMX1[JMX Rakendus] --&gt; |andmed| ZS
+    end
+
+    subgraph &quot;Võrk B - Harukontor&quot;
+        ZP[Zabbix Proxy] --&gt; |vahendab andmeid| ZS
+        ZA3[Zabbix Agent] --&gt; ZP
+        ZA4[Zabbix Agent] --&gt; ZP
+        SA2[SNMP Seade] --&gt; ZP
+    end
+
+    subgraph &quot;Võrk C - Pilveressursid&quot;
+        ZP2[Zabbix Proxy] --&gt; |vahendab andmeid| ZS
+        API1[Cloud API] --&gt; ZP2
+        ZA5[Zabbix Agent] --&gt; ZP2
+    end
+
+    subgraph &quot;Lisakomponendid&quot;
+        ZS --&gt; |HTTP küsimused| EXT[Välised veebiteenused]
+        AL --&gt; |teavitab| EM[E-mail]
+        AL --&gt; |teavitab| SMS[SMS]
+        AL --&gt; |kutsub| SC[Skriptid/Käsud]
+        AL --&gt; |integreerub| IT[ITSM/Tiketisüsteemid]
+    end
+</code></pre></div>
+<h3 id="andmevoogude-hierarhia">Andmevoogude hierarhia<a class="headerlink" href="#andmevoogude-hierarhia" title="Permanent link">&para;</a></h3>
+<p>Zabbix töötab järgmiste struktuurielementide hierarhiana, mis võimaldab jõudsalt hallata isegi väga suuri monitooringu keskkondi:</p>
+<ol>
+<li><strong>Hostid (Hosts)</strong> - füüsilised või virtuaalsed seadmed, mida jälgitakse</li>
+<li>
+<p><em>Näide</em>: webserver01.example.com, db.example.com, router1</p>
+</li>
+<li>
+<p><strong>Hostide grupid (Host Groups)</strong> - hostide loogilised grupeeringud </p>
+</li>
+<li>
+<p><em>Näide</em>: Veebiserverid, Andmebaasid, Võrguseadmed</p>
+</li>
+<li>
+<p><strong>Mallid (Templates)</strong> - eelseadistatud jälgimisparameetrite kogumid</p>
+</li>
+<li>
+<p><em>Näide</em>: Template OS Linux, Template DB MySQL, Template App Nginx</p>
+</li>
+<li>
+<p><strong>Elemendid (Items)</strong> - konkreetsed andmetüübid, mida kogutakse</p>
+</li>
+<li>
+<p><em>Näide</em>: cpu.load, memory.available, http.response.time</p>
+</li>
+<li>
+<p><strong>Päästikud (Triggers)</strong> - tingimused, mis põhinevad kogutud andmetel</p>
+</li>
+<li>
+<p><em>Näide</em>: {host:cpu.load.avg(5m)}&gt;90, {host:memory.available.last()}&lt;100M</p>
+</li>
+<li>
+<p><strong>Sündmused (Events)</strong> - päästikute oleku muutused või muud tuvastatud sündmused</p>
+</li>
+<li>
+<p><em>Näide</em>: Päästik "Kõrge CPU kasutus" muutus olekust "OK" olekusse "PROBLEEM"</p>
+</li>
+<li>
+<p><strong>Tegevused (Actions)</strong> - reaktsioonid sündmustele</p>
+</li>
+<li>
+<p><em>Näide</em>: Saada e-kiri administraatorile, käivita taaskäivitusskript</p>
+</li>
+<li>
+<p><strong>Meedia (Media)</strong> - teavituskanalid</p>
+</li>
+<li>
+<p><em>Näide</em>: E-post, SMS, Slack, Telegram</p>
+</li>
+<li>
+<p><strong>Graafikud ja näidikupaneelid (Graphs and Dashboards)</strong> - andmete visualiseerimine</p>
+</li>
+<li><em>Näide</em>: CPU kasutuse graafik, süsteemiressursside näidikupaneel</li>
+</ol>
+<div class="highlight"><pre><span></span><code>flowchart TD
+    subgraph &quot;Andmete allikad&quot;
+        A1[Serverid] --&gt; A[Zabbix Agent]
+        A2[Võrguseadmed] --&gt; B[SNMP monitooring]
+        A3[Java rakendused] --&gt; C[JMX monitooring]
+        A4[Riistvara] --&gt; D[IPMI monitooring]
+    end
+
+    subgraph &quot;Andmete kogumine ja edastamine&quot;
+        A --&gt; E[Zabbix Proxy]
+        B --&gt; E
+        C --&gt; E
+        D --&gt; E
+
+        A --&gt; F[Zabbix Server]
+        B --&gt; F
+        C --&gt; F
+        D --&gt; F
+    end
+
+    subgraph &quot;Keskne töötlemine ja salvestamine&quot;
+        E --&gt; F
+        F &lt;--&gt; G[(Andmebaas)]
+    end
+
+    subgraph &quot;Kasutajaliides&quot;
+        F &lt;--&gt; H[Veebiliides]
+        G &lt;--&gt; H
+    end
+
+    subgraph &quot;Kasutajad&quot;
+        H --&gt; I[Administraatorid]
+        H --&gt; J[Monitoorijad]
+    end
+
+    %% Selgitavad märkused
+    K1[(&quot;Keskne andmete töötlemine,\nteavituste genereerimine&quot;)] -.-&gt; F
+    K2[(&quot;Andmete ja\nkonfiguratsiooni hoidla&quot;)] -.-&gt; G
+    K3[(&quot;Haldusliides ja\nvisualiseerimine&quot;)] -.-&gt; H
+    K4[(&quot;Andmete vahendamine\neraldatud võrkudest&quot;)] -.-&gt; E
+
+    classDef core fill:#f96,stroke:#333,stroke-width:2px,color:black
+    classDef sources fill:#69f,stroke:#333,stroke-width:1px,color:black
+    classDef interface fill:#9f6,stroke:#333,stroke-width:1px,color:black
+    classDef notes fill:#fcf,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5,color:black
+
+    class F,G core
+    class A,B,C,D,A1,A2,A3,A4 sources
+    class H,I,J interface
+    class K1,K2,K3,K4 notes
+    class E core
+</code></pre></div>
+<h3 id="zabbixi-komponentide-rollid-ja-vastastikused-seosed">Zabbix'i komponentide rollid ja vastastikused seosed<a class="headerlink" href="#zabbixi-komponentide-rollid-ja-vastastikused-seosed" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>flowchart TB
+    subgraph &quot;Monitooritavad seadmed&quot;
+        A[Serverid] --&gt; B1[Zabbix Agent]
+        N[Võrguseadmed] --&gt; C1[SNMP monitooring]
+        J[Java rakendused] --&gt; D1[JMX monitooring]
+        H[Füüsiline riistvara] --&gt; E1[IPMI monitooring]
+    end
+
+    subgraph &quot;Andmete kogumine&quot;
+        B1 --&gt; B[Zabbix Agent]
+        C1 --&gt; C[SNMP monitooring]
+        D1 --&gt; D[JMX monitooring]
+        E1 --&gt; E[IPMI monitooring]
+    end
+
+    subgraph &quot;Andmete vahendamine&quot;
+        B --&gt; F[Zabbix Proxy]
+        C --&gt; F
+        D --&gt; F
+        E --&gt; F
+
+        B --&gt; G[Zabbix Server]
+        C --&gt; G
+        D --&gt; G
+        E --&gt; G
+    end
+
+    subgraph &quot;Keskne töötlemine&quot;
+        F --&gt; G
+        G &lt;--&gt; H[Andmebaas]
+    end
+
+    subgraph &quot;Haldus ja visualiseerimine&quot;
+        H &lt;--&gt; I[Veebiliides]
+        G &lt;--&gt; I
+    end
+
+    subgraph &quot;Kasutajad&quot;
+        I --&gt; J1[Administraatorid]
+        I --&gt; K[Monitoorijad]
+    end
+
+    classDef primary fill:#f96,stroke:#333,stroke-width:2px
+    classDef secondary fill:#69f,stroke:#333,stroke-width:1px
+    classDef component fill:#9f6,stroke:#333,stroke-width:1px
+    classDef users fill:#f69,stroke:#333,stroke-width:1px
+
+    class G,H primary
+    class F,I secondary
+    class A,B,C,D,E,B1,C1,D1,E1 component
+    class J1,K users
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Komponent</th>
+<th>Peamine roll</th>
+<th>Suhtleb komponendiga</th>
+<th>Andmete liikumine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Zabbix Server</strong></td>
+<td>Keskne andmete töötlemine, teavituste genereerimine</td>
+<td>Agendid, Proksid, Andmebaas, Veebiliides</td>
+<td>Võtab vastu andmeid agentidelt/proksidelt, salvestab andmebaasi</td>
+</tr>
+<tr>
+<td><strong>Zabbix Agent</strong></td>
+<td>Kohalike andmete kogumine</td>
+<td>Server või Proxy</td>
+<td>Kogub andmeid ja saadab serverile/proksile</td>
+</tr>
+<tr>
+<td><strong>Zabbix Proxy</strong></td>
+<td>Andmete vahendamine eraldatud võrkudest</td>
+<td>Server, Agendid, SNMP seadmed</td>
+<td>Kogub andmeid agentidelt ja edastab serverile</td>
+</tr>
+<tr>
+<td><strong>Andmebaas</strong></td>
+<td>Andmete ja konfiguratsiooni hoidla</td>
+<td>Server, Veebiliides</td>
+<td>Salvestab kõik andmed ja konfiguratsiooni</td>
+</tr>
+<tr>
+<td><strong>Veebiliides</strong></td>
+<td>Haldusliides ja visualiseerimine</td>
+<td>Server, Andmebaas</td>
+<td>Kuvab andmeid, võimaldab seadistamist</td>
+</tr>
+<tr>
+<td><strong>SNMP monitooring</strong></td>
+<td>Võrguseadmete jälgimine</td>
+<td>Server või Proxy</td>
+<td>Küsib andmeid SNMP protokolli kaudu</td>
+</tr>
+<tr>
+<td><strong>JMX monitooring</strong></td>
+<td>Java rakenduste jälgimine</td>
+<td>Server</td>
+<td>Küsib andmeid Java rakenduselt JMX kaudu</td>
+</tr>
+<tr>
+<td><strong>IPMI monitooring</strong></td>
+<td>Riistvara jälgimine</td>
+<td>Server</td>
+<td>Küsib andmeid füüsiliselt serverilt IPMI kaudu</td>
+</tr>
+</tbody>
+</table>
+<h3 id="andmete-liikumine-susteemis">Andmete liikumine süsteemis<a class="headerlink" href="#andmete-liikumine-susteemis" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Andmete kogumine</strong>:</li>
+<li>Agendid koguvad andmeid jälgitavatest süsteemidest</li>
+<li>SNMP, JMX, IPMI ja muud monitooringu viisid koguvad andmeid ilma agentideta</li>
+<li>
+<p>Andmeid võib koguda aktiivselt (server küsib) või passiivselt (agent saadab)</p>
+</li>
+<li>
+<p><strong>Andmete edastamine</strong>:</p>
+</li>
+<li>Andmed liiguvad otse serverisse või läbi prokside</li>
+<li>
+<p>Proksid puhverdavad andmeid võrguühenduse katkestuste ajal</p>
+</li>
+<li>
+<p><strong>Andmete töötlemine</strong>:</p>
+</li>
+<li>Server töötleb saabuvad andmed</li>
+<li>Andmed salvestatakse andmebaasi</li>
+<li>
+<p>Kontrollitakse päästikute tingimusi</p>
+</li>
+<li>
+<p><strong>Reaktsioonide genereerimine</strong>:</p>
+</li>
+<li>Kui päästik käivitub, luuakse sündmus</li>
+<li>
+<p>Sündmused käivitavad tegevusi (teavitused, skriptid)</p>
+</li>
+<li>
+<p><strong>Andmete visualiseerimine</strong>:</p>
+</li>
+<li>Veebiliides kuvab andmeid graafikutel ja näidikupaneelidel</li>
+<li>Andmeid saab eksportida raportitena</li>
+</ol>
+<p>Zabbix'i struktuur võimaldab süsteemi skaleerida vastavalt vajadusele, alustades lihtsast ühe serveriga seadistusest ja laiendades seda globaalse monitooringu võrgustikuni, mis suudab jälgida sadu tuhandeid seadmeid.</p>
+<div class="highlight"><pre><span></span><code>flowchart LR
+    %% Peamised komponendid
+    Server[Zabbix Server] 
+    Agent[Zabbix Agent]
+    Proxy[Zabbix Proxy]
+    DB[(Andmebaas)]
+    Web[Veebiliides]
+    SNMP[SNMP monitooring]
+    JMX[JMX monitooring]
+    IPMI[IPMI monitooring]
+
+    %% Seosed
+    Agent --&gt;|&quot;Andmete edastamine&quot;| Server
+    Agent --&gt;|&quot;Andmete edastamine&quot;| Proxy
+    Proxy --&gt;|&quot;Andmete edastamine&quot;| Server
+    Server &lt;--&gt;|&quot;Andmete salvestamine/lugemine&quot;| DB
+    Web &lt;--&gt;|&quot;Konfigureerimine/andmete kuvamine&quot;| Server
+    Web &lt;--&gt;|&quot;Andmete pärimine&quot;| DB
+    SNMP --&gt;|&quot;Võrguseadmete andmed&quot;| Server
+    SNMP --&gt;|&quot;Võrguseadmete andmed&quot;| Proxy
+    JMX --&gt;|&quot;Java rakenduste andmed&quot;| Server
+    IPMI --&gt;|&quot;Riistvara andmed&quot;| Server
+
+    %% Stiilid komponentide jaoks
+    classDef central fill:#f96,stroke:#333,stroke-width:2px
+    classDef collector fill:#69f,stroke:#333,stroke-width:1px
+    classDef storage fill:#9f6,stroke:#333,stroke-width:1px
+    classDef interface fill:#6f9,stroke:#333,stroke-width:1px
+
+    class Server central
+    class Agent,Proxy,SNMP,JMX,IPMI collector
+    class DB storage
+    class Web interface
+
+    %% Selgitavad märkused
+    Server_note[&quot;Keskne andmete töötlemine,\nteavituste genereerimine&quot;]:::note -.-&gt; Server
+    Agent_note[&quot;Kohalike andmete\nkogumine&quot;]:::note -.-&gt; Agent
+    Proxy_note[&quot;Andmete vahendamine\neraldatud võrkudest&quot;]:::note -.-&gt; Proxy
+    DB_note[&quot;Andmete ja konfiguratsiooni\nhoidla&quot;]:::note -.-&gt; DB
+    Web_note[&quot;Haldusliides ja\nvisualiseerimine&quot;]:::note -.-&gt; Web
+
+    classDef note fill:white,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
+</code></pre></div>
+<h3 id="zabbix-702-versioon">Zabbix 7.0.2 versioon<a class="headerlink" href="#zabbix-702-versioon" title="Permanent link">&para;</a></h3>
+<p>Zabbix 7.0.2 on uusim versioon (märts 2025 seisuga), mis sisaldab mitmeid olulisi uuendusi ja täiendusi:</p>
+<ul>
+<li><strong>Täiustatud kasutajaliides</strong>: Kaasaegsem ja intuitiivsem kasutajaliides, mis lihtsustab igapäevast tööd.</li>
+<li><strong>Parem jõudlus</strong>: Optimeeritud andmebaasitöötlus ja väiksem ressursikasutus.</li>
+<li><strong>Laiendatud API</strong>: Täiendatud API funktsioonid automatiseerimiseks ja integreerimiseks.</li>
+<li><strong>Uued jälgimisfunktsioonid</strong>: Täiendatud võimalused rakenduste ja konteinerite jälgimiseks.</li>
+<li><strong>Täiustatud teavitused</strong>: Paindlikumad ja kohandatavad teavitused, sealhulgas parem integratsioon väliste süsteemidega.</li>
+<li><strong>Turvalisuse täiendused</strong>: Täiustatud autentimine ja parema turvaomadused.</li>
+</ul>
+<p><img alt="Zabbix 7.2 peatselt tulemas" src="https://blog.zabbix.com/wp-content/uploads/2024/12/Zabbix_BLOG_7.2_release_880x516.png" /></p>
+<p>Lisainformatsiooni uuenduste ja tulevaste versioonide kohta leiate <a href="https://blog.zabbix.com/see-whats-possible-in-zabbix-7-2/29373/">Zabbix'i ametlikult blogilt</a>.</p>
+<h1 id="building-a-monitoring-dashboard-which-metrics-to-track">Building a Monitoring Dashboard: Which Metrics to Track?<a class="headerlink" href="#building-a-monitoring-dashboard-which-metrics-to-track" title="Permanent link">&para;</a></h1>
+<h2 id="olulised-jalgimismeetrikad">Olulised jälgimismeetrikad<a class="headerlink" href="#olulised-jalgimismeetrikad" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Kategooria</th>
+<th>Meetrika</th>
+<th>Kirjeldus</th>
+<th>Miks on oluline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Globaalsed meetrikad</strong></td>
+<td>Süsteemi tööaeg ja kättesaadavus</td>
+<td>Mõõdab, kui kaua süsteem on töötanud ilma katkestusteta</td>
+<td>Võimaldab jälgida teenuste järjepidevat kättesaadavust, mida saavad kõik koheselt näha</td>
+</tr>
+<tr>
+<td></td>
+<td>Üldine ressursside kasutus</td>
+<td>CPU, mälu, kettaruumi ja võrgu kasutuse jälgimine</td>
+<td>Aitab tuvastada probleeme enne, kui need muutuvad kriitiliseks</td>
+</tr>
+<tr>
+<td></td>
+<td>Peamised kriitilised probleemid</td>
+<td>Kohesed teavitused süsteemi oluliste probleemide kohta</td>
+<td>Võimaldab kiiresti reageerida hädaolukordadele</td>
+</tr>
+<tr>
+<td></td>
+<td>SLA vastavuse staatus</td>
+<td>Teenustaseme lepingute täitmise jälgimine</td>
+<td>Tagab klientide rahulolu ja probleemide ennetava lahendamise</td>
+</tr>
+<tr>
+<td><strong>Infrastruktuuri meetrikad</strong></td>
+<td>Serveri jõudlus</td>
+<td>CPU, RAM, ketta I/O ja muude serveri ressursside jälgimine</td>
+<td>Tagab funktsionaalse kasutajakogemuse ja aitab optimeerida ressursikasutust</td>
+</tr>
+<tr>
+<td></td>
+<td>Rakenduste tervis</td>
+<td>Rakenduste jõudluse, kättesaadavuse ja käitumise jälgimine</td>
+<td>Võimaldab tuvastada ja lahendada probleeme ning optimeerida ressursikasutust</td>
+</tr>
+<tr>
+<td></td>
+<td>Salvestusruumi kasutus</td>
+<td>Reaalajas ülevaade ja ennustavad analüütikad</td>
+<td>Aitab planeerida ressursse ja ennetada salvestusruumiga seotud probleeme</td>
+</tr>
+<tr>
+<td></td>
+<td>Andmebaasi jõudlusnäitajad</td>
+<td>Andmebaasi reaktsiooniaeg ja võimekus</td>
+<td>Kindlustab, et andmebaas toetab rakendusi ja vastab päringutele kiiresti</td>
+</tr>
+<tr>
+<td><strong>Võrgu meetrikad</strong></td>
+<td>Ribalaiuse kasutus</td>
+<td>Võrgu andmeedastuse mahu jälgimine</td>
+<td>Annab teada, kui võrk on lähenemas läbilaskevõime piiridele</td>
+</tr>
+<tr>
+<td></td>
+<td>Latentsus ja pakettide kadu</td>
+<td>Andmete ülekandmise kiiruse ja kadude jälgimine</td>
+<td>Tuvastab võrguprobleemid ja andmete kadumise</td>
+</tr>
+<tr>
+<td></td>
+<td>Liideste staatus</td>
+<td>Kõigi võrguseadmete ja nende jõudluse jälgimine</td>
+<td>Aitab tuvastada võrgu kitsaskohti ja jõudlusprobleeme</td>
+</tr>
+<tr>
+<td></td>
+<td>Tulemüüri ja VPN-tunneli staatus</td>
+<td>Turvaseadmete ja -ühenduste seisukorra jälgimine</td>
+<td>Tagab, et turvameetmed töötavad korrektselt</td>
+</tr>
+<tr>
+<td><strong>Turvalisuse meetrikad</strong></td>
+<td>Volitamata juurdepääsukatsed</td>
+<td>Jälgib katseid pääseda ligi süsteemidele</td>
+<td>Kaitseb tundlikke andmeid ja hoiab ära operatsioonide katkestusi</td>
+</tr>
+<tr>
+<td></td>
+<td>Lõpp-punktide turvastaatus</td>
+<td>Seadmete viirusetõrje ja tarkvara uuenduste staatus</td>
+<td>Aitab tuvastada ja ennetada turvaohte enne nende realiseerumist</td>
+</tr>
+<tr>
+<td></td>
+<td>Vastavus ja auditlogid</td>
+<td>Regulatsioonidele ja nõuetele vastavuse jälgimine</td>
+<td>Tagab nõuetele vastavuse ja aitab tuvastada pettusi</td>
+</tr>
+<tr>
+<td></td>
+<td>Aktiivsed turvahoiatused</td>
+<td>Pidev süsteemide ja võrgu jälgimine ohtude tuvastamiseks</td>
+<td>Võimaldab avastada ohte enne kahju tekkimist</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tohusa-jalgimislaua-loomise-pohimotted">Tõhusa jälgimislaua loomise põhimõtted<a class="headerlink" href="#tohusa-jalgimislaua-loomise-pohimotted" title="Permanent link">&para;</a></h2>
+<p>Zabbix'i jälgimislaud on võimas tööriist, mis võimaldab jälgida kõiki ülaltoodud meetrikaid. Tõhusa jälgimislaua loomisel tasub arvestada järgmiste põhimõtetega:</p>
+<ol>
+<li>
+<p><strong>Väldi informatsiooni üleküllust</strong> - liiga palju graafikuid, värve ja vidinaid muudavad jälgimislaua raskesti loetavaks. Keskendu olulisimale.</p>
+</li>
+<li>
+<p><strong>Struktureeri vastavalt kasutajate vajadustele</strong> - erinevad meeskonnad (IT, juhtkond, turvatiim) vajavad erinevaid meetrikaid.</p>
+</li>
+<li>
+<p><strong>Kasuta sobivaid visualiseerimisformaate</strong> - Zabbix pakub mitmeid võimalusi (joongraafikud, tulpdiagrammid, sektordiagrammid, mõõdikud), vali andmetele sobiv.</p>
+</li>
+<li>
+<p><strong>Loo hierarhia</strong> - kõige kriitilisemad näitajad peaksid olema kohe nähtavad, detailsema info jaoks saab kasutada alamvaateid.</p>
+</li>
+<li>
+<p><strong>Jälgi trende ja mustreid</strong> - ajaloolised andmed aitavad ennustada tulevasi probleeme ja planeerida ressursse.</p>
+</li>
+<li>
+<p><strong>Kasuta dünaamilist uuendamist</strong> - Zabbix'i vidinad saavad omavahel suhelda ja andmeid värskendada vastavalt olukorrale.</p>
+</li>
+<li>
+<p><strong>Optimeeri andmete säilitamine</strong> - ajalugu 7-30 päeva, trendid 365 päeva, regulaarne andmete puhastamine.</p>
+</li>
+</ol>
+<p>Hästi läbimõeldud jälgimislaud võimaldab kiiresti tuvastada probleeme, optimeerida ressursikasutust ning tagada süsteemide sujuv toimimine.</p>
+<h1 id="zabbixi-olulised-asjad">Zabbix'i olulised asjad<a class="headerlink" href="#zabbixi-olulised-asjad" title="Permanent link">&para;</a></h1>
+<h2 id="andmete-kogumise-meetodid">Andmete kogumise meetodid<a class="headerlink" href="#andmete-kogumise-meetodid" title="Permanent link">&para;</a></h2>
+<h3 id="agendiga-jalgimine">Agendiga jälgimine<a class="headerlink" href="#agendiga-jalgimine" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Aktiivne vs passiivne kontroll</strong>: </li>
+<li><em>Passiivne</em>: Server küsib agendilt andmeid</li>
+<li><em>Aktiivne</em>: Agent saadab ise andmeid serverisse perioodi järgi</li>
+<li><strong>UserParameters</strong>: Kohandatud kontrollide loomine agendis
+  <div class="highlight"><pre><span></span><code>UserParameter=mysql.status[*],/usr/local/bin/check_mysql.sh $1
+</code></pre></div></li>
+<li><strong>Item'id</strong>: Kuidas seadistada erinevaid andmekogumise elemente</li>
+</ul>
+<h3 id="agendita-jalgimine">Agendita jälgimine<a class="headerlink" href="#agendita-jalgimine" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>SNMP</strong> (Simple Network Management Protocol):</li>
+<li>Võrguseadmete jälgimiseks (ruuterid, switchid)</li>
+<li>MIB failide kasutamine ja mõistmine</li>
+<li><strong>IPMI</strong> (Intelligent Platform Management Interface):</li>
+<li>Serverriistvara jälgimiseks (temperatuur, ventilaatorid)</li>
+<li><strong>HTTP/HTTPS kontrollid</strong>:</li>
+<li>Veebiteenuste kättesaadavuse ja jõudluse jälgimine</li>
+<li><strong>JMX</strong> (Java Management Extensions):</li>
+<li>Java rakenduste jälgimine</li>
+<li><strong>SSH/Telnet kontrollid</strong>: </li>
+<li>Kaugseadmete käsurea kaudu jälgimine</li>
+</ul>
+<h3 id="api-ja-valised-skriptid">API ja välised skriptid<a class="headerlink" href="#api-ja-valised-skriptid" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>External scripts</strong>: Kohandatud skriptide kasutamine serveris</li>
+<li><strong>HTTP Agent</strong>: Veebiteenuste REST API-de kontrollimiseks</li>
+<li><strong>Zabbix Sender</strong>: Kuidas saata kohandatud meetrikaid Zabbix'i</li>
+</ul>
+<h2 id="templates-ja-mallide-kasutamine">Templates ja mallide kasutamine<a class="headerlink" href="#templates-ja-mallide-kasutamine" title="Permanent link">&para;</a></h2>
+<h3 id="mallide-struktuur">Mallide struktuur<a class="headerlink" href="#mallide-struktuur" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Items</strong>: Andmete kogumise definitsioonid</li>
+<li><strong>Triggers</strong>: Probleemide tuvastamise tingimused</li>
+<li><strong>Graphs</strong>: Andmete visualiseerimine</li>
+<li><strong>Applications</strong>: Items'ide loogiline grupeerimine</li>
+<li><strong>Discovery rules</strong>: Automaatne ressursside avastamine</li>
+<li><strong>Web scenarios</strong>: Veebiteenuste jälgimine</li>
+</ul>
+<h3 id="mallide-haldamine">Mallide haldamine<a class="headerlink" href="#mallide-haldamine" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Mallide importimine/eksportimine</strong>: Mallide jagamine ja varundamine</li>
+<li><strong>Pärimine (inheritance)</strong>: Kuidas luua mallide hierarhiaid</li>
+<li><strong>Macros</strong>: Kohandatavate muutujate kasutamine mallides</li>
+<li><strong>Mallide linkimine</strong>: Kuidas siduda malle hostidega</li>
+</ul>
+<h3 id="levinud-mallid">Levinud mallid<a class="headerlink" href="#levinud-mallid" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Operatsioonisüsteemi mallid</strong>: Linux, Windows, macOS</li>
+<li><strong>Andmebaasi mallid</strong>: MySQL, PostgreSQL, MongoDB</li>
+<li><strong>Võrguteenuste mallid</strong>: HTTP, DNS, SMTP, FTP</li>
+<li><strong>Virtualiseerimisplatvormide mallid</strong>: VMware, Docker, Kubernetes</li>
+</ul>
+<h2 id="hairemine-ja-teavitused">Häiremine ja teavitused<a class="headerlink" href="#hairemine-ja-teavitused" title="Permanent link">&para;</a></h2>
+<h3 id="triggerite-loomine">Triggerite loomine<a class="headerlink" href="#triggerite-loomine" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Tingimuste süntaks</strong>: Kuidas kirjutada funktsionaalseid triggereid
+<div class="highlight"><pre><span></span><code>{host:system.cpu.load[percpu,avg1].avg(5m)}&gt;4
+</code></pre></div></li>
+<li><strong>Raskusastmed (severity levels)</strong>: Erineva tõsidusega probleemide määramine</li>
+<li><strong>Trigger dependencies</strong>: Vältimaks üleliigseid teavitusi</li>
+</ul>
+<h3 id="teavituste-seadistamine">Teavituste seadistamine<a class="headerlink" href="#teavituste-seadistamine" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Meedia tüübid</strong>: Email, SMS, messengers, webhooks</li>
+<li><strong>Kasutajagrupid ja teavitusaegade määramine</strong></li>
+<li><strong>Teavituste sisu kohandamine</strong>: Kuidas muuta teavituste sisu ja formaati</li>
+<li><strong>Eskalatsioonid</strong>: Probleemide eskaleerimise seadistamine</li>
+</ul>
+<h3 id="tegevuste-seadistamine-actions">Tegevuste seadistamine (Actions)<a class="headerlink" href="#tegevuste-seadistamine-actions" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Tingimused</strong>: Millal tuleb tegevus käivitada</li>
+<li><strong>Toimingud</strong>: Mida teha, kui tingimused on täidetud</li>
+<li><strong>Taastumistoimingud (recovery operations)</strong>: Mida teha, kui probleem laheneb</li>
+<li><strong>Automatiseeritud skriptid</strong>: Probleemide automaatne lahendamine</li>
+</ul>
+<h2 id="automaatne-avastamine-ja-registreerimine">Automaatne avastamine ja registreerimine<a class="headerlink" href="#automaatne-avastamine-ja-registreerimine" title="Permanent link">&para;</a></h2>
+<h3 id="network-discovery">Network Discovery<a class="headerlink" href="#network-discovery" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>IP vahemike kontroll</strong>: Võrguseadmete automaatne avastamine</li>
+<li><strong>Seadmete tüüpide tuvastamine</strong>: Kuidas määrata seadme tüüp</li>
+<li><strong>Automaatsed tegevused</strong>: Mida teha, kui uus seade avastatakse</li>
+</ul>
+<h3 id="auto-registration">Auto-registration<a class="headerlink" href="#auto-registration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Agentide automaatne registreerimine</strong>: Kuidas lasta agentidel end ise registreerida</li>
+<li><strong>Hostigruppide ja mallide määramine</strong>: Automaatne seadistuste lisamine</li>
+<li><strong>Turvalisuse tagamine</strong>: Autoriseeritud registreerimise tagamine</li>
+</ul>
+<h3 id="low-level-discovery-lld">Low-Level Discovery (LLD)<a class="headerlink" href="#low-level-discovery-lld" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Liideste avastamine</strong>: Võrguliideste, kettaseadmete, protsesside jms avastamine</li>
+<li><strong>Andmebaasi tabelite ja indeksite avastamine</strong></li>
+<li><strong>Kohandatud avastamisreeglid</strong>: JSON, XML, või muu struktureeritud andmeformaadi põhjal</li>
+</ul>
+<h2 id="andmete-salvestamine-ja-haldamine">Andmete salvestamine ja haldamine<a class="headerlink" href="#andmete-salvestamine-ja-haldamine" title="Permanent link">&para;</a></h2>
+<h3 id="andmete-elutsukkel">Andmete elutsükkel<a class="headerlink" href="#andmete-elutsukkel" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>History vs Trends</strong>: Erinevad andmete salvestamise viisid</li>
+<li><strong>Säilitamispoliitikad</strong>: Kui kaua andmeid säilitada</li>
+<li><strong>Housekeeper</strong>: Vananenud andmete automaatne kustutamine</li>
+</ul>
+<h3 id="andmebaasi-hooldus">Andmebaasi hooldus<a class="headerlink" href="#andmebaasi-hooldus" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Partitsioneerimine</strong>: Suurte tabelite jagamine (eriti history tabelid)</li>
+<li><strong>Indekseerimine</strong>: Õigete indeksite kasutamine jõudluse tagamiseks</li>
+<li><strong>Regulaarne hooldus</strong>: ANALYZE, VACUUM jms andmebaasi hoolduse tegevused</li>
+</ul>
+<h3 id="varundamine">Varundamine<a class="headerlink" href="#varundamine" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Andmebaasi varundamine</strong>: Meetodid Zabbix'i andmebaasi varundamiseks</li>
+<li><strong>Konfiguratsiooni eksportimine</strong>: Seadistuste varundamine XML formaadis</li>
+<li><strong>Taastamismenetlused</strong>: Kuidas taastada Zabbix süsteemi probleemide korral</li>
+</ul>
+<h2 id="optimeerimise-vajaduse-margid">Optimeerimise vajaduse märgid<a class="headerlink" href="#optimeerimise-vajaduse-margid" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Probleem</th>
+<th>Tunnused</th>
+<th>Lihtne lahendus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Aeglane veebiliides</strong></td>
+<td>Graafikud laadivad kaua, menüüd avanevad aeglaselt</td>
+<td>Suurenda ValueCacheSize seadistust, optimeeri dashboarde</td>
+</tr>
+<tr>
+<td><strong>Andmed hilinenevad</strong></td>
+<td>Viimane andmepunkt on vanem kui kontrolliintervall</td>
+<td>Suurenda pollerite arvu või lisa proxy</td>
+</tr>
+<tr>
+<td><strong>Teavitused hilinenevad</strong></td>
+<td>Probleemidest ei teatata õigeaegselt</td>
+<td>Kontrolli serveri koormust, lisa ressursse</td>
+</tr>
+<tr>
+<td><strong>Kõrge serveri koormus</strong></td>
+<td>CPU kasutus on pidevalt üle 70%</td>
+<td>Lisa rohkem CPU ressursse või jaga koormust proksidega</td>
+</tr>
+<tr>
+<td><strong>Andmebaasi aeglus</strong></td>
+<td>Päringud võtavad kaua aega</td>
+<td>Optimeeri andmebaasi seadistusi, lisa mälu</td>
+</tr>
+</tbody>
+</table>
+<h2 id="optimeerimise-samm-sammult">Optimeerimise samm-sammult<a class="headerlink" href="#optimeerimise-samm-sammult" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Samm</th>
+<th>Tegevus</th>
+<th>Kasu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Vaata üle meetrikad</strong></td>
+<td>Eemalda ebavajalikud kontrollid, pikenda intervalle</td>
+<td>Vähendab üldist koormust</td>
+</tr>
+<tr>
+<td><strong>2. Paranda serveri jõudlust</strong></td>
+<td>Suurenda pollerite arvu ja mälu puhvreid</td>
+<td>Kiirem andmete kogumine ja töötlemine</td>
+</tr>
+<tr>
+<td><strong>3. Kaalutle proxy lisamist</strong></td>
+<td>Lisa proxy suurematesse võrgupiirkondadesse</td>
+<td>Koormuse hajutamine ja võrguliikluse vähendamine</td>
+</tr>
+<tr>
+<td><strong>4. Optimeeri andmebaasi</strong></td>
+<td>Anna rohkem mälu, seadista kirjutusparameetrid</td>
+<td>Kiiremad päringud ja andmete salvestamine</td>
+</tr>
+<tr>
+<td><strong>5. Korrigeeri andmete säilitamist</strong></td>
+<td>Seadista sobivad säilitamisperioodid</td>
+<td>Hoiab andmebaasi mahu kontrolli all</td>
+</tr>
+</tbody>
+</table>
+<p>Ma teen sulle ümber API kasutamise sektsiooni:</p>
+<h2 id="api-kasutamine">API kasutamine<a class="headerlink" href="#api-kasutamine" title="Permanent link">&para;</a></h2>
+<p>Zabbix API võimaldab programmilist juurdepääsu Zabbix funktsionaalsusele, mis on kriitilise tähtsusega järgmistel põhjustel:</p>
+<ol>
+<li>
+<p><strong>Automaatne haldus</strong> - Võimaldab programmilist ligipääsu Zabbix'i funktsionaalsusele ja automaatset seadistamist.</p>
+</li>
+<li>
+<p><strong>Rutiinülesannete automatiseerimine</strong> - Korduvate ülesannete automatiseerimine vähendab vigade tekkimise võimalust ja säästab aega.</p>
+</li>
+<li>
+<p><strong>Süsteemide integreerimine</strong> - Võimaldab Zabbix'i integreerimist olemasolevate IT-haldussüsteemidega, luues ühtse töökeskkonna.</p>
+</li>
+<li>
+<p><strong>Skaleeritavus</strong> - Suurtes keskkondades muudab programmiline ligipääs haldamise lihtsamaks ja efektiivsemaks.</p>
+</li>
+<li>
+<p><strong>Kasutuspaindlikkus</strong> - API laiendab Zabbix'i kasutusvõimalusi, võimaldades luua kohandatud lahendusi ja aruandeid.</p>
+</li>
+</ol>
+<h3 id="api-pohitoimingud">API põhitoimingud<a class="headerlink" href="#api-pohitoimingud" title="Permanent link">&para;</a></h3>
+<h3 id="automatiseerimine">Automatiseerimine<a class="headerlink" href="#automatiseerimine" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Skriptide kirjutamine</strong>: Python, Bash või PowerShell abil Zabbix'i haldamine</li>
+<li><strong>Regulaarsed tegevused</strong>: Seadistuste massuuendamine ajakava alusel</li>
+<li><strong>CI/CD integratsioon</strong>: Monitooringu automaatne kohandamine rakenduste versioonide muutumisel</li>
+</ul>
+<p><img alt="Zabbix monitooringu ülevaade" src="https://blog.zabbix.com/wp-content/uploads/2023/05/summary_schema-2.png" /></p>
+<h3 id="levinud-api-kasustusjuhud">Levinud API kasustusjuhud<a class="headerlink" href="#levinud-api-kasustusjuhud" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Hostide masstoiming</strong>: Uute seadmete lisamine või olemasolevate värskendamine</li>
+<li><strong>Kohandatud aruandlus</strong>: Spetsiifiliste aruannete genereerimine ja saatmine</li>
+<li><strong>Konfiguratsioonihaldus</strong>: Zabbix'i seadistuste sidumine konfiguratsioonihaldussüsteemidega (Ansible, Puppet jne)</li>
+<li><strong>Häiretega toimetamine</strong>: Automaatsed reageerimistoimingud häirete korral</li>
+</ul>
+<h2 id="torkeotsing-ja-logide-analuus">Tõrkeotsing ja logide analüüs<a class="headerlink" href="#torkeotsing-ja-logide-analuus" title="Permanent link">&para;</a></h2>
+<h3 id="logifailid">Logifailid<a class="headerlink" href="#logifailid" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Serveri logid</strong>: <code>/var/log/zabbix/zabbix_server.log</code></li>
+<li><strong>Agendi logid</strong>: <code>/var/log/zabbix/zabbix_agentd.log</code></li>
+<li><strong>Proxy logid</strong>: <code>/var/log/zabbix/zabbix_proxy.log</code></li>
+<li><strong>Veebiserveri logid</strong>: Apache/Nginx logid</li>
+</ul>
+<h3 id="levinud-probleemid">Levinud probleemid<a class="headerlink" href="#levinud-probleemid" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Agent ei ühendu</strong>: Firewall probleemid, vale hostname seadistus</li>
+<li><strong>Andmeid ei koguta</strong>: Item'i seadistusprobleemid, agendi piirangud</li>
+<li><strong>Andmebaasi probleemid</strong>: Aeglased päringud, kettaruumi täitumine</li>
+<li><strong>Jõudlusprobleemid</strong>: Serveri ülekoormus, ressursipiirangud</li>
+</ul>
+<h3 id="diagnostika-tooriistad">Diagnostika tööriistad<a class="headerlink" href="#diagnostika-tooriistad" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>zabbix_get</strong>: Andmete manuaalne pärimine agendilt</li>
+<li><strong>zabbix_sender</strong>: Andmete manuaalne saatmine serverisse</li>
+<li><strong>Runtime Commands</strong>: Serveri käsud konfiguratsioonide </li>
+<li><strong>Jõudlusanalüüs</strong>: Zabbix'i sisseehitatud statistika</li>
+</ul>
+<h2 id="zabbixi-integreerimine-teiste-susteemidega">Zabbix'i integreerimine teiste süsteemidega<a class="headerlink" href="#zabbixi-integreerimine-teiste-susteemidega" title="Permanent link">&para;</a></h2>
+<h3 id="teavitussusteemid">Teavitussüsteemid<a class="headerlink" href="#teavitussusteemid" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Slack, Microsoft Teams, Telegram</strong>: Teavituste saatmine meeskonnakanalitesse</li>
+<li><strong>PagerDuty, OpsGenie</strong>: Valvesüsteemide integratsioonid</li>
+<li><strong>ServiceNow, JIRA</strong>: Piletisüsteemide integratsioonid</li>
+</ul>
+<h3 id="monitooringususteemid">Monitooringusüsteemid<a class="headerlink" href="#monitooringususteemid" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Grafana</strong>: Andmete visualiseerimine Grafana's</li>
+<li><strong>InfluxDB/Prometheus</strong>: Andmete eksportimine aegridade andmebaasidesse</li>
+<li><strong>ELK Stack</strong>: Logide ja meetrikate koondamine</li>
+</ul>
+<h3 id="it-haldussusteemid">IT-haldussüsteemid<a class="headerlink" href="#it-haldussusteemid" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>CMDB integratsioonid</strong>: Konfiguratsioonihalduse integratsioonid</li>
+<li><strong>Ansible, Puppet, Chef</strong>: Konfiguratsioonihalduse automatiseerimine</li>
+<li><strong>CI/CD Pipeline integratsioonid</strong>: DevOps tsükli osana</li>
+</ul>
+<h2 id="kasulikud-lingid">Kasulikud lingid<a class="headerlink" href="#kasulikud-lingid" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.zabbix.com/">Zabbix'i ametlik veebileht</a></li>
+<li><a href="https://www.zabbix.com/documentation/">Zabbix'i dokumentatsioon</a></li>
+<li><a href="https://www.zabbix.com/download">Zabbix'i allalaadimised</a></li>
+<li><a href="https://www.zabbix.com/forum/">Zabbix'i foorum</a></li>
+<li><a href="https://www.zabbix.com/training">Zabbix'i koolitus ja sertifikaadid</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3883 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://haapsalu-kutsehariduskeskus.github.io/monitoring/fundamentals/intro-to-logging-monitoring-observability/">
+      
+      
+        <link rel="prev" href="../intro-to-linux-logging/">
+      
+      
+        <link rel="next" href="../../final_project/final_project_building_monsystem/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>Logging, Monitoring, Observability - Logging, Monitoring, and Observability Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sissejuhatus-logimisesse-seiresse-ja-vaatlusesse" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Logging, Monitoring, and Observability Guide" class="md-header__button md-logo" aria-label="Logging, Monitoring, and Observability Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Logging, Monitoring, and Observability Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Logging, Monitoring, Observability
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../intro-to-linux-logging/" class="md-tabs__link">
+          
+  
+  
+  Fundamentals
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../final_project/final_project_building_monsystem/" class="md-tabs__link">
+          
+  
+  
+  Final Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../labs/01_linux_logging/Simple_Linux_Logging_Lab/" class="md-tabs__link">
+          
+  
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lectures/Part1_Introduction/" class="md-tabs__link">
+          
+  
+  
+  Materials
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../materials/lectures/Observability/wrap-up-observability/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Observability Wrap-Up
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../resources/github-guide/" class="md-tabs__link">
+          
+  
+  
+  Resources
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Logging, Monitoring, and Observability Guide" class="md-nav__button md-logo" aria-label="Logging, Monitoring, and Observability Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Logging, Monitoring, and Observability Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Fundamentals
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Fundamentals
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intro-to-linux-logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro to Linux Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Logging, Monitoring, Observability
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Logging, Monitoring, Observability
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sisukord" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Sisukord
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Final Project
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Final Project
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../final_project/final_project_building_monsystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../final_project/topology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Topology
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Help
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Help
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../final_project/help/elk_stack_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ELK Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../final_project/help/hints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hints
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../final_project/help/kibana_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kibana Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../final_project/help/networking_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Networking Debug
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../final_project/help/starter_code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Starter Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../final_project/help/virtualbox_wsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox & WSL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Labs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Labs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 01 Linux Logging
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 01 Linux Logging
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/01_linux_logging/Simple_Linux_Logging_Lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simple
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/01_linux_logging/1_linux_logging_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/01_linux_logging/2_linux_logging_lab_advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/01_linux_logging/3_linux_logging_lab_testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 02 Prometheus
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 02 Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/02_prometheus/lab02_prometheus_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/02_prometheus/lab02_prometheus_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 03 TICK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 03 TICK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/03_tick_stack/lab03_tick_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/03_tick_stack/lab03_tick_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 04 ELK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 04 ELK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/lab04_monitoring_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/lab04_monitoring_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/lab04_monitoring_part3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/monitoring-lab-manual-extra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Extra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/adding_logstash_and_filebeat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Add Logstash & Filebeat
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/Lab1_Setup_Elastic_Kibana_NoSecurity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    No Security Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/Lab8_Security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Lab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/set_up_elk_cluster_docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker Cluster Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/set_up_elk_cluster_with_security_docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Secure Docker Cluster
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/example_multipass_node_config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multipass Config
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/04_elk_stack/example_local_install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Local Example
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 05 Elasticsearch Deep Dive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 05 Elasticsearch Deep Dive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/lab_05/part_2/Lab2_DataModeling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2 - Data Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_2" id="__nav_4_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Part 3 - Searching
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Part 3 - Searching
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/lab_05/part_3/Lab3_Searching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/lab_05/part_3/Shakespeare_Search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Shakespeare Search
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/lab_05/part_4/Lab4_Advance_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 4 - Advanced Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/lab_05/part_5/Lab5_Aggregations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 5 - Aggregations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/lab_05/part_6/Lab6_Tunning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 6 - Tuning
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/lab_05/part_7/Lab7_Monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 7 - Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/lab_05/part_9/Lab9_Backup_Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 9 - Backup & Restore
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 06 Splunk
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 06 Splunk
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/05_splunk/splunk_cloud_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Cloud
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/05_splunk/splunk_cluster_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Cluster
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Materials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Materials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Elasticsearch
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Elasticsearch
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Part1_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intro
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Part2_Data_Modeling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Part3_Search_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Search & Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Part4_Advanced_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Part5_Aggregations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Aggregations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Part6_Performance_Tuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance Tuning
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Part7_Monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Part8_Security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Part9_Backup_Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backup & Restore
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Part10_Deployment_CI_CD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CI/CD Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/intro-to-prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/loki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Loki
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/intro-to-splunk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/intro-to-tick-stack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/zabbix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/Intro_HTTP_RESTful_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HTTP & REST
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lectures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    README
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../materials/lectures/Observability/wrap-up-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Observability Wrap-Up
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/github-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/konto-digital_ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DigitalOcean Account
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/vscode-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VS Code Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reading
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reading
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/additional-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    General
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/additional-reading/zabbix-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix Reading
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Cert Manager
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cert Manager
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/cert_manager/basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/cert_manager/automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/cert_manager/elastic-cert_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Elastic Certs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/cert_manager/hashicorp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HashiCorp
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6" id="__nav_7_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    VM Setup
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6">
+            <span class="md-nav__icon md-icon"></span>
+            VM Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/lab_02/lab1/vm/MultipassSetupforMonitoringLab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multipass
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../labs/lab_02/lab1/vm/VirtualBoxSetupGuideforMonitoringLab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sisukord" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Sisukord
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<p>Siin on tõlge eesti keelde, säilitades kogu Markdown-formaadi, logid, URL-id ja jättes alles professionaalse tooni IT-õppijatele:</p>
+<h1 id="sissejuhatus-logimisesse-seiresse-ja-vaatlusesse">🔍 Sissejuhatus logimisesse, seiresse ja vaatlusesse<a class="headerlink" href="#sissejuhatus-logimisesse-seiresse-ja-vaatlusesse" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>💡 "Kaasaegses IT-maailmas ei ole süsteemi tervise pimeduses olemine valik"</p>
+</blockquote>
+<h2 id="sisukord">📚 Sisukord<a class="headerlink" href="#sisukord" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#mis-on-logimine">Mis on logimine?</a></li>
+<li><a href="#mis-on-seire">Mis on seire?</a></li>
+<li><a href="#mis-on-vaatlus">Mis on vaatlus?</a></li>
+<li><a href="#mis-on-jalgimine">Mis on jälgimine?</a></li>
+<li><a href="#logimise-ja-seire-tahtsus">Logimise ja seire tähtsus</a></li>
+<li><a href="#logimise-ja-seire-evolutsioon">Ajalugu ja areng</a></li>
+<li><a href="#praktiline-rakendamine">Logihalduse protsessid</a></li>
+<li><a href="#vaatluse-tooriistad">Linuxi logimise tööriistad</a></li>
+<li><a href="#vaatluse-tooriistad">Seire ja vaatluse tööriistad</a></li>
+</ul>
+<hr />
+<h1 id="sissejuhatus">🌟 Sissejuhatus<a class="headerlink" href="#sissejuhatus" title="Permanent link">&para;</a></h1>
+<p>Logimine, seire ja vaatlus on hädavajalikud praktikad kaasaegses IT-s, küberturvalisuses ja süsteemide haldamises. Need kontseptsioonid moodustavad turvaliste, töökindlate ja tõhusate süsteemide aluse.</p>
+<h2 id="mis-on-logimine">📝 Mis on logimine?<a class="headerlink" href="#mis-on-logimine" title="Permanent link">&para;</a></h2>
+<p><img alt="Logimise ülevaade" src="../../materials/lectures/Observability/media/image_1.png" /></p>
+<p>Logimine on süsteemis toimuvate sündmuste salvestamise protsess. Mõelge sellest kui oma süsteemi päevikust - salvestades kõike kasutajate sisselogimistest süsteemi vigadeni ja turvanõrkusteni.</p>
+<h3 id="logimise-eesmark">🎯 Logimise eesmärk<a class="headerlink" href="#logimise-eesmark" title="Permanent link">&para;</a></h3>
+<p><strong>1. Süsteemi seire</strong>
+- Reaalajas ülevaade süsteemi käitumisest
+- Liiklusvoogude tuvastamine
+- Teenuste tõrgete tuvastamine
+- Jõudluse jälgimine</p>
+<p><img alt="Süsteemi seire näide" src="../../materials/lectures/Observability/media/image_2.png" /></p>
+<p><strong>2. Veaotsing</strong>
+- Loob detailsed sündmuste ajateljed
+- Aitab probleeme diagnoosida
+- Salvestab veateated
+- Võimaldab kiiret probleemide lahendamist</p>
+<p><strong>3. Auditeerimine</strong>
+- Tagab vastavuse (GDPR, HIPAA)
+- Säilitab kontrollimise kirjed
+- Jälgib kasutajate tegevusi
+- Dokumenteerib süsteemi muudatused</p>
+<p><strong>4. Turvalisus</strong>
+- Tuvastab volitamata juurdepääsu
+- Jälgib kahtlast tegevust
+- Jälgib sisselogimiskatseid
+- Hoiatab potentsiaalsete ohtude eest</p>
+<p><img alt="Turvalisuse logimine" src="../../materials/lectures/Observability/media/image_3.png" /></p>
+<h3 id="logimise-naited">✨ Logimise näited<a class="headerlink" href="#logimise-naited" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Veebiserveri logid</strong> 🌐
+Salvestavad iga veebiserveri päringu, sealhulgas üksikasjad nagu kliendi IP-aadress, taotletud URL ja vastuse olek.</li>
+<li>Kliendi IP-aadressid</li>
+<li>Taotletud URL-id</li>
+<li>Vastuse olekukoodid</li>
+<li>
+<p>Juurdepääsu ajatemplid</p>
+</li>
+<li>
+<p><strong>Rakenduse logid</strong> 💻
+Talletavad tarkvara poolt genereeritud sündmusi, nagu kasutajate tegevused, süsteemivead või tehingute üksikasjad, pakkudes ülevaadet rakenduse toimimisest.</p>
+</li>
+<li>Kasutajate tegevused</li>
+<li>Süsteemivead</li>
+<li>Tehingute üksikasjad</li>
+<li>
+<p>Jõudlusmõõdikud</p>
+</li>
+<li>
+<p><strong>Turvalogid</strong> 🔐
+Jälgivad süsteemi turvalisusega seotud tegevusi, sealhulgas ebaõnnestunud sisselogimiskatseid, kasutajaõiguste muudatusi ja tulemüüri aktiivsust.</p>
+</li>
+<li>Sisselogimiskatsed</li>
+<li>Õiguste muudatused</li>
+<li>Tulemüüri tegevused</li>
+<li>Turvahoiatused</li>
+</ol>
+<h3 id="parimad-tavad-logimises">🎓 Parimad tavad logimises<a class="headerlink" href="#parimad-tavad-logimises" title="Permanent link">&para;</a></h3>
+<p><img alt="Logimissüsteemide ülevaade" src="../../materials/lectures/Observability/media/image_4.png" /></p>
+<p><strong>1. Tsentraliseeritud logimine</strong>
+Selle asemel, et logid oleksid hajutatud erinevate süsteemide vahel, tsentraliseerige need ühte asukohta. See muudab nende otsimise, analüüsimise ja haldamise lihtsamaks.
+- ✅ Üks asukoht kõikidele logidele
+- ✅ Lihtsam otsing ja analüüs
+- ✅ Lihtsustatud haldamine
+- ✅ Parem turvalisuse kontroll</p>
+<p><strong>2. Logide rotatsioon ja säilitamine</strong>
+Logid võivad kiiresti kasvada, seega on oluline rakendada logide rotatsiooni põhimõtteid vanade logide arhiveerimiseks ja ruumi vabastamiseks. Veenduge, et olulised logid säilitatakse sobiva perioodi jooksul, eriti vastavuse eesmärkidel.
+- 🔄 Automaatne arhiveerimine
+- 📊 Ruumi haldamine
+- 💾 Vastavuse järgimine
+- 🗑️ Selged kustutamise põhimõtted</p>
+<p><strong>3. Logiformaadi standardiseerimine</strong>
+Standardiseeritud logiformaadi kasutamine tagab järjepidevuse, muutes logide analüüsimise ja töötlemise lihtsamaks erinevate süsteemide vahel.
+- 📝 Järjepidev struktuur
+- 🔍 Lihtne töötlemine
+- 📈 Parem analüüs
+- 🔧 Lihtsustatud hooldus</p>
+<h3 id="levinud-ohukohad-mida-valtida">⚠️ Levinud ohukohad, mida vältida<a class="headerlink" href="#levinud-ohukohad-mida-valtida" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Ebajärjepidevad logiformaadid</li>
+<li>Oluliste sündmuste puudumine</li>
+<li>Ebapiisavad säilitamispoliitikad</li>
+<li>Kehv otsitavus</li>
+</ol>
+<h3 id="professionaalsed-napunaited">💡 Professionaalsed näpunäited<a class="headerlink" href="#professionaalsed-napunaited" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Lisage alati ajatemplid standardformaadis</li>
+<li>Logige asjakohast konteksti, mitte ainult sündmusi</li>
+<li>Rakendage korralik logide rotatsioon</li>
+<li>Kaitske tundlikke logiandmeid</li>
+</ul>
+<h1 id="mis-on-seire">📊 Mis on seire?<a class="headerlink" href="#mis-on-seire" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>💡 "Seire on nagu tervisekontroll kogu teie IT-süsteemile"</p>
+</blockquote>
+<p>Mõelge seirest kui süsteemi elutähtsate näitajate monitorist - pidevalt jälgides jõudlust, kättesaadavust ja üldist tervist.
+Seire hõlmab süsteemi jõudluse, kättesaadavuse ja üldise tervise pidevat jälgimist. Erinevalt logimisest, mis salvestab diskreetseid sündmusi, keskendub seire mõõdikutele ja näitajatele, mis peegeldavad süsteemi töökorda ajas.</p>
+<h3 id="miks-seire-on-oluline">Miks seire on oluline<a class="headerlink" href="#miks-seire-on-oluline" title="Permanent link">&para;</a></h3>
+<p><strong>Tehnoloogia kontrolli all hoidmine:</strong>
+Kujutage ette, et käitate mänguserverit või äpplikatsiooni sõpradele. Seire aitab märgata probleeme enne, kui need kontrolli alt väljuvad. See on nagu kuues meel teie süsteemi tervise jaoks! Jälgides selliseid aspekte nagu CPU kasutus, mälu ja võrguliiklus, saate varakult tuvastada anomaaliaid.</p>
+<p>🕵️‍♂️ <strong>Näide:</strong> Teie serveri CPU läheb äkitselt ülekoormuse alla (võib-olla keegi püüab seda tahtlikult koormata või esineb viga). Seiretööriist annab teile märku enne, kui teie mäng hakkab viibima või kokku jookseb. Kriis on ära hoitud!</p>
+<p><strong>Jõudluse parandamine:</strong>
+Seire annab teile kõik olulised andmed süsteemi toimimise kohta. See on nagu jõudlusnäitajate jälgimine - märkate trende, leiate nõrgad kohad ja aja jooksul parandate tulemusi. Kasutage seda teavet süsteemi jõudluse parandamiseks ja planeerige ressursse kõrgete koormuste aegadeks.</p>
+<p>⚡ <strong>Näide:</strong> Aja jooksul märkate, et teie rakendus aeglustub iga reede õhtul. Seire näitab, et põhjuseks on kasutajate liikluse hüppeline tõus. Nüüd teate, et reedeti on vaja rohkem ressursse.</p>
+<p><strong>Alati töökorras:</strong>
+Keegi ei taha tööseisaku ajal probleemidega tegeleda, eriti kui olulised protsessid on pooleli. Seire jälgib teie süsteeme ööpäevaringselt, et kui midagi juhtub, saate sellest kohe teada. Parandage probleem kiiresti ja jätkake töötamist.</p>
+<p>🌐 <strong>Näide:</strong> E-kaubanduse veebisait võib seisakute ajal kaotada palju raha, samamoodi võib mänguserveri tõrge turniiri ajal kasutajaid frustreerida. Seire aitab seda vältida.</p>
+<h2 id="olulised-susteemi-moodikud">🎯 Olulised süsteemi mõõdikud<a class="headerlink" href="#olulised-susteemi-moodikud" title="Permanent link">&para;</a></h2>
+<p>Süsteemi jälgimisel on vaja keskenduda kindlatele võtmekomponentidele, et tagada sujuv toimimine:</p>
+<h3 id="1-susteemi-elutahtsad-naitajad">1. <strong>Süsteemi elutähtsad näitajad</strong><a class="headerlink" href="#1-susteemi-elutahtsad-naitajad" title="Permanent link">&para;</a></h3>
+<p>Need on teie süsteemi südametöö, hingamine ja energiatase. Nende jälgimine näitab süsteemi üldist seisundit:</p>
+<ul>
+<li>
+<p><strong>LoadAvg ja CPU kasutus</strong><br />
+  CPU on süsteemi aju. LoadAvg ja CPU kasutuse näitajad näitavad, kui palju tööd CPU teeb. Kui see on pidevalt maksimumpiiri lähedal, võib see olla ülekoormatud ja vajada rohkem ressursse!</p>
+</li>
+<li>
+<p><strong>Mälu/ketta kasutus</strong><br />
+  Mälu (RAM) on süsteemi lühiajaline mälu, ketas on pikaajaline salvestusruum. Kui üks neist on peaaegu täis, võib süsteem aeglustuda või isegi kokku joosta. Regulaarne kontroll aitab vältida "mälu otsas" probleeme.</p>
+</li>
+<li>
+<p><strong>Võrgu jõudlus (bps/pps)</strong><br />
+  See näitab, kui kiiresti andmed süsteemi sisse ja välja liiguvad. Bitte sekundis (bps) ja pakette sekundis (pps) näitavad, kas teie võrk toimib sujuvalt või on "ummikus".</p>
+</li>
+<li>
+<p><strong>Ketta koormus</strong><br />
+  See mõõdab, kui palju teie salvestusseadmed töötavad. Ülekoormuse korral võib esineda aeglasemat jõudlust või isegi rikkeid. Selle jälgimine aitab kaitsta teie faile ja rakendusi.</p>
+</li>
+</ul>
+<hr />
+<h3 id="2-susteemi-tervise-naitajad">2. <strong>Süsteemi tervise näitajad</strong><a class="headerlink" href="#2-susteemi-tervise-naitajad" title="Permanent link">&para;</a></h3>
+<p>Need mõõdikud on regulaarsed kontrollid, et näha, kas süsteem "tunneb end hästi" ja töötab tõhusalt:</p>
+<ul>
+<li><strong>📝 Süsteemilogide "puhtus"</strong><br />
+  Logid on nagu süsteemi päevik – need salvestavad kõik, mis kulisside taga toimub. Kui need on täis veateateid või hoiatusi, on see märk probleemist.<br />
+  Olulised jälgitavad logid:  </li>
+<li><code>dmesg</code>: Kerneli logid – mis toimub süsteemi tuumas.  </li>
+<li>
+<p><code>messages</code>: Üldised süsteemisündmused – nagu igapäevane päevik teie arvutile.</p>
+</li>
+<li>
+<p><strong>💾 Varunduse oleku asjakohasus</strong><br />
+  Varukoopiad on teie turvavõrk. Nende oleku jälgimine tagab, et teil on oluliste andmete ajakohased koopiad. Kui midagi läheb valesti (näiteks riistvara rike), saate taastuda ilma oluliste andmete kaotuseta. Hoidke varukoopiad värskena ja kontrollige neid töökindluse tagamiseks!</p>
+</li>
+</ul>
+<p>Nende mõõdikute jälgimine ei aita ainult süsteemi töös hoida – see tagab, et süsteem on optimeeritud, turvaline ja valmis kõigeks.</p>
+<h2 id="seire-tuubid">🔍 Seire tüübid<a class="headerlink" href="#seire-tuubid" title="Permanent link">&para;</a></h2>
+<p><img alt="Teenuse mõõdikud" src="../../materials/lectures/Observability/media/image_6.png" /></p>
+<p>Seire ei ole universaalne lahendus; see on pigem tööriistakomplekt erinevate ülesannete jaoks. Järgnevalt ülevaade:</p>
+<hr />
+<h3 id="1-infrastruktuuri-seire">1. <strong>Infrastruktuuri seire</strong> 🏗️<a class="headerlink" href="#1-infrastruktuuri-seire" title="Permanent link">&para;</a></h3>
+<p>See on nagu hoone vundamendi ja ehituse kontrollimine – tagab, et süsteemi põhikomponendid on stabiilsed.  </p>
+<ul>
+<li><strong>Füüsilised komponendid</strong>: Jälgib servereid, toiteallikaid ja jahutussüsteeme. Kas riistvara on liiga kuum? Kas ketas on riknemas? Jääge probleemidest sammu võrra ette!  </li>
+<li><strong>Virtuaalsed ressursid</strong>: Jälgib virtuaalmasinaid (VM), konteinereid ja pilveteenuste instantse. Need on kaasaegsete süsteemide paindlikud ehitusblokid.  </li>
+<li><strong>Võrguseadmed</strong>: Jälgib ruutereid, lüliteid ja modemeid. Kui tekib võrgu pudelikael, märkate seda siin.  </li>
+<li><strong>Salvestussüsteemid</strong>: Tagab, et andmesalvestus ei saa täis ega esine jõudlusprobleeme.  </li>
+</ul>
+<p>🛠️ <strong>Miks see on oluline:</strong> Infrastruktuuri seire aitab tuvastada riistvara või ressursside piiranguid enne, kui need süsteemi aeglustavad.</p>
+<hr />
+<h3 id="2-rakenduse-joudluse-seire-apm">2. <strong>Rakenduse jõudluse seire (APM)</strong> 💻<a class="headerlink" href="#2-rakenduse-joudluse-seire-apm" title="Permanent link">&para;</a></h3>
+<p>Teie rakendused on etenduse staarid ja APM tagab, et need toimiksid kasutajate jaoks parimal võimalikul viisil.  </p>
+<ul>
+<li><strong>Reageerimisajad</strong>: Kui kiiresti reageerib teie rakendus kasutaja tegevustele? Aeglased reageerimisajad võivad põhjustada frustratsiooni ja kasutajate loobumist.  </li>
+<li><strong>Veamäärad</strong>: Jälgib probleeme nagu ebaõnnestunud päringud või vead. Kõrged veamäärad on punased lipud, mis vajavad kiiret parandamist.  </li>
+<li><strong>Kasutaja rahulolu</strong>: Mõõdab kasutajakogemusi, sageli selliste mõõdikute abil nagu Apdex (rakenduse jõudlusindeks). Õnnelikud kasutajad tähendavad edukat rakendust!  </li>
+<li><strong>Tehingute vood</strong>: Visualiseerib andmete ja tegevuste liikumist läbi rakenduse, aidates tuvastada pudelikaelu.  </li>
+</ul>
+<p>🎮 <strong>Miks see on oluline:</strong> APM aitab hoida rakendused sujuvad, kiired ja kasutajasõbralikud.</p>
+<hr />
+<h3 id="3-turvaseire">3. <strong>Turvaseire</strong> 🔐<a class="headerlink" href="#3-turvaseire" title="Permanent link">&para;</a></h3>
+<p>See on valvekoer, mis kaitseb teie süsteemi pahatahtliku tegevuse ja volitamata juurdepääsu eest.  </p>
+<ul>
+<li><strong>Sisselogimiskatsed</strong>: Jälgib ebaõnnestunud ja õnnestunud sisselogimisi. Mitu ebaõnnestunud katset? Võib olla keegi püüab sisse murda.  </li>
+<li><strong>Juurdepääsukontroll</strong>: Jälgib, kes ja millele ligi pääseb, tagades, et ainult volitatud kasutajad saavad läbi.  </li>
+<li><strong>Tulemüüri aktiivsus</strong>: Jälgib blokeeritud või kahtlast võrguliiklust.  </li>
+<li><strong>Turvarikkumised</strong>: Tuvastab anomaaliaid või rikkumisi reaalajas, et saaksite kiiresti reageerida ja kahju minimeerida.  </li>
+</ul>
+<p>🛡️ <strong>Miks see on oluline:</strong> Pidevate küberühtude maailmas on turvaseire teie esimene kaitseliin.</p>
+<hr />
+<p>Kombineerides neid seire tüüpe, saate tervikliku pildi oma süsteemi tervisest, jõudlusest ja turvalisusest. </p>
+<h2 id="teenuse-moodikute-naide">📈 Teenuse mõõdikute näide<a class="headerlink" href="#teenuse-moodikute-naide" title="Permanent link">&para;</a></h2>
+<h3 id="diagnostilise-paringu-lahenemine">"Diagnostilise päringu" lähenemine<a class="headerlink" href="#diagnostilise-paringu-lahenemine" title="Permanent link">&para;</a></h3>
+<p>Mõelge sellest kui süsteemi tervisekontrollist:
+- Kaasab enamik süsteemi komponente
+- Mõõdab reageerimis-/töötlemisaega
+- Jälgib päringuid ajaühikus
+- Jälgib samaaegseid päringuid</p>
+<h3 id="moodik-aegrida">🕒 "Mõõdik = Aegrida"<a class="headerlink" href="#moodik-aegrida" title="Permanent link">&para;</a></h3>
+<p><img alt="Aegrea näide" src="../../materials/lectures/Observability/media/image_7.png" />
+<img alt="Mõõdikute visualiseerimine" src="../../materials/lectures/Observability/media/image_8.png" /></p>
+<p>Mõõdikud on seiresüsteemide põhitoode ning neid jäädvustatakse sageli <strong>aegridadena</strong>. Mõelge aegridadest kui sündmuste ajateljest – iga andmepunkt jutustab loo sellest, mis konkreetsel hetkel toimub.</p>
+<hr />
+<h4 id="mis-teeb-hea-aegrea">Mis teeb hea aegrea?<a class="headerlink" href="#mis-teeb-hea-aegrea" title="Permanent link">&para;</a></h4>
+<p>Et seire oleks tõhus, peaksid teie aegrea andmed täitma mõned võtmetingimused:</p>
+<hr />
+<ol>
+<li>
+<p><strong>Ajaline orientatsioon</strong> ⏰<br />
+   Aegrea andmed on seotud millegi toimumise ajaga, seega on ajatemplid olulised!  </p>
+</li>
+<li>
+<p><strong>Igal andmepunktil on ajatempel:</strong> See aitab mõista mitte ainult <em>mis</em> toimub, vaid ka <em>millal</em>.  </p>
+</li>
+<li><strong>Järjestikune salvestamine:</strong> Andmed kogutakse järjekorras, mis muudab mustrite jälgimise lihtsamaks.  </li>
+<li><strong>Nähtavad ajalised mustrid:</strong> Sündmuste jada vaadates saate märgata trende, tippe või langusi mõõdikutes.  </li>
+</ol>
+<p>🕵️‍♂️ <strong>Näide:</strong> Kujutage ette, et teie rakenduse reageerimisaeg tõusis järsult eile kell 14. Ajatempel aitab tuvastada, millal probleem algas, et saaksite uurida selle põhjust.</p>
+<hr />
+<ol>
+<li>
+<p><strong>Ainult lisamine</strong> ➕<br />
+   Kui andmepunkt on lisatud, seda enam ei muudeta. See säilitab ajaloo analüüsimiseks.  </p>
+</li>
+<li>
+<p><strong>Ajalugu säilitamine:</strong> Saate tagasi vaadata ja analüüsida mineviku trende, et ennustada tulevast käitumist.  </p>
+</li>
+<li><strong>Trendide analüüs:</strong> Tahate teada, kuidas teie süsteem toimis eelmise aasta pühadeliikluse ajal? Ainult lisatavatele andmetega on teil kogu ajalooline ülevaade käeulatuses.  </li>
+</ol>
+<p>🛠️ <strong>Miks see on oluline:</strong> Mõõdikud nagu CPU kasutus või veamäärad ajas näitavad, mis on teie süsteemi jaoks "normaalne" ja millal asjad tavapärasest kõrvale kalduvad.</p>
+<hr />
+<ol>
+<li>
+<p><strong>Värske andmete fookus</strong> 🆕<br />
+   Kuigi ajalugu on kasulik, on seire kõige tõhusam, kui see prioriseerib olevikku.  </p>
+</li>
+<li>
+<p><strong>Prioriseerib värsket teavet:</strong> Reaalajas andmed hoiavad teid kursis sellega, mis toimub <em>praegu</em>.  </p>
+</li>
+<li><strong>Reaalajas analüüs:</strong> Kohene ülevaade võimaldab tuvastada ja lahendada probleeme kohe, kui need ilmnevad.  </li>
+<li><strong>Kiire reageerimise võimekus:</strong> Kas saite hoiatuse äkilisest serveri tõrkest? Värsked andmed aitavad kiiresti reageerida.  </li>
+</ol>
+<p>🚀 <strong>Näide:</strong> Kui jälgite sisselogimiskatseid, on praeguse hetke ebaõnnestunud katsete järsk tõus palju kasulikum info kui sama märkamine tunde hiljem.</p>
+<hr />
+<h3 id="aegrea-visualiseerimine">Aegrea visualiseerimine<a class="headerlink" href="#aegrea-visualiseerimine" title="Permanent link">&para;</a></h3>
+<p>Aegrea andmete mõistmiseks on visualiseerimistööriistad hädavajalikud.  </p>
+<ul>
+<li>📊 <strong>Graafikud ja juhtpaneelid:</strong> Näitavad selgelt mustreid, trende ja anomaaliaid.  </li>
+<li>🔍 <strong>Suurendamine või vähendamine:</strong> Süvenege konkreetsetesse ajaperioodidesse või saage ülevaade üldisest jõudlusest.  </li>
+</ul>
+<p>Heade aegrea andmete ja õigete tööriistadega olete alati sammu võrra ees oma süsteemi mõistmises ja haldamises. 🕒✨</p>
+<h2 id="seire-tooriistad">🛠️ Seire tööriistad<a class="headerlink" href="#seire-tooriistad" title="Permanent link">&para;</a></h2>
+<p>Seire tööriistad on teie usaldusväärsed kaaslased süsteemide tervise ja jõudluse jälgimisel. Igal tööriistal on unikaalsed tugevused, seega õige valiku tegemine sõltub teie vajadustest. Vaatame lähemalt mõnda populaarset valikut:</p>
+<p><img alt="Seire tööriistade ülevaade" src="../../materials/lectures/Observability/media/image_9.png" /></p>
+<hr />
+<h3 id="populaarsete-tooriistade-vordlus">Populaarsete tööriistade võrdlus<a class="headerlink" href="#populaarsete-tooriistade-vordlus" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><strong>Tööriist</strong></th>
+<th><strong>Parim kasutus</strong></th>
+<th><strong>Põhiomadused</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nagios</strong></td>
+<td><strong>Infrastruktuur</strong></td>
+<td>Usaldusväärne ja töökindel, ideaalne serverite, võrguseadmete ja rakenduste jälgimiseks. Klassikaline ja laialt kasutatav.</td>
+</tr>
+<tr>
+<td><strong>Zabbix</strong></td>
+<td><strong>Ettevõtted</strong></td>
+<td>Kõik-ühes seire lahendus tugeva toega kohandatud integratsioonidele ja elegantse kasutajaliidesega. Skaleerub hästi suurte organisatsioonide jaoks.</td>
+</tr>
+<tr>
+<td><strong>Prometheus</strong></td>
+<td><strong>Pilvetehnoloogiad</strong></td>
+<td>Loodud pilvekeskkondade jaoks, silmapaistev aegrea andmete kogumisel, paindlikul päringul ja teavitamisel. Populaarne Kubernetesega koos kasutamiseks.</td>
+</tr>
+<tr>
+<td><strong>Grafana</strong></td>
+<td><strong>Visualiseerimine</strong></td>
+<td>Muudab toorandmed uskumatuteks juhtpaneelideks, integreerub sujuvalt Prometheuse, InfluxDB ja teistega. Ideaalne trendide jälgimiseks ja silmapaistvate aruannete loomiseks.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="tooriistade-esiletostmised">Tööriistade esiletõstmised<a class="headerlink" href="#tooriistade-esiletostmised" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Nagios:</strong><br />
+  Nagios on seire tööriistade vanaisaks. See on eksisteerinud kaua ja sobib suurepäraselt süsteemi töökindluse ja tervise jälgimiseks. Kuigi selle liides on pisut vanamoeline, muudavad selle usaldusväärsus ja lihtsus selle infrastruktuuri seireks heaks valikuks.  </p>
+</li>
+<li>
+<p><strong>Zabbix:</strong><br />
+  Zabbix paistab silma oma võimsate ettevõttetaseme funktsioonidega. See suudab hakkama saada kõigega alates rakenduse seirest kuni võrguseadmete jälgimiseni, kõik ühes kohas. Eelehitatud mallid ja integratsioonid muudavad seadistamise kiireks ja lihtsaks.  </p>
+</li>
+<li>
+<p><strong>Prometheus:</strong><br />
+  Loodud modernsete, dünaamiliste keskkondade jaoks, spetsialiseerub Prometheus aegrea andmetele ja on silmapaistev pilvetehnoloogia lahendustes. Kui töötate Kubernetese või mikroteenustega, on Prometheus tööriist, mida kasutada mõõdikute kogumiseks ja hoiatuste saatmiseks, kui midagi valesti läheb.  </p>
+</li>
+<li>
+<p><strong>Grafana:</strong><br />
+  Grafana ei kogu andmeid, kuid särab visualiseerimisplatvormina. See võtab andmed tööriistadest nagu Prometheus või InfluxDB ning muudab need juhtpaneelideks, mis on mitte ainult funktsionaalsed, vaid ka ilusad. Alates jõudluse jälgimisest kuni trendide prognoosimiseni on Grafana täiuslik viis andmete tähenduslikuks muutmiseks.  </p>
+</li>
+</ul>
+<hr />
+<h3 id="teavitusmeetodid">🚨 Teavitusmeetodid<a class="headerlink" href="#teavitusmeetodid" title="Permanent link">&para;</a></h3>
+<p>Tõhus teavitamine on seiresüsteemide süda – oluline on tagada, et teid teavitatakse õigel ajal ja õigel viisil. Euroopas arvestab teavitamine sageli piirkondlike eripäradega, nagu vastavus GDPR-ile ja konkreetsete tööriistade kättesaadavus.</p>
+<p><img alt="Teavitusmeetodid" src="../../materials/lectures/Observability/media/image_10.png" /></p>
+<hr />
+<h2 id="parimad-tavad-seires">✅ Parimad tavad seires<a class="headerlink" href="#parimad-tavad-seires" title="Permanent link">&para;</a></h2>
+<p><img alt="Parimad tavad" src="../../materials/lectures/Observability/media/image_11.png" /></p>
+<p>Hea seire ei seisne ainult tööriistades ja mõõdikutes – see tähendab nende <em>õiget</em> kasutamist. Siin on juhised, kuidas seadistada seiresüsteem, mis on arukas, tõhus ja jätkusuutlik:</p>
+<hr />
+<h3 id="1-selged-moodikud-ja-hoiatused">1. <strong>Selged mõõdikud ja hoiatused</strong><a class="headerlink" href="#1-selged-moodikud-ja-hoiatused" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Määratlege konkreetsed künnised:</strong> Vältige ebamääraseid hoiatusi nagu "CPU kõrge" – olge täpne (nt "CPU kasutus &gt; 80% 5 minuti jooksul").  </li>
+<li><strong>Seadke tähendusrikkad hoiatused:</strong> Keskenduge sellele, mis on tõeliselt oluline – teavitage ainult probleemidest, mis vajavad tegevust.  </li>
+<li><strong>Vältige hoiatuste väsimust:</strong> Liiga palju hoiatusi võib teie meeskonna üle koormata, põhjustades kriitiliste hoiatuste märkamata jätmist. Prioriseerige tõsiduse järgi ja summutage vähemolulised.  </li>
+<li><strong>Dokumenteerige hoiatuste reaktsioonid:</strong> Iga hoiatuse jaoks veenduge, et on olemas selge juhend, kuidas probleemi uurida ja lahendada.  </li>
+</ul>
+<p>💡 <strong>Professionaalne nõuanne:</strong> Kasutage hoiatuste eskalatsiooni – alustage madala prioriteediga hoiatustest ja eskaleerige ainult siis, kui probleemi ei lahendata.</p>
+<hr />
+<h3 id="2-regulaarne-ulevaatusprotsess">2. <strong>Regulaarne ülevaatusprotsess</strong><a class="headerlink" href="#2-regulaarne-ulevaatusprotsess" title="Permanent link">&para;</a></h3>
+<p>Seire ei ole "sea ja unusta". Peate pidevalt parendama:  </p>
+<ul>
+<li><strong>Analüüsige seireandmeid:</strong> Kasutage ajaloolisi trende oma seadistuse täiustamiseks ja potentsiaalsete probleemide ennustamiseks.  </li>
+<li><strong>Kohandage künniseid vastavalt vajadusele:</strong> Kui süsteem muutub, võivad ka künnised vajada muutmist.  </li>
+<li><strong>Uuendage seirereegleid:</strong> Lisage uusi mõõdikuid või loobuge iganenutest, et püsida asjakohane.  </li>
+<li><strong>Kontrollige hoiatuste tõhusust:</strong> Testiga hoiatusi, et tagada nende käivitumine vajalikul hetkel ja kriitiliste stsenaariumide märkamine.  </li>
+</ul>
+<p>📈 <strong>Näide:</strong> Kui liikluspiik põhjustab valehäireid, muutke künniseid või lisage tingimusi, et vähendada ebavajalikku müra.</p>
+<hr />
+<h3 id="3-integratsiooni-parimad-tavad">3. <strong>Integratsiooni parimad tavad</strong><a class="headerlink" href="#3-integratsiooni-parimad-tavad" title="Permanent link">&para;</a></h3>
+<p>Muutke seire oma töövoo sujuvaks osaks:  </p>
+<ul>
+<li><strong>Ühendage intsidendihaldusega:</strong> Integreerige tööriistadega nagu PagerDuty, Opsgenie või Slack reaalajas hoiatuste ja koostöö jaoks.  </li>
+<li><strong>Looge selged töövood:</strong> Määratlege, kes millega tegeleb, kui hoiatus käivitub – ei mingit aimamist!  </li>
+<li><strong>Automatiseerige levinud reaktsioonid:</strong> Korduvate probleemide puhul (nt teenuse taaskäivitamine) automatiseerige vastused aja säästmiseks.  </li>
+<li><strong>Dokumenteerige protseduurid:</strong> Looge käsiraamatud levinud intsidentide jaoks lahenduste kiirendamiseks.</li>
+</ul>
+<p>🤖 <strong>Professionaalne nõuanne:</strong> Kasutage veebikonkse või API-sid, et käivitada automatiseeritud tegevusi otse hoiatustest.</p>
+<hr />
+<h3 id="levinud-seire-probleemid">⚠️ Levinud seire probleemid<a class="headerlink" href="#levinud-seire-probleemid" title="Permanent link">&para;</a></h3>
+<p>Vältige neid tavalisi lõkse, mis võivad teie seiresüsteemi nõrgestada:  </p>
+<p>Jätkan tõlke teist osa:</p>
+<ol>
+<li><strong>Liiga palju hoiatusi:</strong> Meeskonna üleujutamine teavitustega viib tundlikkuse vähenemiseni ja kriitiliste probleemide märkamata jätmiseni.  </li>
+<li><strong>Kehvad künnisseadistused:</strong> Liiga tundlikud või liiga leebed künnised muudavad hoiatused tähendusetuks.  </li>
+<li><strong>Oluliste mõõdikute puudumine:</strong> Võtmenäitajate jälgimise puudumine võib jätta teid teadmatusse suurte probleemide suhtes.  </li>
+<li><strong>Ebapiisav dokumentatsioon:</strong> Ilma selgete juhisteta muutub hoiatustele reageerimine oletamiseks.</li>
+</ol>
+<hr />
+<h3 id="professionaalsed-napunaited-seire-edukuseks">💡 Professionaalsed näpunäited seire edukuseks<a class="headerlink" href="#professionaalsed-napunaited-seire-edukuseks" title="Permanent link">&para;</a></h3>
+<p>Siin on, kuidas viia oma seire järgmisele tasemele:  </p>
+<ol>
+<li><strong>Alustage oluliste mõõdikutega:</strong> Keskenduge CPU-le, mälule, kettale ja võrgu kasutusele — laiendage järk-järgult vastavalt vajadusele.  </li>
+<li><strong>Ehitage järk-järgult:</strong> Ärge proovige kõike korraga jälgida. Alustage põhiasjadest, seejärel lisage keerukust.  </li>
+<li><strong>Dokumenteerige kõik:</strong> Alates hoiatuste konfiguratsioonidest kuni veaotsingu sammudeni, hoidke selget ja ligipääsetavat dokumentatsiooni.  </li>
+<li><strong>Regulaarsed ülevaatused ja uuendused:</strong> Tehke seirest regulaarne tegevus, et tagada efektiivsus.  </li>
+<li><strong>Koolitaga meeskonda:</strong> Õpetage kõigile, kuidas hoiatustele reageerida, seiretööriistu kasutada ja järgida eskalatsiooni töövoogusid.</li>
+</ol>
+<hr />
+<h1 id="mis-on-vaatlus">🔭 Mis on vaatlus?<a class="headerlink" href="#mis-on-vaatlus" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>💡 "Vaatlus on nagu röntgennägemine teie süsteemi sisemiste tööprotsesside jälgimiseks."</p>
+</blockquote>
+<p>Kui seire ütleb teile <em>mis toimub</em>, siis vaatlus aitab teil mõista <em>miks</em>. See on võime süveneda teie süsteemi väljunditesse — logid, mõõdikud ja jäljed — et avastada sisemist olekut ja lahendada probleeme kiiremini.</p>
+<p><img alt="Vaatluse ülevaade" src="../../materials/lectures/Observability/media/image_12.png" /></p>
+<hr />
+<h2 id="pohikontseptsioon">🎯 Põhikontseptsioon<a class="headerlink" href="#pohikontseptsioon" title="Permanent link">&para;</a></h2>
+<p>Vaatlus ei ole lihtsalt moesõna; see on seire evolutsioon. See pakub rikkalikku ülevaadet keerulistest süsteemidest nende väljundite analüüsimise kaudu. Mis teeb selle eriliseks:  </p>
+<ul>
+<li><strong>Logid</strong> 📝: Talletavad sündmuste, vigade ja protsesside üksikasju.  </li>
+<li><strong>Mõõdikud</strong> 📊: Pakuvad numbrilisi hetkvõtteid süsteemi jõudlusest ja tervisest.  </li>
+<li><strong>Jäljed</strong> 🔍: Kaardistab päringute teekonda läbi teenuste, et avastada pudelikaelu ja sõltuvusi.  </li>
+</ul>
+<p>Koos moodustavad need komponendid võimsa tööriistakomplekti süsteemide diagnoosimiseks ja parendamiseks.</p>
+<hr />
+<h2 id="vaatluse-komponendid">🏗️ Vaatluse komponendid<a class="headerlink" href="#vaatluse-komponendid" title="Permanent link">&para;</a></h2>
+<h3 id="1-logid">1. <strong>Logid</strong> 📝<a class="headerlink" href="#1-logid" title="Permanent link">&para;</a></h3>
+<p>Logid on nagu teie süsteemi päevik — need talletavad üksikasjalikke sündmusi, mis aja jooksul toimuvad.  </p>
+<ul>
+<li><strong>Üksikasjalikud sündmuste kirjed:</strong> Need ütlevad teile <em>mis</em> juhtus, <em>millal</em> ja <em>kus</em>.  </li>
+<li><strong>Kontekstuaalne teave:</strong> Logid sisaldavad rikkalikke üksikasju nagu veakoodid, kasutaja ID-d või veaotsingud, mis aitavad probleeme lahendada.  </li>
+<li><strong>Ajatemplid ja järjestused:</strong> Need võimaldavad jälgida sündmuste kulgu samm-sammult.  </li>
+<li><strong>Silumise teave:</strong> Kui midagi läheb katki, on logid teie esimene peatus juurpõhjuse leidmiseks.</li>
+</ul>
+<p>🛠️ <strong>Näide:</strong> Veebiserveri logi võib näidata, et konkreetne API kutsung ebaõnnestus puuduva autentimissalasõna tõttu.  </p>
+<hr />
+<h3 id="2-moodikud">2. <strong>Mõõdikud</strong> 📊<a class="headerlink" href="#2-moodikud" title="Permanent link">&para;</a></h3>
+<p>Mõõdikud pakuvad kvantifitseeritavat ülevaadet teie süsteemi jõudlusest ja ressursside kasutamisest.  </p>
+<ul>
+<li><strong>Kvantitatiivsed mõõtmised:</strong> Jälgige CPU kasutust, mälu tarbimist, ketta I/O-d ja muud.  </li>
+<li><strong>Jõudlusnäitajad:</strong> Mõõdikud nagu reageerimisaeg või läbilaskevõime näitavad, kui hästi teie süsteem toimib.  </li>
+<li><strong>Ressursside kasutamine:</strong> Jälgige ressursside tarbimist, et vältida ülekoormust või alakasutust.  </li>
+<li><strong>Äri KPI-d:</strong> Minge tehnikast kaugemale — jälgige selliseid mõõdikuid nagu kasutajate kaasatus või müük, et siduda süsteemi jõudlus äriliste eesmärkidega.</li>
+</ul>
+<p>📈 <strong>Näide:</strong> Järsk tõus CPU kasutuses koos suurenenud lehelaadimisajaga viitab jõudluse pudelikaelale.  </p>
+<hr />
+<h3 id="3-jaljed">3. <strong>Jäljed</strong> 🔍<a class="headerlink" href="#3-jaljed" title="Permanent link">&para;</a></h3>
+<p>Jäljed jälgivad ühe päringu või tehingu teekonda läbi teie süsteemi, näidates, kuidas erinevad teenused omavahel suhtlevad.  </p>
+<ul>
+<li><strong>Päringute teekond:</strong> Mõistke, kuidas andmed liiguvad kasutaja sisendist andmebaasi päringuteni ja tagasi.  </li>
+<li><strong>Teenuste suhtlus:</strong> Näete, kuidas erinevad süsteemi komponendid omavahel suhtlevad.  </li>
+<li><strong>Jõudluse pudelikaelad:</strong> Tuvastage viivitused või vead päringute teekonnal.  </li>
+<li><strong>Süsteemi sõltuvused:</strong> Kaardistage, millised teenused üksteisest sõltuvad, aidates tuvastada järjestikuseid tõrkeid.</li>
+</ul>
+<p>🔎 <strong>Näide:</strong> Jäljed võivad paljastada, et viivitus teie maksetöötlussüsteemis on tingitud aeglasest vastusest kolmanda osapoole API-lt.  </p>
+<hr />
+<h3 id="miks-vaatlus-on-oluline">🌟 Miks vaatlus on oluline<a class="headerlink" href="#miks-vaatlus-on-oluline" title="Permanent link">&para;</a></h3>
+<p>Tänapäeva keerukates, hajutatud süsteemides pole ainult seirest piisav. Vaatlus annab teile tööriistad:  </p>
+<ul>
+<li>Kiiresti probleeme lahendada selgete ülevaadete abil.  </li>
+<li>Mõista süsteemi käitumist, isegi ettearvamatutes stsenaariumites.  </li>
+<li>Optimeerida jõudlust ja parandada kasutajakogemust.  </li>
+</ul>
+<p>Vaatlusega te mitte ainult ei jälgi oma süsteemi — vaid olete selle meister. 🚀</p>
+<p><img alt="Vaatluse komponendid" src="../../materials/lectures/Observability/media/image_13.png" /></p>
+<hr />
+<h2 id="roll-kaasaegsetes-susteemides">🌟 Roll kaasaegsetes süsteemides<a class="headerlink" href="#roll-kaasaegsetes-susteemides" title="Permanent link">&para;</a></h2>
+<h3 id="keerukate-susteemide-haldamine">Keerukate süsteemide haldamine<a class="headerlink" href="#keerukate-susteemide-haldamine" title="Permanent link">&para;</a></h3>
+<p>Mõelge sellest kui GPS-st teie mikroteenuste jaoks:
+- 🗺️ Kaardistab teenuste suhtluse
+- 🔍 Jälgib päringute voogusid
+- ⚡ Tuvastab pudelikaelu
+- 🔧 Võimaldab kiireid parandusi</p>
+<h3 id="proaktiivne-vs-reaktiivne-lahenemine">Proaktiivne vs reaktiivne lähenemine<a class="headerlink" href="#proaktiivne-vs-reaktiivne-lahenemine" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Traditsiooniline seire</th>
+<th>Kaasaegne vaatlus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reageerib probleemidele</td>
+<td>Hoiab probleeme ära</td>
+</tr>
+<tr>
+<td>Piiratud nähtavus</td>
+<td>Täielik süsteemi ülevaade</td>
+</tr>
+<tr>
+<td>Fikseeritud juhtpaneelid</td>
+<td>Dünaamiline uurimine</td>
+</tr>
+<tr>
+<td>Teadaolevad tundmatud</td>
+<td>Tundmatud tundmatud</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vaatluse-tooriistad">🛠️ Vaatluse tööriistad<a class="headerlink" href="#vaatluse-tooriistad" title="Permanent link">&para;</a></h2>
+<p><img alt="Vaatluse rakendamine" src="../../materials/lectures/Observability/media/image_14.png" /></p>
+<h3 id="jalgimise-tooriistad">Jälgimise tööriistad<a class="headerlink" href="#jalgimise-tooriistad" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Jaeger</strong> </li>
+<li>Hajutatud jälgimine</li>
+<li>Jõudluse seire</li>
+<li>
+<p>Juurpõhjuse analüüs</p>
+</li>
+<li>
+<p><strong>Zipkin</strong></p>
+</li>
+<li>Päringute voo jälgimine</li>
+<li>Latentsuse analüüs</li>
+<li>Teenuste sõltuvuste kaardistamine</li>
+</ol>
+<h3 id="integreeritud-platvormid">Integreeritud platvormid<a class="headerlink" href="#integreeritud-platvormid" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>OpenTelemetry</strong></li>
+<li>Standardne raamistik</li>
+<li>Mitmed andmetüübid</li>
+<li>
+<p>Lihtne integreerimine</p>
+</li>
+<li>
+<p><strong>Honeycomb &amp; Datadog</strong></p>
+</li>
+<li>Laiahaardeline seire</li>
+<li>Täiustatud analüütika</li>
+<li>Reaalajas ülevaated</li>
+</ol>
+<hr />
+<h2 id="vaatluse-parimad-tavad">✅ Vaatluse parimad tavad<a class="headerlink" href="#vaatluse-parimad-tavad" title="Permanent link">&para;</a></h2>
+<p><img alt="Parimate tavade ülevaade" src="../../materials/lectures/Observability/media/image_15.png" /></p>
+<table>
+<thead>
+<tr>
+<th><strong>Kategooria</strong></th>
+<th><strong>Parimad tavad</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Ühtne lähenemine</strong></td>
+<td>- 🔄 Integreerige kõik andmeallikad<br>- 📊 Tagage järjepidev mõõdikute kogumine<br>- 🔍 Kasutage standardiseeritud analüüsimeetodeid<br>- 📱 Looge ühtne vaade süsteemi tervisele</td>
+</tr>
+<tr>
+<td><strong>2. Keskendumine ärimõjule</strong></td>
+<td>- 💼 Jälgige kriitilisi tehinguid<br>- 📈 Jälgige kasutajakogemust<br>- 💰 Mõõtke ärimõõdikuid<br>- 🎯 Prioriseerige võtmeteenuseid</td>
+</tr>
+<tr>
+<td><strong>3. Pidev parendamine</strong></td>
+<td>- 📝 Viige läbi regulaarseid ülevaatustsükleid<br>- 🔄 Uuendage seirestrateegiad<br>- 📊 Täiustage mõõdikute kogumist<br>- 🎓 Pakkuge meeskonnale koolitust</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>Levinud probleemkohad</strong></th>
+<th><strong>Professionaalsed näpunäited</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Tööriistade vohamine</td>
+<td>- Alustage äriliselt kriitiliste teedega</td>
+</tr>
+<tr>
+<td>2. Andmete eraldatus</td>
+<td>- Ehitage järk-järgult</td>
+</tr>
+<tr>
+<td>3. Puuduv kontekst</td>
+<td>- Automatiseerige kus võimalik</td>
+</tr>
+<tr>
+<td>4. Hoiatuste väsimus</td>
+<td>- Dokumenteerige kõik ja koolitaga oma meeskonda</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="praktiline-rakendamine">🔄 Praktiline rakendamine<a class="headerlink" href="#praktiline-rakendamine" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>graph TB
+    subgraph Phase1[Faas 1: Alus]
+        A1[Põhilogimine]
+        A2[Mõõdikute kogumine]
+        A3[Jälgimise infrastruktuur]
+        A1 --&gt; A2 --&gt; A3
+    end
+
+    subgraph Phase2[Faas 2: Integratsioon]
+        B1[Ühenda andmeallikad]
+        B2[Loo ühtsed juhtpaneelid]
+        B3[Konfigureeri hoiatused]
+        B1 --&gt; B2 --&gt; B3
+    end
+
+    subgraph Phase3[Faas 3: Optimeerimine]
+        C1[Täiusta andmete kogumist]
+        C2[Paranda hoiatusreegleid]
+        C3[Täiusta visualiseerimist]
+        C1 --&gt; C2 --&gt; C3
+    end
+
+    Phase1 --&gt; Phase2 --&gt; Phase3
+
+    classDef phaseStyle fill:#f9f9f9,stroke:#333,stroke-width:2px
+    classDef stepStyle fill:#fff,stroke:#666
+    class Phase1,Phase2,Phase3 phaseStyle
+    class A1,A2,A3,B1,B2,B3,C1,C2,C3 stepStyle
+</code></pre></div>
+<h1 id="mis-on-jalgimine">🔍 Mis on jälgimine?<a class="headerlink" href="#mis-on-jalgimine" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>💡 "Jälgimine on nagu GPS teie päringutele, kui need läbivad teie süsteemi"</p>
+</blockquote>
+<p><img alt="Jälgimise ülevaade" src="../../materials/lectures/Observability/media/image_16.png" /></p>
+<h2 id="pohieesmark">🎯 Põhieesmärk<a class="headerlink" href="#pohieesmark" title="Permanent link">&para;</a></h2>
+<p>Jälgimine (tracing) jälgib päringute liikumist läbi erinevate teenuste või komponentide hajutatud süsteemides, eriti mikroteenuste arhitektuurides.</p>
+<hr />
+<table>
+<thead>
+<tr>
+<th><strong>Võtmevõime</strong></th>
+<th><strong>Kirjeldus</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Täitmisaja mõõtmine</strong> ⏱️</td>
+<td>- Operatsiooni kestuse jälgimine<br>- Aeglaste komponentide tuvastamine<br>- Teenuse latentsuse mõõtmine<br>- Jõudlustrendide jälgimine</td>
+</tr>
+<tr>
+<td><strong>2. Päringute profileerimine</strong> 📊</td>
+<td>- Päringumustrite analüüsimine<br>- Ressursikasutuse mõõtmine<br>- Kasutajateekondade jälgimine<br>- Pudelikaelte tuvastamine</td>
+</tr>
+<tr>
+<td><strong>3. Sõltuvuste kaardistamine</strong> 🗺️</td>
+<td>- Teenuste ühenduste avastamine<br>- Päringuvoogude visualiseerimine<br>- Süsteemiarhitektuuri mõistmine<br>- Teenuste vahelise suhtluse jälgimine</td>
+</tr>
+<tr>
+<td><strong>4. Jõudlusanalüüs</strong> 📈</td>
+<td>- Süsteemi läbilaskevõime mõõtmine<br>- Vastuse viivituste analüüsimine<br>- Ressursikasutuse jälgimine<br>- Süsteemi võimekuse jälgimine</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><img alt="Jälgimise rakendamine" src="../../materials/lectures/Observability/media/image_17.png" /></p>
+<h2 id="jalgimise-tooriistad_1">🛠️ Jälgimise tööriistad<a class="headerlink" href="#jalgimise-tooriistad_1" title="Permanent link">&para;</a></h2>
+<hr />
+<table>
+<thead>
+<tr>
+<th><strong>Tööriist</strong></th>
+<th><strong>Omadused</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Zipkin</strong></td>
+<td>- Hajutatud jälgimissüsteem<br>- Päringuvoo visualiseerimine<br>- Jõudlusanalüüs<br>- Teenuste sõltuvuste kaardistamine</td>
+</tr>
+<tr>
+<td><strong>2. Grafana Tempo</strong></td>
+<td>- Skaleeritav jälgimise tagataust<br>- Sujuv Grafana integratsioon<br>- Kõrgjõudluslik disain<br>- Lihtne visualiseerimine</td>
+</tr>
+<tr>
+<td><strong>3. OpenTelemetry</strong></td>
+<td>- Avatud lähtekoodiga raamistik<br>- Standardiseeritud instrumenteerimine<br>- Tugi mitmetele programmeerimiskeeltele<br>- Lihtne integreerimine</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="logimise-ja-seire-tahtsus">🚨 Logimise ja seire tähtsus<a class="headerlink" href="#logimise-ja-seire-tahtsus" title="Permanent link">&para;</a></h1>
+<h2 id="intsidentide-haldamine">Intsidentide haldamine<a class="headerlink" href="#intsidentide-haldamine" title="Permanent link">&para;</a></h2>
+<p><img alt="Intsidentide haldamine" src="../../materials/lectures/Observability/media/image_18.png" /></p>
+<p>Kujutage ette, et teie rakendus jookseb kokku suure lansseerimise keskel. Mida teete? Just siin tuleb appi <strong>intsidentide haldamine</strong>!  </p>
+<h3 id="votmeisikud"><strong>Võtmeisikud</strong><a class="headerlink" href="#votmeisikud" title="Permanent link">&para;</a></h3>
+<p>Siin on meeskond, kelle kutsute tegevusse:<br />
+- <strong>Arendustiim:</strong> Vigade parandamine professionaalselt.<br />
+- <strong>Käitusvõistkond:</strong> Hoiab serverid töös nagu õlitatud masin.<br />
+- <strong>SRE spetsialistid:</strong> Võlurid, kes tagavad, et süsteemid mitte ainult ei üle ela, vaid õitseksid.<br />
+- <strong>ITIL raamistik:</strong> Mõelge sellest kui reeglistikust kaose haldamiseks.  </p>
+<hr />
+<h3 id="professionaalsed-napunaited-efektiivseks-intsidentide-haldamiseks"><strong>Professionaalsed näpunäited efektiivseks intsidentide haldamiseks</strong><a class="headerlink" href="#professionaalsed-napunaited-efektiivseks-intsidentide-haldamiseks" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Probleemide klassifitseerimine:</strong> Kas tegemist on väikese vea või täiemahulise katkestusega? Teadke vahet.  </li>
+<li><strong>Omage plaani:</strong> Ärge sattuge paanikasse. Järgige eelkirjutatud reageerimissamme probleemide kiiremaks lahendamiseks.  </li>
+<li><strong>Harjutamine teeb meistriks:</strong> Regulaarsed õppused tagavad, et teie meeskond teab, mida teha tõelise kriisi korral.  </li>
+<li><strong>Dokumenteerige kõik:</strong> Hoidke juhtunust logid, et vigu mitte korrata.  </li>
+</ol>
+<hr />
+<h2 id="turvalisus-ja-vastavus">🔐 Turvalisus ja vastavus<a class="headerlink" href="#turvalisus-ja-vastavus" title="Permanent link">&para;</a></h2>
+<p><img alt="Turvalisuse ülevaade" src="../../materials/lectures/Observability/media/image_19.png" /></p>
+<p>Kas olete kuulnud häkkeritest, kes püüavad süsteemidesse sisse murda? Teie seire tööriistad on nagu kindluse valvurid.  </p>
+<h3 id="kuidas-seire-tuvastab-halbu-asju"><strong>Kuidas seire tuvastab halbu asju</strong><a class="headerlink" href="#kuidas-seire-tuvastab-halbu-asju" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Reaalajas jälgimine:</strong> Nagu otseülekande turvakaamera teie süsteemi jaoks.  </li>
+<li><strong>Mustrite tuvastamine:</strong> Märkate veidraid asju varakult (nt "Miks see IP üritab sisse logida 100 korda?").  </li>
+<li><strong>Anomaaliate tuvastamine:</strong> Märkab, kui midagi tundub <em>vale</em> — nagu äkiline andmepiik.  </li>
+<li><strong>Ohtude hindamine:</strong> Selgitab välja, kas tegemist on lihtsalt uudishimuliku lapsega või täiemahulise rünnakuga.  </li>
+</ul>
+<p><img alt="Turvalisuse rakendamine" src="../../materials/lectures/Observability/media/image_20.png" /></p>
+<hr />
+<p><img alt="Turvalisuse rakendamine" src="../../materials/lectures/Observability/media/image_20.png" /></p>
+<h3 id="kuidas-valtida-probleeme-vastavusega"><strong>Kuidas vältida probleeme vastavusega</strong><a class="headerlink" href="#kuidas-valtida-probleeme-vastavusega" title="Permanent link">&para;</a></h3>
+<p>Valitsustel ja tööstustel on reeglid ning nende rikkumine võib põhjustada suuri probleeme.  </p>
+<ol>
+<li><strong>Hoidke auditeerimise jälge:</strong> Logid on nagu päevik toimunust — kes pääses millele ligi, millal ja miks.  </li>
+<li>Kas keegi üritas sisse murda? Logid on teie toeks.  </li>
+<li>
+<p>Kas teie süsteem muutus? Teate, kes seda tegi.  </p>
+</li>
+<li>
+<p><strong>Järgige reegleid:</strong> Erinevatel piirkondadel ja tööstustel on ranged suunised, mida järgida:  </p>
+</li>
+<li><strong>GDPR:</strong> Kaitseb kasutajate privaatsust Euroopas.  </li>
+<li><strong>HIPAA:</strong> Hoiab meditsiiniandmeid turvalisena.  </li>
+<li><strong>SOX:</strong> Tagab, et finantsaruanded oleksid korrektsed.  </li>
+<li><strong>Tööstusreeglid:</strong> Olenemata teie valdkonnast on tõenäoliselt olemas järgimist vajav reeglistik.</li>
+</ol>
+<hr />
+<h2 id="kuidas-professionaalselt-probleeme-lahendada">🔧 Kuidas professionaalselt probleeme lahendada<a class="headerlink" href="#kuidas-professionaalselt-probleeme-lahendada" title="Permanent link">&para;</a></h2>
+<p>Kui IT-s midagi katkeb, on veaotsing teie supervõime! Siin on, kuidas jõuda "Mis just juhtus?!" olukorrast "Kriis lahendatud!" olukorrani. </p>
+<p><img alt="Reageerimise raamistik" src="../../materials/lectures/Observability/media/image_21.png" /></p>
+<hr />
+<h3 id="teie-3-sammuline-plaan-paeva-paastmiseks"><strong>Teie 3-sammuline plaan päeva päästmiseks</strong><a class="headerlink" href="#teie-3-sammuline-plaan-paeva-paastmiseks" title="Permanent link">&para;</a></h3>
+<h4 id="1-esialgne-detektiivitoo"><strong>1. Esialgne detektiivitöö 🕵️‍♂️</strong><a class="headerlink" href="#1-esialgne-detektiivitoo" title="Permanent link">&para;</a></h4>
+<p>Alustage vihjete kogumisega, nagu mõistatuse lahendamisel:<br />
+- Tuvastage sümptomid — mis käitub veidralt?<br />
+- Kontrollige logisid — need on nagu teie süsteemi päevik.<br />
+- Süvenege seire juhtpaneelidesse reaalajas uuenduste saamiseks.<br />
+- Vaadake üle hiljutised muudatused — kas keegi uuendas süsteemi või lisas uue funktsiooni?  </p>
+<hr />
+<h4 id="2-leidke-juurpohjus"><strong>2. Leidke juurpõhjus 🌟</strong><a class="headerlink" href="#2-leidke-juurpohjus" title="Permanent link">&para;</a></h4>
+<p>Nüüd süvenege sügavamale, et avastada, mis läks valesti:<br />
+- Otsige mustreid logides — kas samad vead korduvad?<br />
+- Analüüsige mõõdikuid — kas CPU, mälu või võrgukasutus suurenes järsult?<br />
+- Leidke seoseid — kas probleem algas pärast konkreetset sündmust?<br />
+- Tuvastage päästikud — mis põhjustas rikke?  </p>
+<hr />
+<h4 id="3-lahendage-ja-kinnitage"><strong>3. Lahendage ja kinnitage 🛠️</strong><a class="headerlink" href="#3-lahendage-ja-kinnitage" title="Permanent link">&para;</a></h4>
+<p>Aeg päev päästa:<br />
+- Rakendage lahendused — taaskäivitage teenus, parandage viga või uuendage konfiguratsioone.<br />
+- Testige veendumaks, et probleem on tõesti kadunud.<br />
+- Kirjutage kõik üles — mis juhtus, kuidas te seda parandasite ja õppetunnid.<br />
+- Uuendage protseduure, et vältida probleemi kordumist.  </p>
+<hr />
+<h3 id="levinud-takistused-ja-kuidas-neid-uletada">⚠️ <strong>Levinud takistused (ja kuidas neid ületada!)</strong><a class="headerlink" href="#levinud-takistused-ja-kuidas-neid-uletada" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Puuduvad logid:</strong> Logid pole korralikult seadistatud? Tunnete end pimedana.<br />
+   💡 Professionaalne nõuanne: Konfigureerige alati üksikasjalikud logid.  </li>
+<li><strong>Pole mõõdikuid:</strong> Ilma seireta lendate ilma instrumentideta.<br />
+   💡 Professionaalne nõuanne: Kasutage selliseid tööriistu nagu Grafana või Prometheus.  </li>
+<li><strong>Kehv korrelatsioon:</strong> Kui te ei suuda ühendada punkte, jääb teil suur pilt hoomamata.<br />
+   💡 Professionaalne nõuanne: Kasutage juhtpaneele, mis näitavad mõõdikuid ja logisid koos.  </li>
+<li><strong>Nõrk dokumentatsioon:</strong> Märkmete puudumine = õppetundide puudumine.<br />
+   💡 Professionaalne nõuanne: Kirjutage üles kõik, isegi väiksemad detailid!  </li>
+</ol>
+<hr />
+<hr />
+<h1 id="logimise-ja-seire-evolutsioon">📚 Logimise ja seire evolutsioon<a class="headerlink" href="#logimise-ja-seire-evolutsioon" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>💡 "Alustades lihtsatest tekstifailidest kuni võimsate tööriistadeni, mis tunduvad maagilised – logimine ja seire on läbinud pika tee."</p>
+</blockquote>
+<hr />
+<h2 id="kunagi-ammu-seire-varajased-paevad">🕰️ <strong>Kunagi ammu: Seire varajased päevad</strong><a class="headerlink" href="#kunagi-ammu-seire-varajased-paevad" title="Permanent link">&para;</a></h2>
+<p>Enne kõiki neid uhkeid juhtpaneele ja reaalajas hoiatusi oli logimine ja seire nii lihtne kui võimalik.</p>
+<h3 id="pohitooriistad-ja-lahenemised"><strong>Põhitööriistad ja lähenemised</strong><a class="headerlink" href="#pohitooriistad-ja-lahenemised" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Tekstilised logifailid:</strong> Logid olid lihtsalt tekstifailid – ilma kaunistuste, visualiseerimiste, lihtsalt tavaline tekst.  </li>
+<li><strong>Põhilised süsteemikäsud:</strong> Tööriistu nagu <code>tail</code> või <code>grep</code> kasutati logide läbikammimiseks rida-realt.  </li>
+<li><strong>Käsitsi ülevaatus:</strong> Probleemide leidmine tähendas lõputut logides kerimist ja lootmist, et probleem silma hakkab.  </li>
+<li><strong>Piiratud seire:</strong> Ei mingeid uhkeid graafikuid, ainult aeg-ajalt kontrolliti, et asjad poleks täiesti katki.  </li>
+</ul>
+<hr />
+<h3 id="probleemid-olid-toelised"><strong>Probleemid olid tõelised</strong><a class="headerlink" href="#probleemid-olid-toelised" title="Permanent link">&para;</a></h3>
+<p><img alt="Väljakutsete ülevaade" src="../../materials/lectures/Observability/media/image_22.png" /></p>
+<h4 id="suured-probleemid-varaste-meetoditega">🚫 <strong>Suured probleemid varaste meetoditega:</strong><a class="headerlink" href="#suured-probleemid-varaste-meetoditega" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Käsitsi töö hullumeelsus:</strong> Kõik tehti käsitsi, mis oli aeglane ja valus.  </li>
+<li><strong>Skaleerimisprobleemid:</strong> Süsteemide kasvades ei suutnud see lähenemine sammu pidada.  </li>
+<li><strong>Reaalajas ülevaate puudumine:</strong> Probleemid võisid jääda märkamata tundideks või kauemaks.  </li>
+<li><strong>Keeruline veaotsing:</strong> Probleemi põhjuse leidmine oli nagu nõela otsimine heinakuhjast.</li>
+</ol>
+<hr />
+<h2 id="tere-tulemast-seire-kaasaegsesse-ajastusse">🌟 <strong>Tere tulemast seire kaasaegsesse ajastusse</strong><a class="headerlink" href="#tere-tulemast-seire-kaasaegsesse-ajastusse" title="Permanent link">&para;</a></h2>
+<p>Nüüd on seiretööriistad kiired, targad ja äärmiselt võimekad. Nii on need arenenud:  </p>
+<hr />
+<h3 id="jargmise-taseme-tooriistad-tehnoloogia-evolutsioon"><strong>Järgmise taseme tööriistad: Tehnoloogia evolutsioon</strong><a class="headerlink" href="#jargmise-taseme-tooriistad-tehnoloogia-evolutsioon" title="Permanent link">&para;</a></h3>
+<p><img alt="Kaasaegsed süsteemid" src="../../materials/lectures/Observability/media/image_23.png" /></p>
+<h4 id="1-prometheus"><strong>1. Prometheus</strong><a class="headerlink" href="#1-prometheus" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Avatud lähtekoodiga võimsus:</strong> Loodud kaasaegsetele, pilvepõhistele seadistustele.  </li>
+<li><strong>Reaalajas hoiatused:</strong> Saage kohe teada, kui midagi läheb valesti.  </li>
+<li><strong>Täiustatud päringud:</strong> Küsige väga spetsiifilisi küsimusi oma andmete kohta.  </li>
+<li><strong>Pilvetehnoloogiatega ühilduv:</strong> Töötab suurepäraselt süsteemidega nagu Kubernetes.</li>
+</ul>
+<hr />
+<h4 id="2-elk-stack-elasticsearch-logstash-kibana"><strong>2. ELK Stack (Elasticsearch, Logstash, Kibana)</strong><a class="headerlink" href="#2-elk-stack-elasticsearch-logstash-kibana" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Logide meisterlikkus:</strong> Hallake ja otsige tohutust logide hulgast vaevata.  </li>
+<li><strong>Reaalajas ülevaated:</strong> Tuvastage trende või probleeme nende tekkimise hetkel.  </li>
+<li><strong>Professionaalne otsing:</strong> Leidke täpselt see, mida vajate, välgukiirete päringutega.  </li>
+<li><strong>Juhtpaneelid:</strong> Muutke toorandmed silmapaistvateks visualiseeringuteks.</li>
+</ul>
+<hr />
+<h4 id="3-grafana"><strong>3. Grafana</strong><a class="headerlink" href="#3-grafana" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Kõik-ühes visualiseeringud:</strong> Kombineerige andmeid mitmest allikast ühel juhtpaneelil.  </li>
+<li><strong>Interaktiivsed juhtpaneelid:</strong> Klõpsake, suurendage ja uurige oma andmeid reaalajas.  </li>
+<li><strong>Hoiatused:</strong> Seadistage nutikad hoiatused, mis teavitavad teid ainult vajadusel.  </li>
+<li><strong>Hulk pluginaid:</strong> Lisage funktsioone ja integratsioone hõlpsalt.</li>
+</ul>
+<hr />
+<h3 id="miks-see-on-oluline">🚀 <strong>Miks see on oluline</strong><a class="headerlink" href="#miks-see-on-oluline" title="Permanent link">&para;</a></h3>
+<p>Kaasaegne logimine ja seire ei ole ainult probleemide tuvastamiseks — need on süsteemi mõistmiseks, probleemide ennustamiseks ja kõige sujuva töö tagamiseks.  </p>
+<p>Tekstilogides kaevamisest kuni tööriistadeni, mis annavad teile röntgennägemuse teie süsteemidesse, oleme läbinud pika tee. Ja arvake mis? Vaatluse tulevik on veelgi helgem. 🌟</p>
+<hr />
+<h2 id="miks-kaasaegsed-seire-tooriistad-on-olulised">💪 <strong>Miks kaasaegsed seire tööriistad on olulised</strong><a class="headerlink" href="#miks-kaasaegsed-seire-tooriistad-on-olulised" title="Permanent link">&para;</a></h2>
+<p>Kaasaegsed seire tööriistad ei tee elu lihtsalt lihtsamaks — need on nagu superlaaditud assistent, kes kunagi ei maga. Siin on, miks need on olulised:</p>
+<hr />
+<h3 id="1-skaleeritavus"><strong>1. Skaleeritavus</strong> 🚀<a class="headerlink" href="#1-skaleeritavus" title="Permanent link">&para;</a></h3>
+<p>Jätke hüvasti piirangutega. Kaasaegsed tööriistad kasvavad koos teie süsteemiga, olenemata sellest, kui suureks see muutub.  </p>
+<ul>
+<li><strong>Haldavad tohutuid andmehulki:</strong> Miljonid logid? Pole probleemi.  </li>
+<li><strong>Toetavad hajussüsteeme:</strong> Ideaalne pilvetehnoloogiate või mitmes kohas töötavate rakenduste jaoks.  </li>
+<li><strong>Pilvetehnoloogiatega ühilduvad:</strong> Töötavad sujuvalt tööriistadega nagu Kubernetes ja AWS.  </li>
+<li><strong>Paindlik juurutamine:</strong> Kasutage neid pilves, kohapeal või kombineeritult.</li>
+</ul>
+<hr />
+<h3 id="2-automatiseerimine"><strong>2. Automatiseerimine</strong> 🤖<a class="headerlink" href="#2-automatiseerimine" title="Permanent link">&para;</a></h3>
+<p>Laske tööriistadel teha raske töö, samal ajal kui teie keskendute põnevatele asjadele.  </p>
+<ul>
+<li><strong>Automatiseeritud andmete kogumine:</strong> Unustage käsitsi sisestused — tööriistad tõmbavad andmeid reaalajas.  </li>
+<li>
+<p><strong>Nutikad hoiatused:</strong> Saate teavitusi <em>ainult</em> siis, kui midagi olulist juhtub — enam mitte rämpsteadaandeid!<br />
+Jätkan tõlke kolmandat osa:</p>
+</li>
+<li>
+<p><strong>Planeeritud aruanded:</strong> Tööriistad toimetavad ülevaateid otse teie postkasti (või juhtpaneelile) nagu kellavärk.  </p>
+</li>
+<li><strong>Automatiseeritud parandused:</strong> Seadistage reaktsioonid levinud probleemidele — parandused toimuvad, kui teie magate.</li>
+</ul>
+<hr />
+<h3 id="3-reaalajas-analuus"><strong>3. Reaalajas analüüs</strong> ⏱️<a class="headerlink" href="#3-reaalajas-analuus" title="Permanent link">&para;</a></h3>
+<p>Kaasaegsed tööriistad ei piirdu jälgimisega — nad tegutsevad kiiresti.  </p>
+<ul>
+<li><strong>Kohesed ülevaated:</strong> Näete, mis teie süsteemis toimub <em>praegusel hetkel</em>.  </li>
+<li><strong>Kiire probleemide tuvastamine:</strong> Märkate probleeme kohe nende ilmnemisel.  </li>
+<li><strong>Välkkiire reaktsioon:</strong> Lahendage probleeme enne, kui need katastroofikse muutuvad.  </li>
+<li><strong>Tuleviku ennustamine:</strong> Arenenud tööriistad suudavad isegi prognoosida probleeme trendide põhjal.</li>
+</ul>
+<hr />
+<h2 id="uleminek-vaatlusele">🔄 <strong>Üleminek vaatlusele</strong><a class="headerlink" href="#uleminek-vaatlusele" title="Permanent link">&para;</a></h2>
+<p>Üleminek põhiliselt seirelt täielikule vaatlusele on nagu binoklitest teleskoobile üleminek — saate palju selgema ja sügavama pildi oma süsteemidest.</p>
+<p><img alt="Vaatluse üleminek" src="../../materials/lectures/Observability/media/image_24.png" />
+<img alt="Vaatluse mõõdikud" src="../../materials/lectures/Observability/media/image_25.png" /></p>
+<hr />
+<h3 id="peamised-vaatlusmeetodid"><strong>Peamised vaatlusmeetodid</strong><a class="headerlink" href="#peamised-vaatlusmeetodid" title="Permanent link">&para;</a></h3>
+<p>Vaatlus ei ole lihtsalt andmete kogumine — see on <em>õigete</em> andmete kogumine ja nende mõtestamine. Siin on peamised meetodid, mis tuleks omandada:</p>
+<h4 id="1-use-meetod"><strong>1. USE meetod</strong> 🚀<a class="headerlink" href="#1-use-meetod" title="Permanent link">&para;</a></h4>
+<p>(Utilization, Saturation, Errors — Kasutus, Küllastus, Vead)<br />
+Ideaalne teie süsteemi ressursside seisundi jälgimiseks:<br />
+- <strong>Kasutus:</strong> Näete, kui palju teie ressurssidest (CPU, mälu jne) on kasutuses.<br />
+- <strong>Küllastus:</strong> Märkate, kas teie süsteem läheneb oma piiridele.<br />
+- <strong>Vead:</strong> Jälgite probleeme nagu ebaõnnestunud päringud või süsteemi rikked.<br />
+- <strong>Eesmärk:</strong> Tagada, et teie süsteem oleks tõhus ja pudelikaelata.</p>
+<hr />
+<h4 id="2-red-meetod"><strong>2. RED meetod</strong> 📊<a class="headerlink" href="#2-red-meetod" title="Permanent link">&para;</a></h4>
+<p>(Rate, Errors, Duration — Sagedus, Vead, Kestus)<br />
+Peamiselt teenuste nagu API-de või rakenduste jälgimiseks:<br />
+- <strong>Sagedus:</strong> Kui palju päringuid saabub?<br />
+- <strong>Vead:</strong> Kui paljud neist ebaõnnestuvad?<br />
+- <strong>Kestus:</strong> Kui kaua iga päring võtab?<br />
+- <strong>Eesmärk:</strong> Tagada, et teie teenus pakuks kõrget kvaliteeti ja jääks reageerivaks.</p>
+<hr />
+<h4 id="3-neli-kuldset-signaali"><strong>3. Neli kuldset signaali</strong> 🌟<a class="headerlink" href="#3-neli-kuldset-signaali" title="Permanent link">&para;</a></h4>
+<p>Mõelge neist kui teie süsteemi olulisimatest tervise näitajatest:<br />
+- <strong>Latentsus:</strong> Kui kiiresti teie süsteem vastab?<br />
+- <strong>Liiklus:</strong> Kui palju andmeid või päringuid töödeldakse?<br />
+- <strong>Vead:</strong> Mis läheb katki?<br />
+- <strong>Küllastus:</strong> Kui täis on teie ressursid?<br />
+- <strong>Eesmärk:</strong> Hoida süsteem kasutajate jaoks sujuvalt töötamas.</p>
+<hr />
+<h3 id="peamised-fokuseerimispiirkonnad">🎯 <strong>Peamised fokuseerimispiirkonnad</strong><a class="headerlink" href="#peamised-fokuseerimispiirkonnad" title="Permanent link">&para;</a></h3>
+<h4 id="1-vigade-analuus"><strong>1. Vigade analüüs</strong> 🛠️<a class="headerlink" href="#1-vigade-analuus" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Määratlege selgelt, mis loetakse veaks (ärge liialdage!).  </li>
+<li>Vältige valepositiivseid tulemusi, mis ujutavad teid tarbetute hoiatustega.  </li>
+<li>Leidke mustreid vigades — kas need on juhuslikud või millegagi seotud?  </li>
+<li>Mõistke <em>mõju</em> — kas see mõjutab kasutajaid või ainult taustaprotsesse?  </li>
+</ul>
+<hr />
+<h4 id="2-latentsuse-jalgimine"><strong>2. Latentsuse jälgimine</strong> ⏱️<a class="headerlink" href="#2-latentsuse-jalgimine" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Jälgige, kui kiiresti teie süsteem vastab — keegi ei taha oodata!  </li>
+<li>Tuvastage pudelikaelad — mis aeglustab asju?  </li>
+<li>Mõõtke kasutajakogemust — rahulolevad kasutajad tähendavad, et kõik toimib.  </li>
+<li>Seadke jõudluse alustasemed — teadke, milline on "normaalne", et probleeme kiiresti märgata.  </li>
+</ul>
+<hr />
+<h4 id="3-ressursside-haldamine"><strong>3. Ressursside haldamine</strong> ⚡<a class="headerlink" href="#3-ressursside-haldamine" title="Permanent link">&para;</a></h4>
+<p><img alt="Ressursside haldamine" src="../../materials/lectures/Observability/media/image_26.png" /><br />
+Ressursside haldamine on nagu eelarvehaldur teie süsteemi jaoks:<br />
+- <strong>Jälgige kasutust:</strong> Kontrollige, kui palju CPU-d, mälu ja kettaruumi te kasutate.<br />
+- <strong>Jälgige küllastust:</strong> Märkate, kui ressursid hakkavad otsa saama.<br />
+- <strong>Ennustage vajadusi:</strong> Planeerige tippaegadeks, et teid ei tabaks ootamatult.<br />
+- <strong>Skaleerige arukalt:</strong> Lisage ressursse vastavalt vajadusele, kuid ärge kulutage liigselt.  </p>
+<hr />
+<h2 id="kaasaegne-logihaldus-kaasaegne-viis-logide-kasitlemiseks">🛠️ <strong>Kaasaegne logihaldus: Kaasaegne viis logide käsitlemiseks</strong><a class="headerlink" href="#kaasaegne-logihaldus-kaasaegne-viis-logide-kasitlemiseks" title="Permanent link">&para;</a></h2>
+<p>Logid on nagu teie süsteemi salajane päevik, salvestades kõike, mis toimub. Nende hea haldamine võib teha teist tõelise IT-professionaali!  </p>
+<p><img alt="Logihaldus" src="../../materials/lectures/Observability/media/image_27.png" /></p>
+<hr />
+<h3 id="parimad-tooriistad-logihalduseks"><strong>Parimad tööriistad logihalduseks</strong><a class="headerlink" href="#parimad-tooriistad-logihalduseks" title="Permanent link">&para;</a></h3>
+<h4 id="1-splunk"><strong>1. Splunk</strong> 🚀<a class="headerlink" href="#1-splunk" title="Permanent link">&para;</a></h4>
+<p>Splunk on nagu logihalduse tööriistade geenius - see teeb rohkem kui lihtsalt logide salvestamine:<br />
+- <strong>Täiustatud analüüs:</strong> Süvenege andmetesse, et leida mustreid.<br />
+- <strong>Masinõpe:</strong> Ennustage probleeme enne nende tekkimist.<br />
+- <strong>Reaalajas jälgimine:</strong> Näete, mis teie süsteemis praegu toimub.<br />
+- <strong>Kohandatud juhtpaneelid:</strong> Muudavad teie andmed elegantseks ja organiseerituks.  </p>
+<hr />
+<h4 id="2-elk-stack-komponendid"><strong>2. ELK Stack komponendid</strong> 🌟<a class="headerlink" href="#2-elk-stack-komponendid" title="Permanent link">&para;</a></h4>
+<p>ELK Stack on täiuslik isetegemise tööriistakomplekt logihalduseks:<br />
+- <strong>Elasticsearch:</strong> Otsingumootor, mis muudab logide leidmise välgukiireks.<br />
+- <strong>Logstash:</strong> Kogub ja töötleb logisid kogu teie süsteemist.<br />
+- <strong>Kibana:</strong> Muudab teie logid ilusateks diagrammideks ja graafikuteks.  </p>
+<hr />
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 19, 2025 09:21:29">April 19, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
