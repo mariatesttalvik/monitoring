@@ -1,110 +1,18 @@
 # 🔍 Sissejuhatus logimisesse, seiresse ja vaatlusesse
 
-- [🔍 Sissejuhatus logimisesse, seiresse ja vaatlusesse](#-sissejuhatus-logimisesse-seiresse-ja-vaatlusesse)
-- [🌟 Sissejuhatus](#-sissejuhatus)
-  - [📝 Mis on logimine?](#-mis-on-logimine)
-    - [🎯 Logimise eesmärk](#-logimise-eesmärk)
-    - [✨ Logimise näited](#-logimise-näited)
-    - [🎓 Parimad tavad logimises](#-parimad-tavad-logimises)
-    - [⚠️ Levinud ohukohad, mida vältida](#️-levinud-ohukohad-mida-vältida)
-    - [💡 Professionaalsed näpunäited](#-professionaalsed-näpunäited)
-- [📊 Mis on seire?](#-mis-on-seire)
-    - [Miks seire on oluline](#miks-seire-on-oluline)
-  - [🎯 Olulised süsteemi mõõdikud](#-olulised-süsteemi-mõõdikud)
-    - [1. **Süsteemi elutähtsad näitajad**](#1-süsteemi-elutähtsad-näitajad)
-    - [2. **Süsteemi tervise näitajad**](#2-süsteemi-tervise-näitajad)
-  - [🔍 Seire tüübid](#-seire-tüübid)
-    - [1. **Infrastruktuuri seire** 🏗️](#1-infrastruktuuri-seire-️)
-    - [2. **Rakenduse jõudluse seire (APM)** 💻](#2-rakenduse-jõudluse-seire-apm-)
-    - [3. **Turvaseire** 🔐](#3-turvaseire-)
-  - [📈 Teenuse mõõdikute näide](#-teenuse-mõõdikute-näide)
-    - ["Diagnostilise päringu" lähenemine](#diagnostilise-päringu-lähenemine)
-    - [🕒 "Mõõdik = Aegrida"](#-mõõdik--aegrida)
-      - [Mis teeb hea aegrea?](#mis-teeb-hea-aegrea)
-    - [Aegrea visualiseerimine](#aegrea-visualiseerimine)
-  - [🛠️ Seire tööriistad](#️-seire-tööriistad)
-    - [Populaarsete tööriistade võrdlus](#populaarsete-tööriistade-võrdlus)
-    - [Tööriistade esiletõstmised](#tööriistade-esiletõstmised)
-    - [🚨 Teavitusmeetodid](#-teavitusmeetodid)
-  - [✅ Parimad tavad seires](#-parimad-tavad-seires)
-    - [1. **Selged mõõdikud ja hoiatused**](#1-selged-mõõdikud-ja-hoiatused)
-    - [2. **Regulaarne ülevaatusprotsess**](#2-regulaarne-ülevaatusprotsess)
-    - [3. **Integratsiooni parimad tavad**](#3-integratsiooni-parimad-tavad)
-    - [⚠️ Levinud seire probleemid](#️-levinud-seire-probleemid)
-    - [💡 Professionaalsed näpunäited seire edukuseks](#-professionaalsed-näpunäited-seire-edukuseks)
-- [🔭 Mis on vaatlus?](#-mis-on-vaatlus)
-  - [🎯 Põhikontseptsioon](#-põhikontseptsioon)
-  - [🏗️ Vaatluse komponendid](#️-vaatluse-komponendid)
-    - [1. **Logid** 📝](#1-logid-)
-    - [2. **Mõõdikud** 📊](#2-mõõdikud-)
-    - [3. **Jäljed** 🔍](#3-jäljed-)
-    - [🌟 Miks vaatlus on oluline](#-miks-vaatlus-on-oluline)
-  - [🌟 Roll kaasaegsetes süsteemides](#-roll-kaasaegsetes-süsteemides)
-    - [Keerukate süsteemide haldamine](#keerukate-süsteemide-haldamine)
-    - [Proaktiivne vs reaktiivne lähenemine](#proaktiivne-vs-reaktiivne-lähenemine)
-  - [🛠️ Vaatluse tööriistad](#️-vaatluse-tööriistad)
-    - [Jälgimise tööriistad](#jälgimise-tööriistad)
-    - [Integreeritud platvormid](#integreeritud-platvormid)
-  - [✅ Vaatluse parimad tavad](#-vaatluse-parimad-tavad)
-  - [🔄 Praktiline rakendamine](#-praktiline-rakendamine)
-- [🔍 Mis on jälgimine?](#-mis-on-jälgimine)
-  - [🎯 Põhieesmärk](#-põhieesmärk)
-  - [🛠️ Jälgimise tööriistad](#️-jälgimise-tööriistad)
-- [🚨 Logimise ja seire tähtsus](#-logimise-ja-seire-tähtsus)
-  - [Intsidentide haldamine](#intsidentide-haldamine)
-    - [**Võtmeisikud**](#võtmeisikud)
-    - [**Professionaalsed näpunäited efektiivseks intsidentide haldamiseks**](#professionaalsed-näpunäited-efektiivseks-intsidentide-haldamiseks)
-  - [🔐 Turvalisus ja vastavus](#-turvalisus-ja-vastavus)
-    - [**Kuidas seire tuvastab halbu asju**](#kuidas-seire-tuvastab-halbu-asju)
-    - [**Kuidas vältida probleeme vastavusega**](#kuidas-vältida-probleeme-vastavusega)
-  - [🔧 Kuidas professionaalselt probleeme lahendada](#-kuidas-professionaalselt-probleeme-lahendada)
-    - [**Teie 3-sammuline plaan päeva päästmiseks**](#teie-3-sammuline-plaan-päeva-päästmiseks)
-      - [**1. Esialgne detektiivitöö 🕵️‍♂️**](#1-esialgne-detektiivitöö-️️)
-      - [**2. Leidke juurpõhjus 🌟**](#2-leidke-juurpõhjus-)
-      - [**3. Lahendage ja kinnitage 🛠️**](#3-lahendage-ja-kinnitage-️)
-    - [⚠️ **Levinud takistused (ja kuidas neid ületada!)**](#️-levinud-takistused-ja-kuidas-neid-ületada)
-- [📚 Logimise ja seire evolutsioon](#-logimise-ja-seire-evolutsioon)
-  - [🕰️ **Kunagi ammu: Seire varajased päevad**](#️-kunagi-ammu-seire-varajased-päevad)
-    - [**Põhitööriistad ja lähenemised**](#põhitööriistad-ja-lähenemised)
-    - [**Probleemid olid tõelised**](#probleemid-olid-tõelised)
-      - [🚫 **Suured probleemid varaste meetoditega:**](#-suured-probleemid-varaste-meetoditega)
-  - [🌟 **Tere tulemast seire kaasaegsesse ajastusse**](#-tere-tulemast-seire-kaasaegsesse-ajastusse)
-    - [**Järgmise taseme tööriistad: Tehnoloogia evolutsioon**](#järgmise-taseme-tööriistad-tehnoloogia-evolutsioon)
-      - [**1. Prometheus**](#1-prometheus)
-      - [**2. ELK Stack (Elasticsearch, Logstash, Kibana)**](#2-elk-stack-elasticsearch-logstash-kibana)
-      - [**3. Grafana**](#3-grafana)
-    - [🚀 **Miks see on oluline**](#-miks-see-on-oluline)
-  - [💪 **Miks kaasaegsed seire tööriistad on olulised**](#-miks-kaasaegsed-seire-tööriistad-on-olulised)
-    - [**1. Skaleeritavus** 🚀](#1-skaleeritavus-)
-    - [**2. Automatiseerimine** 🤖](#2-automatiseerimine-)
-    - [**3. Reaalajas analüüs** ⏱️](#3-reaalajas-analüüs-️)
-  - [🔄 **Üleminek vaatlusele**](#-üleminek-vaatlusele)
-    - [**Peamised vaatlusmeetodid**](#peamised-vaatlusmeetodid)
-      - [**1. USE meetod** 🚀](#1-use-meetod-)
-      - [**2. RED meetod** 📊](#2-red-meetod-)
-      - [**3. Neli kuldset signaali** 🌟](#3-neli-kuldset-signaali-)
-    - [🎯 **Peamised fokuseerimispiirkonnad**](#-peamised-fokuseerimispiirkonnad)
-      - [**1. Vigade analüüs** 🛠️](#1-vigade-analüüs-️)
-      - [**2. Latentsuse jälgimine** ⏱️](#2-latentsuse-jälgimine-️)
-      - [**3. Ressursside haldamine** ⚡](#3-ressursside-haldamine-)
-  - [🛠️ **Kaasaegne logihaldus: Kaasaegne viis logide käsitlemiseks**](#️-kaasaegne-logihaldus-kaasaegne-viis-logide-käsitlemiseks)
-    - [**Parimad tööriistad logihalduseks**](#parimad-tööriistad-logihalduseks)
-      - [**1. Splunk** 🚀](#1-splunk-)
-      - [**2. ELK Stack komponendid** 🌟](#2-elk-stack-komponendid-)
-
 > 💡 "Kaasaegses IT-maailmas ei ole süsteemi tervise pimeduses olemine valik"
 
-# 🌟 Sissejuhatus
+# Sissejuhatus
 
 Logimine, seire ja vaatlus on hädavajalikud praktikad kaasaegses IT-s, küberturvalisuses ja süsteemide haldamises. Need kontseptsioonid moodustavad turvaliste, töökindlate ja tõhusate süsteemide aluse.
 
-## 📝 Mis on logimine?
+## Mis on logimine?
 
 ![Logimise ülevaade](media/image_1.png)
 
 Logimine on süsteemis toimuvate sündmuste salvestamise protsess. Mõelge sellest kui oma süsteemi päevikust - salvestades kõike kasutajate sisselogimistest süsteemi vigadeni ja turvanõrkusteni.
 
-### 🎯 Logimise eesmärk
+### Logimise eesmärk
 
 **1. Süsteemi seire**
 - Reaalajas ülevaade süsteemi käitumisest
@@ -134,7 +42,7 @@ Logimine on süsteemis toimuvate sündmuste salvestamise protsess. Mõelge selle
 
 ![Turvalisuse logimine](media/image_3.png)
 
-### ✨ Logimise näited
+### Logimise näited
 
 1. **Veebiserveri logid** 🌐
 Salvestavad iga veebiserveri päringu, sealhulgas üksikasjad nagu kliendi IP-aadress, taotletud URL ja vastuse olek.
@@ -157,7 +65,7 @@ Jälgivad süsteemi turvalisusega seotud tegevusi, sealhulgas ebaõnnestunud sis
    - Tulemüüri tegevused
    - Turvahoiatused
 
-### 🎓 Parimad tavad logimises
+### Parimad tavad logimises
 
 ![Logimissüsteemide ülevaade](media/image_4.png)
 
@@ -182,19 +90,19 @@ Standardiseeritud logiformaadi kasutamine tagab järjepidevuse, muutes logide an
 - 📈 Parem analüüs
 - 🔧 Lihtsustatud hooldus
 
-### ⚠️ Levinud ohukohad, mida vältida
+### Levinud ohukohad, mida vältida
 1. Ebajärjepidevad logiformaadid
 2. Oluliste sündmuste puudumine
 3. Ebapiisavad säilitamispoliitikad
 4. Kehv otsitavus
 
-### 💡 Professionaalsed näpunäited
+### Professionaalsed näpunäited
 - Lisage alati ajatemplid standardformaadis
 - Logige asjakohast konteksti, mitte ainult sündmusi
 - Rakendage korralik logide rotatsioon
 - Kaitske tundlikke logiandmeid
 
-# 📊 Mis on seire?
+# Mis on seire?
 
 > 💡 "Seire on nagu tervisekontroll kogu teie IT-süsteemile"
 
@@ -218,7 +126,7 @@ Keegi ei taha tööseisaku ajal probleemidega tegeleda, eriti kui olulised prots
 
 🌐 **Näide:** E-kaubanduse veebisait võib seisakute ajal kaotada palju raha, samamoodi võib mänguserveri tõrge turniiri ajal kasutajaid frustreerida. Seire aitab seda vältida.
 
-## 🎯 Olulised süsteemi mõõdikud
+## Olulised süsteemi mõõdikud
 
 Süsteemi jälgimisel on vaja keskenduda kindlatele võtmekomponentidele, et tagada sujuv toimimine:
 
@@ -253,7 +161,7 @@ Need mõõdikud on regulaarsed kontrollid, et näha, kas süsteem "tunneb end h�
 
 Nende mõõdikute jälgimine ei aita ainult süsteemi töös hoida – see tagab, et süsteem on optimeeritud, turvaline ja valmis kõigeks.
 
-## 🔍 Seire tüübid
+## Seire tüübid
 
 ![Teenuse mõõdikud](media/image_6.png)
 
@@ -299,7 +207,7 @@ See on valvekoer, mis kaitseb teie süsteemi pahatahtliku tegevuse ja volitamata
 
 Kombineerides neid seire tüüpe, saate tervikliku pildi oma süsteemi tervisest, jõudlusest ja turvalisusest. 
 
-## 📈 Teenuse mõõdikute näide
+## Teenuse mõõdikute näide
 
 ### "Diagnostilise päringu" lähenemine
 Mõelge sellest kui süsteemi tervisekontrollist:
@@ -308,7 +216,7 @@ Mõelge sellest kui süsteemi tervisekontrollist:
 - Jälgib päringuid ajaühikus
 - Jälgib samaaegseid päringuid
 
-### 🕒 "Mõõdik = Aegrida"
+### "Mõõdik = Aegrida"
 
 ![Aegrea näide](media/image_7.png)
 ![Mõõdikute visualiseerimine](media/image_8.png)
@@ -365,7 +273,7 @@ Aegrea andmete mõistmiseks on visualiseerimistööriistad hädavajalikud.
 
 Heade aegrea andmete ja õigete tööriistadega olete alati sammu võrra ees oma süsteemi mõistmises ja haldamises. 🕒✨
 
-## 🛠️ Seire tööriistad
+## Seire tööriistad
 
 Seire tööriistad on teie usaldusväärsed kaaslased süsteemide tervise ja jõudluse jälgimisel. Igal tööriistal on unikaalsed tugevused, seega õige valiku tegemine sõltub teie vajadustest. Vaatame lähemalt mõnda populaarset valikut:
 
@@ -399,7 +307,7 @@ Seire tööriistad on teie usaldusväärsed kaaslased süsteemide tervise ja jõ
 
 ---
 
-### 🚨 Teavitusmeetodid
+### Teavitusmeetodid
 
 Tõhus teavitamine on seiresüsteemide süda – oluline on tagada, et teid teavitatakse õigel ajal ja õigel viisil. Euroopas arvestab teavitamine sageli piirkondlike eripäradega, nagu vastavus GDPR-ile ja konkreetsete tööriistade kättesaadavus.
 
@@ -407,7 +315,7 @@ Tõhus teavitamine on seiresüsteemide süda – oluline on tagada, et teid teav
 
 ---
 
-## ✅ Parimad tavad seires
+## Parimad tavad seires
 
 ![Parimad tavad](media/image_11.png)
 
@@ -449,7 +357,7 @@ Muutke seire oma töövoo sujuvaks osaks:
 
 ---
 
-### ⚠️ Levinud seire probleemid  
+### Levinud seire probleemid  
 
 Vältige neid tavalisi lõkse, mis võivad teie seiresüsteemi nõrgestada:  
 
@@ -462,7 +370,7 @@ Jätkan tõlke teist osa:
 
 ---
 
-### 💡 Professionaalsed näpunäited seire edukuseks  
+### Professionaalsed näpunäited seire edukuseks  
 
 Siin on, kuidas viia oma seire järgmisele tasemele:  
 
@@ -474,7 +382,7 @@ Siin on, kuidas viia oma seire järgmisele tasemele:
 
 ---
 
-# 🔭 Mis on vaatlus?  
+# Mis on vaatlus?  
 
 > 💡 "Vaatlus on nagu röntgennägemine teie süsteemi sisemiste tööprotsesside jälgimiseks."
 
@@ -484,7 +392,7 @@ Kui seire ütleb teile *mis toimub*, siis vaatlus aitab teil mõista *miks*. See
 
 ---
 
-## 🎯 Põhikontseptsioon  
+## Põhikontseptsioon  
 
 Vaatlus ei ole lihtsalt moesõna; see on seire evolutsioon. See pakub rikkalikku ülevaadet keerulistest süsteemidest nende väljundite analüüsimise kaudu. Mis teeb selle eriliseks:  
 
@@ -496,7 +404,7 @@ Koos moodustavad need komponendid võimsa tööriistakomplekti süsteemide diagn
 
 ---
 
-## 🏗️ Vaatluse komponendid  
+## Vaatluse komponendid  
 
 ### 1. **Logid** 📝  
 Logid on nagu teie süsteemi päevik — need talletavad üksikasjalikke sündmusi, mis aja jooksul toimuvad.  
@@ -534,7 +442,7 @@ Jäljed jälgivad ühe päringu või tehingu teekonda läbi teie süsteemi, näi
 
 ---
 
-### 🌟 Miks vaatlus on oluline  
+### Miks vaatlus on oluline  
 
 Tänapäeva keerukates, hajutatud süsteemides pole ainult seirest piisav. Vaatlus annab teile tööriistad:  
 
@@ -568,7 +476,7 @@ Mõelge sellest kui GPS-st teie mikroteenuste jaoks:
 
 ---
 
-## 🛠️ Vaatluse tööriistad
+## Vaatluse tööriistad
 
 ![Vaatluse rakendamine](media/image_14.png)
 
@@ -596,7 +504,7 @@ Mõelge sellest kui GPS-st teie mikroteenuste jaoks:
 
 ---
 
-## ✅ Vaatluse parimad tavad
+## Vaatluse parimad tavad
 
 ![Parimate tavade ülevaade](media/image_15.png)
 
@@ -617,7 +525,7 @@ Mõelge sellest kui GPS-st teie mikroteenuste jaoks:
 ---
 
 
-## 🔄 Praktiline rakendamine
+## Praktiline rakendamine
 
 ```mermaid
 graph TB
@@ -651,13 +559,13 @@ graph TB
 ```
 
 
-# 🔍 Mis on jälgimine?
+# Mis on jälgimine?
 
 > 💡 "Jälgimine on nagu GPS teie päringutele, kui need läbivad teie süsteemi"
 
 ![Jälgimise ülevaade](media/image_16.png)
 
-## 🎯 Põhieesmärk
+## Põhieesmärk
 Jälgimine (tracing) jälgib päringute liikumist läbi erinevate teenuste või komponentide hajutatud süsteemides, eriti mikroteenuste arhitektuurides.
 
 ---
@@ -673,7 +581,7 @@ Jälgimine (tracing) jälgib päringute liikumist läbi erinevate teenuste või 
 
 ![Jälgimise rakendamine](media/image_17.png)
 
-## 🛠️ Jälgimise tööriistad
+## Jälgimise tööriistad
 
 ---
 
@@ -685,7 +593,7 @@ Jälgimine (tracing) jälgib päringute liikumist läbi erinevate teenuste või 
 
 ---
 
-# 🚨 Logimise ja seire tähtsus
+# Logimise ja seire tähtsus
 
 ## Intsidentide haldamine
 
@@ -710,7 +618,7 @@ Siin on meeskond, kelle kutsute tegevusse:
 
 ---
 
-## 🔐 Turvalisus ja vastavus
+## Turvalisus ja vastavus
 
 ![Turvalisuse ülevaade](media/image_19.png)
 
@@ -795,13 +703,13 @@ Aeg päev päästa:
 
 ---
 
-# 📚 Logimise ja seire evolutsioon  
+# Logimise ja seire evolutsioon  
 
 > 💡 "Alustades lihtsatest tekstifailidest kuni võimsate tööriistadeni, mis tunduvad maagilised – logimine ja seire on läbinud pika tee."
 
 ---
 
-## 🕰️ **Kunagi ammu: Seire varajased päevad**  
+## **Kunagi ammu: Seire varajased päevad**  
 
 Enne kõiki neid uhkeid juhtpaneele ja reaalajas hoiatusi oli logimine ja seire nii lihtne kui võimalik.
 
@@ -825,7 +733,7 @@ Enne kõiki neid uhkeid juhtpaneele ja reaalajas hoiatusi oli logimine ja seire 
 
 ---
 
-## 🌟 **Tere tulemast seire kaasaegsesse ajastusse**  
+## **Tere tulemast seire kaasaegsesse ajastusse**  
 
 Nüüd on seiretööriistad kiired, targad ja äärmiselt võimekad. Nii on need arenenud:  
 
@@ -859,7 +767,7 @@ Nüüd on seiretööriistad kiired, targad ja äärmiselt võimekad. Nii on need
 
 ---
 
-### 🚀 **Miks see on oluline**  
+### **Miks see on oluline**  
 
 Kaasaegne logimine ja seire ei ole ainult probleemide tuvastamiseks — need on süsteemi mõistmiseks, probleemide ennustamiseks ja kõige sujuva töö tagamiseks.  
 
@@ -867,7 +775,7 @@ Tekstilogides kaevamisest kuni tööriistadeni, mis annavad teile röntgennägem
 
 ---
 
-## 💪 **Miks kaasaegsed seire tööriistad on olulised**  
+## **Miks kaasaegsed seire tööriistad on olulised**  
 
 Kaasaegsed seire tööriistad ei tee elu lihtsalt lihtsamaks — need on nagu superlaaditud assistent, kes kunagi ei maga. Siin on, miks need on olulised:
 
@@ -905,7 +813,7 @@ Kaasaegsed tööriistad ei piirdu jälgimisega — nad tegutsevad kiiresti.
 
 ---
 
-## 🔄 **Üleminek vaatlusele**  
+## **Üleminek vaatlusele**  
 
 Üleminek põhiliselt seirelt täielikule vaatlusele on nagu binoklitest teleskoobile üleminek — saate palju selgema ja sügavama pildi oma süsteemidest.
 
@@ -948,7 +856,7 @@ Mõelge neist kui teie süsteemi olulisimatest tervise näitajatest:
 
 ---
 
-### 🎯 **Peamised fokuseerimispiirkonnad**  
+### **Peamised fokuseerimispiirkonnad**  
 
 #### **1. Vigade analüüs** 🛠️  
 - Määratlege selgelt, mis loetakse veaks (ärge liialdage!).  
@@ -976,7 +884,7 @@ Ressursside haldamine on nagu eelarvehaldur teie süsteemi jaoks:
 
 ---
 
-## 🛠️ **Kaasaegne logihaldus: Kaasaegne viis logide käsitlemiseks**  
+## **Kaasaegne logihaldus: Kaasaegne viis logide käsitlemiseks**  
 
 Logid on nagu teie süsteemi salajane päevik, salvestades kõike, mis toimub. Nende hea haldamine võib teha teist tõelise IT-professionaali!  
 
