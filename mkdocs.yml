@@ -3,58 +3,58 @@ site_url: https://haapsalu-kutsehariduskeskus.github.io/monitoring/
 theme:
   name: material
   features:
-    # Navigation
-    - navigation.tabs          # Top-level sections as tabs
-    - navigation.top           # Back-to-top button
-    - navigation.expand        # Left sidebar sections expanded
-    - navigation.sections      # Render sections as groups
-    - navigation.indexes       # Section landing pages
-    - navigation.tracking      # URL updates as you scroll
-    - navigation.instant       # Instant page loading
-    
-    # Table of Contents
-    - toc.follow               # TOC follows scroll
-    - toc.sticky               # Keep TOC visible while scrolling
-    
-    # Search
-    - search.suggest           # Search suggestions
-    - search.highlight         # Highlight search terms
-    
-    # Content
-    - content.tabs.link        # Link tabs together
-    - content.code.copy        # Add copy button to code blocks
-  
+  # Navigation
+  - navigation.tabs # Top-level sections as tabs
+  - navigation.top # Back-to-top button
+  - navigation.expand # Left sidebar sections expanded
+  - navigation.sections # Render sections as groups
+  - navigation.indexes # Section landing pages
+  - navigation.tracking # URL updates as you scroll
+  - navigation.instant # Instant page loading
+
+  # Table of Contents
+  - toc.follow # TOC follows scroll
+  - toc.sticky # Keep TOC visible while scrolling
+
+  # Search
+  - search.suggest # Search suggestions
+  - search.highlight # Highlight search terms
+
+  # Content
+  - content.tabs.link # Link tabs together
+  - content.code.copy # Add copy button to code blocks
+
   language: en
 
 markdown_extensions:
-  - toc:
-      permalink: true
-  - admonition
-  - codehilite
-  - pymdownx.superfences
-  - pymdownx.highlight:
-      anchor_linenums: true     # Line numbers in code blocks
-  - pymdownx.details
-  - pymdownx.tabbed
-  - pymdownx.snippets           # Include code snippets
-  - pymdownx.keys               # Keyboard key formatting
-  - pymdownx.critic             # Editorial annotations
-  - pymdownx.emoji:
-      emoji_index: https://github.com/jdecked/twemoji
-      emoji_generator: pymdownx.emoji.to_svg
+- toc:
+    permalink: true
+- admonition
+- codehilite
+- pymdownx.superfences
+- pymdownx.highlight:
+    anchor_linenums: true # Line numbers in code blocks
+- pymdownx.details
+- pymdownx.tabbed
+- pymdownx.snippets # Include code snippets
+- pymdownx.keys # Keyboard key formatting
+- pymdownx.critic # Editorial annotations
+- pymdownx.emoji:
+    emoji_index: https://github.com/jdecked/twemoji
+    emoji_generator: pymdownx.emoji.to_svg
 
 plugins:
-  - search
-  - git-revision-date-localized:
-      fallback_to_build_date: true
-  - mermaid2
+- search
+- git-revision-date-localized:
+    fallback_to_build_date: true
+- mermaid2
 
 nav:
-  - Home: index.md
+- Home: index.md
 
-  - Observability:
-    - Foundations: materials/lectures/Observability/intro_logging_monitoring_observability.md
-    - Wrap-Up: materials/lectures/Observability/wrap-up-observability.md
+- Observability:
+  - Foundations: materials/lectures/Observability/intro_logging_monitoring_observability.md
+  - Wrap-Up: materials/lectures/Observability/wrap-up-observability.md
 
 - Final Project:
   - Overview: final_project/final_project_building_monsystem.md
