@@ -1,5 +1,16 @@
 # Lecture 5: Elasticsearch Agregatsioonid
 
+- [Lecture 5: Elasticsearch Agregatsioonid](#lecture-5-elasticsearch-agregatsioonid)
+    - [1. Sissejuhatus Agregatsionidesse](#1-sissejuhatus-agregatsionidesse)
+      - [1.1 Mis on Elasticsearch agregatsioonid?](#11-mis-on-elasticsearch-agregatsioonid)
+      - [1.2 Põhilised kasutusjuhud](#12-põhilised-kasutusjuhud)
+    - [2. Agregatsiooni Tüübid](#2-agregatsiooni-tüübid)
+      - [2.1 Meetrika Agregatsioonid](#21-meetrika-agregatsioonid)
+      - [2.2 Bucketing Agregatsioonid](#22-bucketing-agregatsioonid)
+    - [3. Praktiline Näide: Müügiandmete Analüüs](#3-praktiline-näide-müügiandmete-analüüs)
+    - [4. Visualiseerimine Kibanas](#4-visualiseerimine-kibanas)
+    - [5. Harjutused](#5-harjutused)
+
 ### 1. Sissejuhatus Agregatsionidesse
 
 #### 1.1 Mis on Elasticsearch agregatsioonid?

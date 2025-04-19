@@ -1,5 +1,27 @@
 # Lecture 6: Elasticsearch Performance Tuning
 
+- [Lecture 6: Elasticsearch Performance Tuning](#lecture-6-elasticsearch-performance-tuning)
+  - [Table of Contents](#table-of-contents)
+  - [1. Performance Basics](#1-performance-basics)
+    - [What affects performance?](#what-affects-performance)
+    - [Key Metrics Table](#key-metrics-table)
+  - [2. Monitoring Tools](#2-monitoring-tools)
+    - [Basic Health Check](#basic-health-check)
+    - [Warning Signs](#warning-signs)
+  - [3. Common Problems \& Solutions](#3-common-problems--solutions)
+    - [Problem 1: Slow Searches](#problem-1-slow-searches)
+    - [Problem 2: High Memory Usage](#problem-2-high-memory-usage)
+    - [Problem 3: Indexing is Slow](#problem-3-indexing-is-slow)
+  - [4. Hardware Guidelines](#4-hardware-guidelines)
+    - [Minimum Requirements](#minimum-requirements)
+    - [Sizing Table](#sizing-table)
+  - [5. Quick Fixes Checklist](#5-quick-fixes-checklist)
+    - [Basic Settings Template](#basic-settings-template)
+  - [Tips for Success](#tips-for-success)
+  - [Emergency Steps](#emergency-steps)
+  - [Need More Help?](#need-more-help)
+  - [Additional Resources](#additional-resources)
+
 ## Table of Contents
 1. Performance Basics
 2. Monitoring Tools

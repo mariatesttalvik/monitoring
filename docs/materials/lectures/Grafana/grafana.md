@@ -1,5 +1,37 @@
 # Grafana
 
+- [Grafana](#grafana)
+  - [Sissejuhatus Grafanasse](#sissejuhatus-grafanasse)
+    - [Mida Grafana Võimaldab:](#mida-grafana-võimaldab)
+  - [Põhikontseptsioonid](#põhikontseptsioonid)
+    - [1. Andmeallikad](#1-andmeallikad)
+    - [2. Dashboardid (Juhtpaneelid)](#2-dashboardid-juhtpaneelid)
+    - [3. Paneelid ja Visualiseerimised](#3-paneelid-ja-visualiseerimised)
+    - [4. Päringukeeled](#4-päringukeeled)
+    - [5. Hoiatussüsteem](#5-hoiatussüsteem)
+  - [Praktiline Rakendamine](#praktiline-rakendamine)
+    - [Täiemahulise Jälgimise Näide](#täiemahulise-jälgimise-näide)
+      - [1. Infrastruktuuri Dashboard](#1-infrastruktuuri-dashboard)
+      - [2. Rakenduse Jõudluse Dashboard](#2-rakenduse-jõudluse-dashboard)
+      - [3. Ärimõõdikute Dashboard](#3-ärimõõdikute-dashboard)
+    - [Dashboardi Organiseerimise Strateegia](#dashboardi-organiseerimise-strateegia)
+  - [Täiendavad Teemad](#täiendavad-teemad)
+    - [1. Grafana Ettevalmistamine](#1-grafana-ettevalmistamine)
+    - [2. Jõudluse Optimeerimine](#2-jõudluse-optimeerimine)
+    - [3. Autentimine ja Autoriseerimine](#3-autentimine-ja-autoriseerimine)
+  - [Juurutamise Võimalused](#juurutamise-võimalused)
+    - [1. Grafana Cloud](#1-grafana-cloud)
+    - [2. Ise Majutatud](#2-ise-majutatud)
+- [Vahemikuvektori valijad](#vahemikuvektori-valijad)
+- [Nihke modifikaator](#nihke-modifikaator)
+- [Aja muutujad](#aja-muutujad)
+- [Andmeallika muutujad](#andmeallika-muutujad)
+- [Kohandatud intervalli muutuja](#kohandatud-intervalli-muutuja)
+- [Päringu tulemuse muutuja](#päringu-tulemuse-muutuja)
+  - [Lisa B: Veaotsing](#lisa-b-veaotsing)
+    - [Levinud Probleemid ja Lahendused](#levinud-probleemid-ja-lahendused)
+
+
 ## Sissejuhatus Grafanasse
 
 Grafana on juhtiv avatud lähtekoodiga platvorm monitooringu ja analüütika visualiseerimiseks. See võimaldab organisatsioonidel saada ülevaadet oma andmetest võimsate, kohandatavate juhtpaneelide kaudu.

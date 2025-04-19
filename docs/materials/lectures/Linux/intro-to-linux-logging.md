@@ -1,6 +1,7 @@
 # Linux Logimine ja Haldamine: Põhitõed
 
 ## Sisukord
+
 - [Linux Logimine ja Haldamine: Põhitõed](#linux-logimine-ja-haldamine-põhitõed)
   - [Sisukord](#sisukord)
 - [1. Sissejuhatus Linux logimisse](#1-sissejuhatus-linux-logimisse)

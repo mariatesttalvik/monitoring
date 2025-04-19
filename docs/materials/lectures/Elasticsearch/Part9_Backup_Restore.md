@@ -1,5 +1,35 @@
 # Elasticsearch Backup & Restore: Complete Documentation Suite
 
+- [Elasticsearch Backup \& Restore: Complete Documentation Suite](#elasticsearch-backup--restore-complete-documentation-suite)
+  - [Basic Concepts Visualization](#basic-concepts-visualization)
+  - [Key Terms](#key-terms)
+  - [Quick Start Tutorial](#quick-start-tutorial)
+- [Technical Documentation](#technical-documentation)
+  - [Repository Configuration](#repository-configuration)
+  - [Repository Types](#repository-types)
+  - [File System Repository](#file-system-repository)
+  - [S3 Repository](#s3-repository)
+  - [Snapshot Management](#snapshot-management)
+    - [Snapshot Lifecycle](#snapshot-lifecycle)
+  - [Snapshot Creation Options](#snapshot-creation-options)
+- [Administrator's Manual](#administrators-manual)
+  - [Backup Strategy Planning](#backup-strategy-planning)
+    - [RPO and RTO Considerations](#rpo-and-rto-considerations)
+    - [Automated Backup Configuration](#automated-backup-configuration)
+  - [Monitoring and Maintenance](#monitoring-and-maintenance)
+    - [Snapshot Status Monitoring](#snapshot-status-monitoring)
+    - [Repository Maintenance](#repository-maintenance)
+- [Troubleshooting Guide](#troubleshooting-guide)
+  - [Common Issues and Solutions](#common-issues-and-solutions)
+    - [Failed Snapshots](#failed-snapshots)
+    - [Failed Restores](#failed-restores)
+  - [Monitoring Dashboard](#monitoring-dashboard)
+- [Quick Reference](#quick-reference)
+  - [Essential Commands](#essential-commands)
+    - [Repository Management](#repository-management)
+    - [Snapshot Operations](#snapshot-operations)
+    - [Restore Operations](#restore-operations)
+
 Elasticsearch backup and restore functionality ensures data safety and business continuity. This guide will help you understand and implement backup strategies.
 
 ## Basic Concepts Visualization

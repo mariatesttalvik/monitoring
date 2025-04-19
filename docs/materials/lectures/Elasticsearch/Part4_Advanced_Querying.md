@@ -1,5 +1,11 @@
 # Lecture 4: Elasticsearchi päringud
 
+- [Lecture 4: Elasticsearchi päringud](#lecture-4-elasticsearchi-päringud)
+  - [1. Query DSL põhikomponendid](#1-query-dsl-põhikomponendid)
+  - [2. Liitpäringud](#2-liitpäringud)
+  - [3. Täistekstotsing ja hägus otsing](#3-täistekstotsing-ja-hägus-otsing)
+  - [4. Lehekülgede kaupa kuvamine ja sorteerimine](#4-lehekülgede-kaupa-kuvamine-ja-sorteerimine)
+
 
 ## 1. Query DSL põhikomponendid
 

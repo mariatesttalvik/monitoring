@@ -1,5 +1,19 @@
 # Lecture 2: Elasticsearch Data Modeling and Indexing
 
+- [Lecture 2: Elasticsearch Data Modeling and Indexing](#lecture-2-elasticsearch-data-modeling-and-indexing)
+    - [**Elasticsearchi andmemodelleerimise alused**](#elasticsearchi-andmemodelleerimise-alused)
+      - [**Skeemitus struktuur (Schema-less Design)**](#skeemitus-struktuur-schema-less-design)
+      - [**JSON-põhised dokumendid**](#json-põhised-dokumendid)
+      - [**Dünaamiline ja eksplitsiitne skeem (Dynamic and Explicit Mapping)**](#dünaamiline-ja-eksplitsiitne-skeem-dynamic-and-explicit-mapping)
+    - [**Elasticsearchi andmetüüpide ülevaade**](#elasticsearchi-andmetüüpide-ülevaade)
+    - [**Indekseerimine ja CRUD-tegevused**](#indekseerimine-ja-crud-tegevused)
+      - [**Dokumentide indekseerimine (Indexing Documents)**](#dokumentide-indekseerimine-indexing-documents)
+      - [**Dokumentide päring**](#dokumentide-päring)
+      - [**Dokumentide uuendamine**](#dokumentide-uuendamine)
+      - [**Dokumentide kustutamine**](#dokumentide-kustutamine)
+    - [**Pesastatud dokumendid ja dünaamilised mallid**](#pesastatud-dokumendid-ja-dünaamilised-mallid)
+    - [**Jõudluse optimeerimine**](#jõudluse-optimeerimine)
+
 ### **Elasticsearchi andmemodelleerimise alused**
 
 ![Elasticsearch Clusters](https://s3.amazonaws.com/media-p.slid.es/uploads/239568/images/5067910/es_clusters.jpg)

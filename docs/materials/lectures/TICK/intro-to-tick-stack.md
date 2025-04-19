@@ -1,5 +1,38 @@
 # TICK Stack - Põhjalik ülevaade
 
+- [TICK Stack - Põhjalik ülevaade](#tick-stack---põhjalik-ülevaade)
+  - [Mis on aegread?](#mis-on-aegread)
+    - [Aegreadata omadused:](#aegreadata-omadused)
+  - [Mis on TICK Stack?](#mis-on-tick-stack)
+  - [TICK Stack komponendid tabelina](#tick-stack-komponendid-tabelina)
+  - [Andmetüübid, mida saab jälgida](#andmetüübid-mida-saab-jälgida)
+  - [Lihtsustatud arhitektuur](#lihtsustatud-arhitektuur)
+  - [Komponendid](#komponendid)
+    - [📊 Telegraf - Andmete koguja](#-telegraf---andmete-koguja)
+      - [Telegraf'i plugin'id:](#telegrafi-pluginid)
+      - [Andmete voog Telegraf'is:](#andmete-voog-telegrafis)
+    - [💾 InfluxDB - Andmete säilitaja](#-influxdb---andmete-säilitaja)
+      - [InfluxDB andmemudel:](#influxdb-andmemudel)
+      - [Andmestruktuuri näide:](#andmestruktuuri-näide)
+      - [Päringud InfluxDB-st:](#päringud-influxdb-st)
+      - [Kus InfluxDB silma paistab:](#kus-influxdb-silma-paistab)
+    - [📈 Chronograf - Andmete visualiseerija](#-chronograf---andmete-visualiseerija)
+    - [⚡ Kapacitor - Andmete töötleja ja häiresüsteem](#-kapacitor---andmete-töötleja-ja-häiresüsteem)
+  - [Study Case](#study-case)
+    - [Temperatuuri jälgimine](#temperatuuri-jälgimine)
+  - [Miks peaks kasutama TICK Stacki?](#miks-peaks-kasutama-tick-stacki)
+    - [Plussid](#plussid)
+    - [Miinused](#miinused)
+  - [Alustamine TICK Stack'iga](#alustamine-tick-stackiga)
+    - [Miinimumnõuded arvutile:](#miinimumnõuded-arvutile)
+    - [Soovituslikud nõuded suurema süsteemi jaoks:](#soovituslikud-nõuded-suurema-süsteemi-jaoks)
+  - [Turvalisus](#turvalisus)
+  - [Probleemide lahendamine](#probleemide-lahendamine)
+  - [Komponentide asendamine](#komponentide-asendamine)
+  - [Olulised mõisted monitoringus:](#olulised-mõisted-monitoringus)
+  - [Lisaressursid õppimiseks:](#lisaressursid-õppimiseks)
+
+
 ## Mis on aegread?
 ![Aegread](https://www.influxdata.com/wp-content/uploads/time-series-graph-1-300x127.png)
 

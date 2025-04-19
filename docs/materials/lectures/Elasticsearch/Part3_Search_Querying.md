@@ -1,5 +1,14 @@
 # Lecture 3: Elasticsearch Otsing ja Päringud
 
+- [Lecture 3: Elasticsearch Otsing ja Päringud](#lecture-3-elasticsearch-otsing-ja-päringud)
+    - [Basic Search Concepts (Põhilised otsingukontseptsioonid)](#basic-search-concepts-põhilised-otsingukontseptsioonid)
+    - [Query Types Overview (Päringutüübid)](#query-types-overview-päringutüübid)
+    - [Common Query Examples:](#common-query-examples)
+    - [Aggregation Types and Use Cases](#aggregation-types-and-use-cases)
+    - [Relevance Scoring Components](#relevance-scoring-components)
+    - [Advanced Query Scenarios](#advanced-query-scenarios)
+    - [Best Practices Summary](#best-practices-summary)
+
 ### Basic Search Concepts (Põhilised otsingukontseptsioonid)
 
 ![Indexing and Searching in Elasticsearch](https://cdn-gcp.new.marutitech.com/indexing_and_searching_in_elasticsearch_7df72c7685.png)

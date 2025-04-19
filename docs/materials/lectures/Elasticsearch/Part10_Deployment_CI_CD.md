@@ -1,5 +1,21 @@
 # Elasticsearch Deployment ja CI/CD
 
+- [Elasticsearch Deployment ja CI/CD](#elasticsearch-deployment-ja-cicd)
+    - [Klastri Disaini Põhikomponendid](#klastri-disaini-põhikomponendid)
+    - [Core Components of Cluster Design](#core-components-of-cluster-design)
+    - [Ressursside Jaotus](#ressursside-jaotus)
+  - [Kõrge Käideldavus](#kõrge-käideldavus)
+    - [Fault Tolerance Measures](#fault-tolerance-measures)
+  - [Deployment meetodid](#deployment-meetodid)
+    - [Sinine-Roheline Juurutus (Blue-Green Deployment)](#sinine-roheline-juurutus-blue-green-deployment)
+    - [Kanari Juurutus (Canary Release)](#kanari-juurutus-canary-release)
+  - [CI/CD Integratsioon](#cicd-integratsioon)
+    - [Automatiseeritud Pipeline](#automatiseeritud-pipeline)
+    - [Näidis Pipeline Kood](#näidis-pipeline-kood)
+  - [Monitooring ja Hoiatused](#monitooring-ja-hoiatused)
+    - [Põhilised Mõõdikud](#põhilised-mõõdikud)
+  - [Parimad Praktikad](#parimad-praktikad)
+
 ### Klastri Disaini Põhikomponendid
 
 Here’s the translated version for your README:

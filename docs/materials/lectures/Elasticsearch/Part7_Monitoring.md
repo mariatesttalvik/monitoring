@@ -1,5 +1,17 @@
 # Lecture 7: Elasticsearch Monitoring and Alerting
 
+- [Lecture 7: Elasticsearch Monitoring and Alerting](#lecture-7-elasticsearch-monitoring-and-alerting)
+  - [Sissejuhatus](#sissejuhatus)
+  - [Jälgimistööriistad](#jälgimistööriistad)
+    - [1. Elasticsearch Monitooringu API](#1-elasticsearch-monitooringu-api)
+    - [2. Prometheus](#2-prometheus)
+    - [3. Grafana](#3-grafana)
+  - [Põhilised Mõõdikud](#põhilised-mõõdikud)
+    - [Klastri Tervise Indikaatorid](#klastri-tervise-indikaatorid)
+  - [Täiendavad Võimalused](#täiendavad-võimalused)
+    - [Anomaaliate Tuvastamine](#anomaaliate-tuvastamine)
+    - [Soovitatavad Häiresignaalide Lävend](#soovitatavad-häiresignaalide-lävend)
+
 ## Sissejuhatus
 Elasticsearch'i klastri tervise ja jõudluse jälgimine on süsteemi usaldusväärsuse ja tõhususe säilitamisel ülioluline. See loeng tutvustab peamisi tööriistu ja tehnikaid Elasticsearch'i jälgimiseks ning häiresignaalide seadistamiseks.
 
