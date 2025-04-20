@@ -81,6 +81,9 @@ nav:
   - Lab 02 Prometheus:
     - Part 1: labs/02_prometheus/lab02_prometheus_part1.md
     - Part 2: labs/02_prometheus/lab02_prometheus_part2.md
+    - Part 3: labs/02_prometheus/lab02_prometheus_part3.md
+    - Part 4: labs/02_prometheus/lab02_prometheus_part4.md
+    - Part 5: labs/02_prometheus/lab02_prometheus_part5.md
   - Lab 03 TICK Stack:
     - Part 1: labs/03_tick_stack/lab03_tick_part1.md
     - Part 2: labs/03_tick_stack/lab03_tick_part2.md
