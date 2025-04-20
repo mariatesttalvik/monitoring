@@ -1,148 +1,116 @@
 # Prometheus Lab Part 1: Introduction and Setup
 
-## Course Introduction and the Status of Prometheus
+## 🚀 What You'll Build
 
-### Introduction
-Welcome to the Prometheus Monitoring Lab! In this lab, you will learn how to set up and configure Prometheus, a powerful open-source monitoring and alerting toolkit. Prometheus has become the industry standard for monitoring cloud-native applications and microservices.
+In this lab series, you're building a real-world Prometheus monitoring stack — including a dashboard, app instrumentation, alerting system, and service discovery — **all containerized** with Docker.
 
-### Prometheus Origins
-Prometheus was originally developed at SoundCloud in 2012 before becoming open source. It was inspired by Google's internal monitoring system called Borgmon.
+Here's a sneak peek of your project structure:
 
-## Setting up our Test Workspace
+```
+prometheus-monitoring/
+├── instrumentation/            # Apps & scripts we instrument
+│   ├── httpserver_test.py      # Barebones Python HTTP server
+│   ├── curler.sh               # Traffic generator
+│   ├── file_counter.sh         # Textfile exporter sample
+│   ├── push-gw/
+│   │   └── push_register.py    # PushGateway metric script
+│   └── flask_app/
+│       ├── Dockerfile
+│       └── app/
+│           ├── wsgi_prom.py    # Flask app with Prometheus client
+│           └── uwsgi.ini
+├── grafana/
+│   ├── dashboards/
+│   └── datasources/
+├── alertmanager/
+├── docker-compose/
+│   └── prometheus/
+│       ├── docker-compose.yml
+│       └── config/
+│           ├── prometheus.yml
+│           ├── blackbox.yml
+│           ├── file-sd/
+│           └── rules/
+└── prom-config → symlink to ./docker-compose/prometheus/config/prometheus.yml
+```
+---
 
-For this lab, we'll be using:
-- Ubuntu Linux environment
-- Docker and Docker Compose for containerization
-- Visual Studio Code (optional) for editing configuration files
+## 🧰 Setting up Your Environment
 
-### Installing the Docker Engine
+| Component          | Description                     |
+| ------------------ | ------------------------------- |
+| Ubuntu Linux       | Base OS or VM                   |
+| Docker             | Run services in containers      |
+| Docker Compose     | Orchestrate multi-service setup |
+| VS Code (optional) | Edit configs and Python code    |
 
-First, let's install Docker and Docker Compose:
+### 1. Install Docker and Docker Compose
 
 ```bash
-# Download the Docker installation script
 curl -fsSL https://get.docker.com -o install-docker.sh
-
-# Verify the script content (optional but recommended)
-cat install-docker.sh
-
-# Run the installation script
 sudo sh install-docker.sh
-
-# Add your user to the docker group (to run Docker without sudo)
 sudo usermod -aG docker ${USER}
-
-# Apply the new group membership without logging out
 newgrp docker
 ```
 
-Install Docker Compose:
-
 ```bash
-# Install Docker Compose
+# Choose architecture
+# For x86_64:
 sudo curl -SL https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+
+# For ARM64:
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-linux-aarch64 -o /usr/local/bin/docker-compose
+
 sudo chmod +x /usr/local/bin/docker-compose
 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-
-# Verify installations
-docker --version
-docker-compose --version
 ```
 
-## Principles in Monitoring and How Prometheus Works
+> ✅ Run `docker --version` and `docker-compose --version` to verify.
 
-### The DevOps Lifecycle and Stages of Monitoring
+---
 
-In the DevOps lifecycle, monitoring plays a crucial role in ensuring the health and performance of systems. The key stages of monitoring include:
+### 2. What's My Server IP?
 
-1. **Collection**: Gathering metrics from various sources
-2. **Storage**: Storing metrics in time-series databases
-3. **Analysis**: Analyzing metrics to identify patterns and anomalies
-4. **Alerting**: Triggering alerts based on predefined conditions
-5. **Visualization**: Displaying metrics in dashboards for better understanding
-
-### Anti-Patterns to Avoid
-
-- **"Cargo Culting"**: Blindly copying monitoring setups without understanding them
-- **"Tool Obsession"**: Focusing too much on tools rather than the problems they solve
-- **"Unnecessary Toil"**: Manually adding targets instead of using service discovery
-
-### Design Patterns
-
-- **Continual Improvement**: Regularly refine your monitoring setup
-- **Composability**: Build a monitoring stack from independent components
-- **The User Perspective**: Monitor what matters to users, not just system metrics
-- **Buy or Build?**: Know when to use existing solutions vs. building custom ones
-
-### The Relationship Between Logs and Metrics
-
-Logs and metrics serve different purposes in monitoring:
-
-- **Logs**: Detailed text records of events (high cardinality, low frequency)
-- **Metrics**: Numerical measurements over time (low cardinality, high frequency)
-
-Methods to connect logs and metrics:
-1. Extracting metrics from logs
-2. Adding context to metrics
-3. Using distributed tracing
-4. Correlating logs and metrics using timestamps
-
-### Push vs Pull
-
-Prometheus uses a **pull-based model**, where it scrapes metrics from monitored targets:
-
-- **Pull Advantages**: Better control, detection of down targets, consistent collection intervals
-- **Push Advantages**: Works for ephemeral jobs, can work through firewalls, scales more easily
-
-### Breaking down the Data Shard Anatomy: Dimensional Data Model
-
-Prometheus uses a dimensional data model where each time series is uniquely identified by:
-- A **metric name** (what's being measured)
-- A set of **key-value pairs** called **labels** (dimensions of the measurement)
-
-For example: `http_requests_total{method="GET", endpoint="/api/users", status="200"}`
-
-### A Closer Look at the Prometheus Server Architecture
-
-Prometheus has a relatively simple architecture with these main components:
-
-1. **Retrieval**: Pulls metrics from monitored targets
-2. **Storage**: Time-series database (TSDB)
-3. **HTTP Server**: Provides API and web interface
-4. **PromQL Engine**: Evaluates queries
-5. **Alertmanager**: Handles alert notifications
-
-![Prometheus Architecture](images/image55.png)
-
-## Installing and Setting up the Prometheus Server
-
-### Running Prometheus in the Terminal
-
-First, we'll run Prometheus directly in the terminal to understand its basic operation:
+You'll access Prometheus via browser, so get your server IP:
 
 ```bash
-# Create a directory for our Prometheus project
-mkdir -p prometheus-monitoring
-cd prometheus-monitoring
-
-# Create directories for our configuration
-mkdir -p prometheus/config
+hostname -I
 ```
 
-Now, let's create a basic Prometheus configuration file:
+> Example: If output is `192.168.56.10`, Prometheus runs at `http://192.168.56.10:9090`
+
+---
+
+## 🧹 Clean Up Old Containers
+
+Before running services with Docker Compose, stop and remove any old containers that may cause conflicts:
 
 ```bash
-# Create a basic prometheus.yml file
-cat > prometheus/config/prometheus.yml << EOF
+docker stop prometheus nodeexporter 2>/dev/null || true
+docker rm prometheus nodeexporter 2>/dev/null || true
+```
+
+This prevents name conflicts when you spin up the Docker Compose version.
+
+---
+
+## 🔧 First Contact with Prometheus
+
+We’ll now create the configuration directly in the right folder used by Docker Compose:
+
+```bash
+# Be in the root of your project directory, e.g. ~/prometheus-lab
+mkdir -p prometheus-monitoring/docker-compose/prometheus/config
+cd prometheus-monitoring/docker-compose/prometheus
+```
+
+Create the Prometheus configuration file:
+
+```bash
+# You should still be inside: prometheus-monitoring/docker-compose/prometheus
+cat > config/prometheus.yml << EOF
 global:
   scrape_interval: 15s
-  scrape_timeout: 10s
-  evaluation_interval: 15s
-
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets: []
 
 scrape_configs:
   - job_name: 'prometheus'
@@ -151,41 +119,25 @@ scrape_configs:
 EOF
 ```
 
-Now, let's start Prometheus using Docker:
+Run Prometheus manually to verify everything is working:
 
 ```bash
+# Run from inside: prometheus-monitoring/docker-compose/prometheus
 docker run -d --name prometheus \
   -p 9090:9090 \
-  -v $(pwd)/prometheus/config:/etc/prometheus \
+  -v $(pwd)/config:/etc/prometheus \
   prom/prometheus
 ```
 
-Once Prometheus is running, you can access the web interface at http://localhost:9090
+Access Prometheus: `http://YOUR_SERVER_IP:9090`
 
-Check the different tabs: Alerts, Graph, Status
+Try the query `up` to verify Prometheus is alive.
 
-Run your first query by typing "up" in the query box and clicking "Execute". You should see a result like:
+---
 
-`up{instance="localhost:9090", job="prometheus"}`
-
-This confirms that Prometheus is monitoring itself.
-
-### Overview of the Prometheus Service Package
-
-Prometheus includes several components:
-- `console_libraries`: Libraries for web consoles
-- `consoles`: Web console templates
-- `data`: Where time-series data is stored
-- `prometheus`: The main binary
-- `prometheus.yml`: Configuration file
-- `promtool`: Utility tool
-
-### Running the Node Exporter
-
-Now, let's add the Node Exporter to monitor system metrics:
+## 🧪 Add Node Exporter (System Metrics)
 
 ```bash
-# Run Node Exporter
 docker run -d --name nodeexporter \
   -p 9100:9100 \
   -v "/proc:/host/proc:ro" \
@@ -197,65 +149,44 @@ docker run -d --name nodeexporter \
   --path.sysfs=/host/sys
 ```
 
-Let's update our Prometheus configuration to monitor Node Exporter:
+Update config:
 
 ```bash
-# Update the prometheus.yml file
-cat > prometheus/config/prometheus.yml << EOF
+# Still inside: prometheus-monitoring/docker-compose/prometheus
+cat > config/prometheus.yml << EOF
 global:
   scrape_interval: 15s
-  scrape_timeout: 10s
-  evaluation_interval: 15s
-
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets: []
 
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
-  
+
   - job_name: 'node'
     static_configs:
       - targets: ['localhost:9100']
 EOF
 
-# Restart Prometheus to apply the new configuration
-docker restart prometheus
+docker restart prometheus  # Ensure it reads the updated config from the correct path
 ```
 
-Now, you can query Node Exporter metrics in Prometheus, such as:
-- `rate(node_cpu_seconds_total[5m])`: CPU usage rate
-- `node_uname_info`: System information
+Now visit `http://YOUR_IP:9090/targets` — both `prometheus` and `node` should show **UP**.
 
-### The Prometheus Metrics Format
+---
 
-Access the raw metrics by visiting:
-- Prometheus metrics: http://localhost:9090/metrics
-- Node Exporter metrics: http://localhost:9100/metrics
+## 🐳 Using Docker Compose (Recommended)
 
-You'll see different types of metrics:
-- Gauge: Values that can go up and down (e.g., memory usage)
-- Counter: Values that only increase (e.g., total requests)
-- Histogram: Observations bucketed by value ranges (e.g., request durations)
-
-### Installing Prometheus as a Docker Service
-
-Let's set up a more complete monitoring stack using Docker Compose:
+Now let’s set up services the *real* way — using Docker Compose:
 
 ```bash
-# Create a directory for Docker Compose
-mkdir -p docker-compose/prometheus
-cd docker-compose/prometheus
+# From the root (~/prometheus-lab), create your Docker Compose setup
+mkdir -p prometheus-monitoring/docker-compose/prometheus/config
+cd prometheus-monitoring/docker-compose/prometheus
 ```
 
-Create a `docker-compose.yml` file:
+### `docker-compose.yml`
 
 ```yaml
-version: '3.7'
-
 volumes:
   data: {}
 
@@ -266,13 +197,6 @@ services:
     volumes:
       - ./config:/etc/prometheus
       - data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.enable-lifecycle'
-      - '--storage.tsdb.retention.time=7d'
     ports:
       - "9090:9090"
     restart: unless-stopped
@@ -280,61 +204,236 @@ services:
   nodeexporter:
     image: prom/node-exporter
     container_name: nodeexporter
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-      - /tmp:/tmp:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)'
     ports:
       - "9100:9100"
     restart: unless-stopped
 ```
 
-Create a config directory and prometheus.yml file:
+### `config/prometheus.yml`
 
-```bash
-# Create config directory
-mkdir -p config
-
-# Create prometheus.yml
-cat > config/prometheus.yml << EOF
+```yaml
 global:
   scrape_interval: 15s
-  scrape_timeout: 10s
-  evaluation_interval: 15s
-
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets: []
 
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090']
-  
+      - targets: ['prometheus:9090']
+
   - job_name: 'node'
     static_configs:
       - targets: ['nodeexporter:9100']
-EOF
 ```
 
-Start the Docker Compose stack:
+> ⚠️ **Troubleshooting Tip – Config Not Found?**
+>
+> If Prometheus logs show: `Error loading config (--config.file=/etc/prometheus/prometheus.yml): no such file or directory`
+>
+> This usually means the `config` folder wasn’t mounted properly.
+>
+> ✅ Ensure the file **exists** before running `docker compose up`:
+>
+> ```bash
+> ls -l prometheus-monitoring/docker-compose/prometheus/config/prometheus.yml
+> ```
+>
+> 🧹 If you've run the container before and it cached a broken volume, clean it up:
+>
+> ```bash
+> docker compose down -v
+> ```
+
+Before running, stop and clean up any old containers (e.g. from manual runs):
 
 ```bash
-docker-compose up -d
+docker stop prometheus nodeexporter 2>/dev/null || true
+docker rm prometheus nodeexporter 2>/dev/null || true
 ```
 
-Check if the services are running:
+Now start everything:
 
 ```bash
-docker-compose ps
+docker compose up -d
 ```
 
-You should see both Prometheus and Node Exporter running.
+## ✅ TASK: Explore Prometheus Internals
 
-![Prometheus services](images/image59.png)
+### 🔎 Check if Targets Are Up
+
+> ⚠️ **Note:** You can't access Node Exporter via `http://nodeexporter:9100/metrics` from your browser because `nodeexporter` is a container name, not a valid hostname from your local network or browser. That's why you might see a DNS error like:
+> 
+> `Hmmm… can't reach this page`
+>
+> But internally, Prometheus *can* reach it thanks to Docker Compose networking. To check if Node Exporter is truly running:
+
+```bash
+docker logs nodeexporter
+```
+
+Or access it by replacing the name with your **server IP address** if ports are published:
+
+```text
+http://localhost:9100/metrics
+http://<your-server-ip>:9100/metrics
+```
+
+Then, proceed to check targets from the Prometheus UI:
+
+To make sure your Node Exporter and Prometheus are being scraped correctly:
+
+1. Go to [http://localhost:9090](http://localhost:9090)
+2. Click on the **Status** menu (top bar) → **Targets**
+3. You should see something like this:
+
+```
+job = prometheus
+  • instance = prometheus:9090  ✓ UP
+
+job = node
+  • instance = nodeexporter:9100 ✓ UP
+```
+
+If any are marked **DOWN**, double-check that the container is running and the port is correct in `prometheus.yml`.
+
+### 🧪 Run Your First Queries
+
+You can also view metrics being scraped directly from container logs.
+
+To view raw metric output from Node Exporter:
+
+```bash
+docker logs nodeexporter
+```
+
+This shows what Prometheus would see at [http://localhost:9100/metrics](http://localhost:9100/metrics).
+
+To inspect Prometheus metrics:
+
+```bash
+docker logs prometheus
+```
+
+These logs may also include startup and scrape status messages.
+
+In Prometheus's **Graph** tab:
+
+1. Type `up` and press **Execute** — this shows which targets are being scraped
+2. Try simpler metric queries first:
+
+```text
+node_cpu_seconds_total
+```
+
+Then try more detailed queries:
+
+```text
+rate(node_cpu_seconds_total[5m])
+node_uname_info
+```
+
+> 💡 Tip: Prometheus has autocomplete! Start typing a metric and suggestions will appear.
+
+Now, you can query Node Exporter metrics in Prometheus, such as:
+
+- `rate(node_cpu_seconds_total[5m])`: CPU usage rate
+- `node_uname_info`: System information
+
+### 🔍 The Prometheus Metrics Format
+
+Access the raw metrics by visiting:
+
+- Prometheus metrics: [http://localhost:9090/metrics](http://localhost:9090/metrics)
+- Node Exporter metrics: [http://localhost:9100/metrics](http://localhost:9100/metrics)
+
+Types of metrics:
+
+- **Gauge**: Values that can go up and down (e.g., memory usage)
+- **Counter**: Values that only increase (e.g., total requests)
+- **Histogram**: Bucketed distributions (e.g., request durations)
+
+### 🧬 Breaking Down Prometheus' Dimensional Model
+
+Every time series in Prometheus is identified by:
+
+- A **metric name** (e.g., `http_requests_total`)
+- A set of **labels** (e.g., `method="GET"`, `status="200"`)
+
+Example:
+
+```text
+http_requests_total{method="GET", endpoint="/api/users", status="200"}
+```
+
+### 📊 Prometheus UI Deep Dive
+
+Open Prometheus at: [http://localhost:9090](http://localhost:9090)
+
+Explore tabs:
+
+- **Status** → **Target Health**: Verify which endpoints are up or down
+- **Targets**: Active scrape targets
+- **Graph**: Run and visualize queries
+- **Alerts**: Triggered alert rules (once configured)
+
+Try the query:
+
+```text
+up
+```
+
+If you see:
+
+```text
+up{instance="localhost:9090", job="prometheus"} 1
+```
+
+That means Prometheus is monitoring itself successfully!
+
+### 🔁 Reloading Prometheus Configuration
+
+Whenever you update your `prometheus.yml` file, you can tell Prometheus to reload the config **without restarting the container**:
+
+```bash
+curl -X POST http://localhost:9090/-/reload
+```
+
+> 💡 This only works if Prometheus is started with `--web.enable-lifecycle` flag, which is already included in your Docker Compose setup.
+
+This makes applying changes (like adding new targets or alerts) fast and seamless.
+
+---
+
+### 🧱 Components Inside the Prometheus Container
+
+Understanding the internal layout of Prometheus helps when you're troubleshooting, checking where metrics are stored, or validating configurations.
+
+| Component           | Description                              |
+| ------------------- | ---------------------------------------- |
+| `console_libraries` | Web UI console helpers                   |
+| `consoles`          | UI dashboards                            |
+| `data`              | TSDB: time-series data (metrics go here) |
+| `prometheus`        | Main Prometheus binary                   |
+| `prometheus.yml`    | Your config file (you mount this!)       |
+| `promtool`          | Validate configs & debug queries         |
+
+For example, if you want to check what config Prometheus is actually using, or why it won't start, you can run:
+
+```bash
+docker exec -it prometheus cat /etc/prometheus/prometheus.yml
+```
+
+You can also explore the `/data` folder inside the container to understand where metrics are written. Validate configs & debug queries |
+
+---
+
+## 💡 Summary
+
+You now have a working Prometheus stack with:
+
+- A real-time dashboard
+- Host system metrics
+- Configured using best practices and Docker Compose
+
+**Next:** We’ll add an instrumented Python app and make Prometheus collect custom metrics from it.
+
+👉 Head to **Lab Part 2: App Instrumentation**. Validate configs & debug queries
