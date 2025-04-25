@@ -42,9 +42,7 @@ markdown_extensions:
 - pymdownx.critic # Editorial annotations
 - pymdownx.emoji:
     emoji_index: !!python/name:material.extensions.emoji.twemoji ""
-    emoji_generator:
-
-      !!python/name:material.extensions.emoji.to_svg ""
+    emoji_generator: !!python/name:material.extensions.emoji.to_svg ""
 plugins:
 - search
 - git-revision-date-localized:
@@ -112,6 +110,10 @@ nav:
   - Lab 06 Splunk:
     - Cloud Lab: labs/05_splunk/splunk_cloud_lab.md
     - Cluster Lab: labs/05_splunk/splunk_cluster_lab.md
+  - Lab 06 Jaeger:
+    - Part 1 - App Traces: labs/lab_06_jaeger/1_jaeger_app_traces.md
+    - Part 2 - OpenTelemetry: labs/lab_06_jaeger/2_jaeger_opentel.md
+    - Part 3 - Spans: labs/lab_06_jaeger/3_jaeger_spans.md
 
 - Materials:
   - Elasticsearch:
