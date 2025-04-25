@@ -66,11 +66,17 @@ This course provided a comprehensive exploration of modern observability and mon
 | **Traces** | End-to-end transaction flow visualization | Jaeger, Tempo, Zipkin | • Request path visualization<br>• Bottleneck identification<br>• Service dependencies |
 
 ### Distributed Tracing Deep Dive
+![Distributed Tracing Concept](https://miro.medium.com/max/1400/1*zIRucGfnpJGVpAd-0sBDwA.png)
 
-**Typical Request Flow:**
-- User Request → API Gateway → Auth Service
-- API Gateway → Product Service → Database
-- Product Service → Inventory Service → Supplier Service
+```mermaid
+flowchart TD
+    A[User Request] --> B[API Gateway]
+    B --> C[Auth Service]
+    B --> D[Product Service]
+    D --> E[Database]
+    D --> F[Inventory Service]
+    F --> G[Supplier Service]
+```
 
 #### Key Tracing Concepts:
 - **Spans**: Individual operations within a trace
@@ -94,10 +100,21 @@ This course provided a comprehensive exploration of modern observability and mon
 - Reduces tool switching costs
 - Supported by major cloud providers# Observability & Monitoring Course - Final Overview
 
-The three pillars of modern monitoring:
-- **Metrics**: Numeric representations over time (Prometheus, TICK)
-- **Logs**: Detailed event records (ELK, Loki)
-- **Traces**: End-to-end request flows (Jaeger, Tempo)
+```mermaid
+flowchart TD
+    A[Monitoring] --> B[Metrics]
+    A --> C[Logs]
+    A --> D[Tracing]
+    
+    B --> B1[Prometheus]
+    B --> B2[TICK]
+    
+    C --> C1[ELK]
+    C --> C2[Loki]
+    
+    D --> D1[Tempo]
+    D --> D2[Jaeger]
+```
 
 ## Core Solutions We'll Study
 
@@ -170,14 +187,29 @@ The three pillars of modern monitoring:
 
 # Comprehensive Solution Overview
 
-**Open Source Solutions:**
-- **Metrics Based**: Prometheus, TICK Stack
-- **Log Based**: ELK Stack, Loki
-- **Visualization**: Grafana
-
-**Enterprise Solutions:**
-- **Full Stack**: Datadog
-- **Enterprise Logs**: Splunk
+```mermaid
+flowchart TD
+    A[Monitoring Solutions] --> B[Open Source]
+    A --> C[Enterprise]
+    
+    B --> D[Metrics Based]
+    B --> E[Log Based]
+    B --> F[Visualization]
+    
+    D --> D1[Prometheus]
+    D --> D2[TICK Stack]
+    
+    E --> E1[ELK Stack]
+    E --> E2[Loki]
+    
+    F --> F1[Grafana]
+    
+    C --> G[Full Stack]
+    C --> H[Enterprise Logs]
+    
+    G --> G1[Datadog]
+    H --> H1[Splunk]
+```
 
 ## 2. Core Solutions Comparison
 
@@ -214,21 +246,22 @@ The three pillars of modern monitoring:
 
 ### By Organization Size
 
-**Small Scale:**
-- Prometheus + Grafana
-- Loki for Logs
-- Low cost, community support, easy start
+```mermaid
+flowchart LR
+    A[Small Scale] --> B[Prometheus + Grafana]
+    A --> C[Loki for Logs]
+    
+    D[Medium Scale] --> E[TICK or Prometheus]
+    D --> F[ELK Stack]
+    D --> G[Grafana]
+    
+    H[Large Scale] --> I[Datadog/Splunk]
+    H --> J[Custom Solutions]
+```
 
-**Medium Scale:**
-- TICK or Prometheus
-- ELK Stack
-- Grafana
-- Balanced features, mixed open/commercial, good scalability
-
-**Large Scale:**
-- Datadog/Splunk
-- Custom Solutions
-- Full support, enterprise features, comprehensive tools
+- **Small**: Low cost, community support, easy start
+- **Medium**: Balanced features, mixed open/commercial, good scalability
+- **Large**: Full support, enterprise features, comprehensive tools
 
 ## 5. Key Takeaways & Best Practices
 
@@ -257,16 +290,23 @@ The three pillars of modern monitoring:
 
 ## 6. Real-World Integration Example
 
-### Modern Observability Architecture Components
-
-**Data Flow:**
-- Application generates metrics, logs, and traces
-- Metrics collected by Prometheus
-- Logs processed by ELK
-- Traces captured by Jaeger
-- All visualized in Grafana
-- Resulting in alerting and dashboards
-- OpenTelemetry provides standardized instrumentation
+```mermaid
+flowchart TD
+    A[Application] --> B[Metrics/Prometheus]
+    A --> C[Logs/ELK]
+    A --> D[Traces/Jaeger]
+    
+    B --> E[Grafana]
+    C --> E
+    D --> E
+    
+    E --> F[Alerting]
+    E --> G[Dashboards]
+    
+    H[OpenTelemetry] --> B
+    H --> C
+    H --> D
+```
 
 ### Modern Observability Architecture
 
@@ -319,11 +359,21 @@ The three pillars of modern monitoring:
 | **Low-Code Observability** | Simplified configuration for non-specialists | Wider adoption across organizations | 1-3 years |
 
 ### Integration Trends
-
-**Modern Observability Directions:**
-- **Tool Consolidation**: Single-pane views, unified alerting
-- **Cross-Domain Visibility**: Security + performance, infrastructure + application integration
-- **BizDevOps Integration**: Business metrics correlation, customer experience monitoring
+```mermaid
+flowchart LR
+    A[Modern Observability] --> B[Tool Consolidation]
+    A --> C[Cross-Domain Visibility]
+    A --> D[BizDevOps Integration]
+    
+    B --> B1[Single-Pane Views]
+    B --> B2[Unified Alerting]
+    
+    C --> C1[Security + Performance]
+    C --> C2[Infrastructure + Application]
+    
+    D --> D1[Business Metrics]
+    D --> D2[Customer Experience]
+```
 
 ### Open Source Future
 - **OpenTelemetry Dominance**: Becoming the standard for instrumentation
@@ -353,8 +403,13 @@ The three pillars of modern monitoring:
 
 ### Skill Development Path
 
-**Progression:**
-- Course Completion → Practice in Lab → Small Production Project → Advanced Observability → AIOps & Automation
+```mermaid
+flowchart LR
+    A[Course Completion] --> B[Practice in Lab]
+    B --> C[Small Production Project]
+    C --> D[Advanced Observability]
+    D --> E[AIOps & Automation]
+```
 
 ### Recommended Learning Resources
 | Resource Type | Recommendations |
@@ -371,7 +426,7 @@ The three pillars of modern monitoring:
 4. **Cost Analysis**: Compare storage and compute costs across different solutions
 5. **SLO Implementation**: Define and track Service Level Objectives for a critical service
 
-### My Final Recommendations
+### Instructor's Final Recommendations
 - **Start small**: Focus on one system and do it well before expanding
 - **Embrace automation**: Use IaC for your monitoring configuration
 - **Consider business impact**: Connect technical metrics to business outcomes
