@@ -219,10 +219,10 @@ If you'd prefer to access the services using `localhost` on your host machine, s
 ### **5. Visual Overview**
 
 #### Elasticsearch Setup:
-![Elasticsearch Overview](../media/elastic.png)
+![Elasticsearch Overview](./media/elastic.png)
 
 #### Kibana Dashboard:
-![Kibana Overview](../media/kibana.png)
+![Kibana Overview](./media/kibana.png)
 
 ---
 
