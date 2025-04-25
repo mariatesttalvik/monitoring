@@ -79,13 +79,6 @@ nav:
     - Part 1: labs/03_tick_stack/lab03_tick_part1.md
     - Part 2: labs/03_tick_stack/lab03_tick_part2.md
   - Lab 04 ELK Stack:
-    - Part 1: labs/04_elk_stack/lab04_monitoring_part1.md
-    - Part 2: labs/04_elk_stack/lab04_monitoring_part2.md
-    - Part 3: labs/04_elk_stack/lab04_monitoring_part3.md
-    - Extra: labs/06_zabbix/monitoring-lab-manual-extra.md
-    - Add Logstash & Filebeat: labs/04_elk_stack/extra_material/adding_logstash_and_filebeat.md
-    - No Security Setup: labs/04_elk_stack/Setup_Elastic_Kibana_NoSecurity.md
-    - Security Lab: labs/04_elk_stack/Security.md
     - Docker Cluster Setup: labs/04_elk_stack/set_up_elk_cluster_docker.md
     - Secure Docker Cluster: labs/04_elk_stack/set_up_elk_cluster_with_security_docker.md
     - Multipass Config: labs/04_elk_stack/extra_material/example_multipass_node_config.md
@@ -103,10 +96,15 @@ nav:
   - Lab 06 Splunk:
     - Cloud Lab: labs/05_splunk/splunk_cloud_lab.md
     - Cluster Lab: labs/05_splunk/splunk_cluster_lab.md
-  - Lab 06 Jaeger:
+  - Lab 07 Jaeger:
     - Part 1 - App Traces: labs/07_jaeger/1_jaeger_app_traces.md
     - Part 2 - OpenTelemetry: labs/07_jaeger/2_jaeger_opentel.md
     - Part 3 - Spans: labs/07_jaeger/3_jaeger_spans.md
+  - Lab 08 Zabbix:
+    - Part 1: labs/06_zabbix/monitoring-lab-manual-part1.md
+    - Part 2: labs/06_zabbix/monitoring-lab-manual-part2.md
+    - Part 3: labs/06_zabbix/monitoring-lab-manual-part3.md
+    - Extra: labs/06_zabbix/monitoring-lab-manual-extra.md
 
 - Materials:
   - Elasticsearch:
