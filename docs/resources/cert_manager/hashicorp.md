@@ -2,7 +2,7 @@
 
 ## Vault Integration Architecture
 
-<div class="mermaid">
+```mermaid
 graph TD
     subgraph "Vault"
         PKI[PKI Engine] --> |issues| CERT[Certificates]
@@ -24,7 +24,7 @@ graph TD
     style PKI fill:#f9f,stroke:#333
     style ANS fill:#bbf,stroke:#333
     style GIT fill:#bfb,stroke:#333
-</div>
+```
 ## Vault Setup
 
 ### PKI Configuration

@@ -702,7 +702,7 @@ Konsoolist kontroll
 
 ## Andmebaaside monitoorimine
 
-<div class="mermaid">
+```mermaid
 flowchart LR
     A[Zabbix server] --> B[ODBC Manager]
     B --> C[ODBC Driver]
@@ -711,7 +711,7 @@ style A fill:#f9acac,stroke:#333,stroke-width:2px
 style B fill:#c2e0c2,stroke:#333,stroke-width:2px
 style C fill:#c2e0c2,stroke:#333,stroke-width:2px
 style D fill:#a8d1f0,stroke:#333,stroke-width:2px
-</div>
+```
 
 **[Article: Out-of-the-box database monitoring](https://blog.zabbix.com/out-of-the-box-database-monitoring/13957/)**
 
@@ -976,7 +976,7 @@ CentOS 7
 
 ## LLD: interaktsiooniskeem
 
-<div class="mermaid">
+```mermaid
 sequenceDiagram
     participant Z as Zabbix Server
     participant A as Zabbix Agent
@@ -1008,7 +1008,7 @@ sequenceDiagram
     A-->>Z: Return processed metrics
     
     Z->>Z: Store data and evaluate triggers
-</div>
+```
 
 ## Prototüüpide loomine
 
@@ -1045,7 +1045,7 @@ Konsooliutiliit meetrikate saatmiseks (Zabbix trapperisse)
 ```
 ##  Näide: Zabbix Discovery Trapper JSON Data Processing
 
-<div class="mermaid">
+```mermaid
 graph TD
     subgraph "Monitored Host"
         Script["Custom Script"]
@@ -1096,11 +1096,11 @@ graph TD
     class JSON json;
     class ZS,ZT,DP,Macros,ItemProto,TriggerProto,GraphProto zabbixComponent;
     class DB database;
-</div>
+```
 
 ## Näide: Zabbix High Availability Data Flow
 
-<div class="mermaid">
+```mermaid
 sequenceDiagram
     participant AA as Active Agent
     participant PA as Passive Agent
@@ -1149,11 +1149,10 @@ sequenceDiagram
     DB->>ZS2: Configuration is pulled
     ZS2->>ZP: Updated configuration
     ZP->>AA: Updated configuration
-</div>
-
+```
 ## Näide: Zabbix Enterprise Network Communication Paths
 
-<div class="mermaid">
+```mermaid
 flowchart TB
     subgraph "External Network"
         EXT_USERS[External Users]
@@ -1206,11 +1205,11 @@ flowchart TB
     class LB,WEB_NODES,VPN dmz;
     class ZS_CLUSTER,PROXIES core;
     class DB_LB,PG_PRIMARY,PG_STANDBY database;
-</div>
+```
 
 ## Näide: Enterprise Zabbix Architecture with High Availability 
 
-<div class="mermaid">
+```mermaid
 flowchart TB
 LB[Load Balancer]
 Admin[Administrator]
@@ -1317,4 +1316,4 @@ class ZServer1,ZServer2,ZServer3,Poller1,Trapper1,Discovery1,LLD1,Alert1 zabbixS
 class DBCluster,DB_Primary,DB_Replica1,DB_Replica2 databases;
 class ProxyDC1,ProxyDC2,ProxyBranch,ProxyCloud proxies;
 class DC_Servers,DC_Network,Cloud_Resources,IOT_Devices infra;
-</div>
+```

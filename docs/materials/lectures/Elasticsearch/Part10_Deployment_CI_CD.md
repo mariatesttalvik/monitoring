@@ -10,7 +10,7 @@
 
 ## Ressursside Jaotus
 
-<div class="mermaid">
+```mermaid
 graph TD
     A[Ressursside Jaotus] --> B[Mälu]
     A --> C[CPU]
@@ -19,7 +19,7 @@ graph TD
     B --> F[JVM Seaded]
     C --> G[Töötlemisvõimsus]
     D --> H[I/O Jõudlus]
-</div>
+```
 
 ## Kõrge Käideldavus
 
@@ -35,12 +35,12 @@ graph TD
 
 ### Sinine-Roheline Juurutus (Blue-Green Deployment)
 
-<div class="mermaid">
+```mermaid
 graph LR
     A[Sinine Keskkond] --> B[Liikluse Suunamine]
     C[Roheline Keskkond] --> B
     B --> D[Kasutajad]
-</div>
+```
 
 ### Kanari Juurutus (Canary Release)
 

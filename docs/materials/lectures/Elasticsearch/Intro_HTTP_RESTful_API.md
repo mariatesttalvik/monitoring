@@ -18,7 +18,7 @@ ElasticSearch operates on a RESTful interface, making it accessible through stan
 
 ## 🔄 HTTP Request/Response Flow
 
-<div class="mermaid">
+```mermaid
 sequenceDiagram
     participant C as Client
     participant ES as ElasticSearch Server
@@ -28,7 +28,7 @@ sequenceDiagram
     Note right of C: 1. Method (GET/POST/PUT/DELETE)<br/>2. Protocol (HTTP/1.1)<br/>3. Host (domain)<br/>4. URL (path)<br/>5. Headers<br/>6. Request Body
     ES-->>-C: HTTP Response
     Note left of ES: 1. Status Code<br/>2. Response Headers<br/>3. Response Body (JSON)
-</div>
+```
 
 ## 📋 HTTP Request Components
 

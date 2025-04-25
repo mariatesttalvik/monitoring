@@ -180,7 +180,7 @@ Zabbix'i arhitektuur on paindlik ja võimaldab juurutada nii lihtsat ühes serve
 
 **Agentless monitooring** võimaldab jälgida seadmeid ilma spetsiaalse tarkvara paigaldamiseta.
 
-<div class="mermaid">
+```mermaid
 flowchart TD
     subgraph "Zabbix Kesksüsteem"
         ZS[Zabbix Server] --> |salvestab andmeid| DB[(Andmebaas)]
@@ -217,7 +217,7 @@ flowchart TD
         AL --> |kutsub| SC[Skriptid/Käsud]
         AL --> |integreerub| IT[ITSM/Tiketisüsteemid]
     end
-</div>
+```
 
 ### Andmevoogude hierarhia
 
@@ -250,7 +250,7 @@ Zabbix töötab järgmiste struktuurielementide hierarhiana, mis võimaldab jõu
 9. **Graafikud ja näidikupaneelid (Graphs and Dashboards)** - andmete visualiseerimine
    - *Näide*: CPU kasutuse graafik, süsteemiressursside näidikupaneel
 
-<div class="mermaid">
+```mermaid
 flowchart TD
     subgraph "Andmete allikad"
         A1[Serverid] --> A[Zabbix Agent]
@@ -302,11 +302,11 @@ flowchart TD
     class H,I,J interface
     class K1,K2,K3,K4 notes
     class E core
-</div>
+```
 
 ### Zabbix'i komponentide rollid ja vastastikused seosed
 
-<div class="mermaid">
+```mermaid
 flowchart TB
     subgraph "Monitooritavad seadmed"
         A[Serverid] --> B1[Zabbix Agent]
@@ -358,7 +358,7 @@ flowchart TB
     class F,I secondary
     class A,B,C,D,E,B1,C1,D1,E1 component
     class J1,K users
-</div>
+```
 
 | Komponent | Peamine roll | Suhtleb komponendiga | Andmete liikumine |
 |-----------|--------------|----------------------|-------------------|
@@ -397,7 +397,7 @@ flowchart TB
 
 Zabbix'i struktuur võimaldab süsteemi skaleerida vastavalt vajadusele, alustades lihtsast ühe serveriga seadistusest ja laiendades seda globaalse monitooringu võrgustikuni, mis suudab jälgida sadu tuhandeid seadmeid.
 
-<div class="mermaid">
+```mermaid
 flowchart LR
     %% Peamised komponendid
     Server[Zabbix Server] 
@@ -440,7 +440,7 @@ flowchart LR
     Web_note["Haldusliides ja\nvisualiseerimine"]:::note -.-> Web
     
     classDef note fill:white,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
-</div>
+```
 
 ### Zabbix 7.0.2 versioon
 

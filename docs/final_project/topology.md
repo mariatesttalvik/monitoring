@@ -1,4 +1,4 @@
-<div class="mermaid">
+```mermaid
 graph TD
     A[Flask App] -->|sends metrics| B[Prometheus]
     A -->|sends logs| C[ELK Stack]
@@ -12,4 +12,4 @@ graph TD
     style D fill:#DDA0DD
     style E fill:#F0E68C
     style F fill:#FFA07A
-</div>
+```
