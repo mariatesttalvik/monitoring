@@ -1,6 +1,6 @@
 # Monitoring Solutions Overview
 
-<div class="mermaid">
+```
 graph TD
     A[Monitoring] --> B[Metrics]
     A --> C[Logs]
@@ -14,7 +14,7 @@ graph TD
     
     D --> D1[Tempo]
     D --> D2[Jaeger]
-</div>
+```
 
 ## Core Solutions We'll Study
 
@@ -102,7 +102,8 @@ graph TD
 # Final Overview
 
 ## 1. Monitoring Landscape Overview
-<div class="mermaid">
+
+```mermaid
 graph TD
     A[Monitoring Solutions] --> B[Open Source]
     A --> C[Enterprise]
@@ -124,7 +125,7 @@ graph TD
     
     G --> G1[Datadog]
     H --> H1[Splunk]
-</div>
+```
 
 ## 2. Core Solutions Comparison
 
@@ -157,32 +158,37 @@ graph TD
 ## 4. Selection Guide
 
 ### Startup/Small Business
-<div class="mermaid">
+
+```mermaid
 graph LR
     A[Small Scale] --> B[Prometheus + Grafana]
     A --> C[Loki for Logs]
-</div>
+```
 - Low cost
 - Community support
 - Easy start
 
 ### Medium Enterprise
-<div class="mermaid">
+
+```mermaid
 graph LR
     A[Medium Scale] --> B[TICK or Prometheus]
     A --> C[ELK Stack]
     A --> D[Grafana]
-</div>
+```
+
 - Balanced features
 - Mixed open/commercial
 - Good scalability
 
 ### Large Enterprise
-<div class="mermaid">
+
+```mermaid
 graph LR
     A[Large Scale] --> B[Datadog/Splunk]
     A --> C[Custom Solutions]
-</div>
+```
+
 - Full support
 - Enterprise features
 - Comprehensive tools
@@ -205,7 +211,7 @@ graph LR
 
 ## 6. Real-World Integration Example
 
-<div class="mermaid">
+```mermaid
 graph TD
     A[Application] --> B[Metrics/Prometheus]
     A --> C[Logs/ELK]
@@ -215,7 +221,7 @@ graph TD
     D --> E
     E --> F[Alerting]
     E --> G[Dashboards]
-</div>
+```
 
 ## 7. Decision Framework
 

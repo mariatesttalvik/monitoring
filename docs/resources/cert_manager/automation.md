@@ -2,7 +2,7 @@
 
 ## Automation Flow
 
-<div class="mermaid">
+```mermaid
 graph LR
     subgraph "GitLab CI/CD"
         CI[Pipeline] --> |triggers| AN[Ansible]
@@ -24,7 +24,8 @@ graph LR
     style CI fill:#f9f,stroke:#333
     style AN fill:#bbf,stroke:#333
     style V fill:#bfb,stroke:#333
-</div>
+```
+
 ## GitLab CI/CD Configuration
 
 ### Basic Pipeline

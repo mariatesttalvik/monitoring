@@ -4,7 +4,7 @@
 
 ### Understanding Certificate Complexity
 
-<div class="mermaid">
+```mermaid
 flowchart TD
     subgraph "Example 1: Simple Website"
         W[www.myshop.com] -->|needs| C1[SSL Certificate]
@@ -28,7 +28,7 @@ flowchart TD
     style W fill:#f9f,stroke:#333
     style LB fill:#bbf,stroke:#333
     style ICA fill:#bfb,stroke:#333
-</div>
+```
 
 ### Real-World Examples
 
@@ -169,7 +169,7 @@ What you maintain:
 ```
 
 ### CA Storage Architecture
-<div class="mermaid">
+```mermaid
 graph TD
     subgraph "Secure Environment / HSM"
         ROOT[Root CA]
@@ -199,8 +199,9 @@ graph TD
     style ROOT fill:#f9f,stroke:#333
     style INT fill:#bbf,stroke:#333
     style LB1 fill:#bfb,stroke:#333
-</div>
-<div class="mermaid">
+```
+
+```mermaid
 graph TD
     subgraph "Certificate Structure"
         CERT[Certificate] --> PK[Public Key]
@@ -218,7 +219,8 @@ graph TD
     style CERT fill:#f9f,stroke:#333
     style KS fill:#bbf,stroke:#333
     style TS fill:#bfb,stroke:#333
-</div>
+```
+
 ## Introduction
 Digital certificates are essential for securing communications and establishing trust in computer networks. This document provides detailed instructions for manual certificate operations and management.
 
@@ -481,7 +483,7 @@ openssl enc -aes-256-cbc -salt \
 ## Internal Certificate Usage
 
 ### Internal Usage Flow
-<div class="mermaid">
+```mermaid
 graph TD
     subgraph "Internal Network"
         ES1[Elasticsearch Node 1] <-->|SSL| ES2[Elasticsearch Node 2]
@@ -503,7 +505,7 @@ graph TD
     style ES1 fill:#bbf,stroke:#333
     style ES2 fill:#bbf,stroke:#333
     style ES3 fill:#bbf,stroke:#333
-</div>
+```
 
 ### What is Internal Usage?
 - Certificates used within a closed network or organization
@@ -565,7 +567,8 @@ keytool -list -keystore truststore.jks -storepass yourpassword
 - Order matters: server certificate → intermediate CA → root CA
 
 ### Certificate Chain Visualization
-<div class="mermaid">
+
+```mermaid
 graph TD
     ROOT[Root CA] -->|signs| INT[Intermediate CA]
     INT -->|signs| SERVER[Server Certificate]
@@ -578,4 +581,4 @@ graph TD
     style ROOT fill:#f9f,stroke:#333
     style INT fill:#bbf,stroke:#333
     style SERVER fill:#bfb,stroke:#333
-</div>
+```
