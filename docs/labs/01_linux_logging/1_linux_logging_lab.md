@@ -8,19 +8,19 @@ We'll build a centralized logging system using:
 
 ### What We'll Build
 
-<div class="mermaid">
+```mermaid
 flowchart TD
-    subgraph Client["Client VM (VM2)"]
-        A[Log Generator] --> B[Local rsyslog]
-    end
-
-    subgraph Server["Log Server (VM1)"]
-        F[rsyslog Receiver] --> G[Log Storage]
-        G --> H[Log Rotation]
-    end
-
-    B -->|Forward Logs| F
-</div>
+  subgraph Client["Client VM (VM2)"]
+    A[Log Generator] --> B[Local rsyslog]
+  end
+  
+  subgraph Server["Log Server (VM1)"]
+    F[rsyslog Receiver] --> G[Log Storage]
+    G --> H[Log Rotation]
+  end
+  
+  B -->|Forward Logs| F
+```
 
 ## Part 1: Environment Setup (30-45 minutes)
 
