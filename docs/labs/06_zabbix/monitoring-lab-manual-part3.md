@@ -1,4 +1,4 @@
-# Labor 3 - Grafana ja Loki seadistamine
+# Monitooringu Labor 3 - Grafana ja Loki seadistamine
 
 ## Sissejuhatus
 
