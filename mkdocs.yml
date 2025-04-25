@@ -3,28 +3,20 @@ site_url: https://haapsalu-kutsehariduskeskus.github.io/monitoring/
 theme:
   name: material
   features:
-  # Navigation
   - mermaid
-  - navigation.tabs # Top-level sections as tabs
-  - navigation.top # Back-to-top button
-  - navigation.expand # Left sidebar sections expanded
-  - navigation.sections # Render sections as groups
-  - navigation.indexes # Section landing pages
-  - navigation.tracking # URL updates as you scroll
-  - navigation.instant # Instant page loading
-
-  # Table of Contents
-  - toc.follow # TOC follows scroll
-  - toc.sticky # Keep TOC visible while scrolling
-
-  # Search
-  - search.suggest # Search suggestions
-  - search.highlight # Highlight search terms
-
-  # Content
-  - content.tabs.link # Link tabs together
-  - content.code.copy # Add copy button to code blocks
-
+  - navigation.tabs
+  - navigation.top
+  - navigation.expand
+  - navigation.sections
+  - navigation.indexes
+  - navigation.tracking
+  - navigation.instant
+  - toc.follow
+  - toc.sticky
+  - search.suggest
+  - search.highlight
+  - content.tabs.link
+  - content.code.copy
   language: en
 
 markdown_extensions:
@@ -34,15 +26,16 @@ markdown_extensions:
 - codehilite
 - pymdownx.superfences
 - pymdownx.highlight:
-    anchor_linenums: true # Line numbers in code blocks
+    anchor_linenums: true
 - pymdownx.details
 - pymdownx.tabbed
-- pymdownx.snippets # Include code snippets
-- pymdownx.keys # Keyboard key formatting
-- pymdownx.critic # Editorial annotations
+- pymdownx.snippets
+- pymdownx.keys
+- pymdownx.critic
 - pymdownx.emoji:
     emoji_index: !!python/name:material.extensions.emoji.twemoji ""
     emoji_generator: !!python/name:material.extensions.emoji.to_svg ""
+
 plugins:
 - search
 - git-revision-date-localized:
@@ -89,31 +82,31 @@ nav:
     - Part 1: labs/04_elk_stack/lab04_monitoring_part1.md
     - Part 2: labs/04_elk_stack/lab04_monitoring_part2.md
     - Part 3: labs/04_elk_stack/lab04_monitoring_part3.md
-    - Extra: labs/04_elk_stack/monitoring-lab-manual-extra.md
-    - Add Logstash & Filebeat: labs/04_elk_stack/adding_logstash_and_filebeat.md
-    - No Security Setup: labs/04_elk_stack/Lab1_Setup_Elastic_Kibana_NoSecurity.md
-    - Security Lab: labs/04_elk_stack/Lab8_Security.md
+    - Extra: labs/06_zabbix/monitoring-lab-manual-extra.md
+    - Add Logstash & Filebeat: labs/04_elk_stack/extra_material/adding_logstash_and_filebeat.md
+    - No Security Setup: labs/04_elk_stack/Setup_Elastic_Kibana_NoSecurity.md
+    - Security Lab: labs/04_elk_stack/Security.md
     - Docker Cluster Setup: labs/04_elk_stack/set_up_elk_cluster_docker.md
     - Secure Docker Cluster: labs/04_elk_stack/set_up_elk_cluster_with_security_docker.md
-    - Multipass Config: labs/04_elk_stack/example_multipass_node_config.md
-    - Local Example: labs/04_elk_stack/example_local_install.md
+    - Multipass Config: labs/04_elk_stack/extra_material/example_multipass_node_config.md
+    - Local Example: labs/04_elk_stack/extra_material/example_local_install.md
   - Lab 05 Elasticsearch Deep Dive:
-    - Part 2 - Data Modeling: labs/lab_05/part_2/Lab2_DataModeling.md
+    - Part 2 - Data Modeling: labs/04_elk_stack/elastic_lab/part_2/Lab2_DataModeling.md
     - Part 3 - Searching:
-      - Lab: labs/lab_05/part_3/Lab3_Searching.md
-      - Shakespeare: labs/lab_05/part_3/Shakespeare_Search.md
-    - Part 4 - Advanced Querying: labs/lab_05/part_4/Lab4_Advance_Querying.md
-    - Part 5 - Aggregations: labs/lab_05/part_5/Lab5_Aggregations.md
-    - Part 6 - Tuning: labs/lab_05/part_6/Lab6_Tunning.md
-    - Part 7 - Monitoring: labs/lab_05/part_7/Lab7_Monitoring.md
-    - Part 9 - Backup & Restore: labs/lab_05/part_9/Lab9_Backup_Restore.md
+      - Lab: labs/04_elk_stack/elastic_lab/part_3/Lab3_Searching.md
+      - Shakespeare: labs/04_elk_stack/elastic_lab/part_3/Shakespeare_Search.md
+    - Part 4 - Advanced Querying: labs/04_elk_stack/elastic_lab/part_4/Lab4_Advance_Querying.md
+    - Part 5 - Aggregations: labs/04_elk_stack/elastic_lab/part_5/Lab5_Aggregations.md
+    - Part 6 - Tuning: labs/04_elk_stack/elastic_lab/part_6/Lab6_Tunning.md
+    - Part 7 - Monitoring: labs/04_elk_stack/elastic_lab/part_7/Lab7_Monitoring.md
+    - Part 9 - Backup & Restore: labs/04_elk_stack/elastic_lab/part_9/Lab9_Backup_Restore.md
   - Lab 06 Splunk:
     - Cloud Lab: labs/05_splunk/splunk_cloud_lab.md
     - Cluster Lab: labs/05_splunk/splunk_cluster_lab.md
   - Lab 06 Jaeger:
-    - Part 1 - App Traces: labs/lab_06_jaeger/1_jaeger_app_traces.md
-    - Part 2 - OpenTelemetry: labs/lab_06_jaeger/2_jaeger_opentel.md
-    - Part 3 - Spans: labs/lab_06_jaeger/3_jaeger_spans.md
+    - Part 1 - App Traces: labs/07_jaeger/1_jaeger_app_traces.md
+    - Part 2 - OpenTelemetry: labs/07_jaeger/2_jaeger_opentel.md
+    - Part 3 - Spans: labs/07_jaeger/3_jaeger_spans.md
 
 - Materials:
   - Elasticsearch:
@@ -156,5 +149,5 @@ nav:
     - Elastic Certs: resources/cert_manager/elastic-cert_manager.md
     - HashiCorp: resources/cert_manager/hashicorp.md
   - VM Setup:
-    - Multipass: labs/lab_02/lab1/vm/MultipassSetupforMonitoringLab.md
-    - VirtualBox: labs/lab_02/lab1/vm/VirtualBoxSetupGuideforMonitoringLab.md
+    - Multipass: labs/06_zabbix/vm/MultipassSetupforMonitoringLab.md
+    - VirtualBox: labs/06_zabbix/vm/VirtualBoxSetupGuideforMonitoringLab.md
