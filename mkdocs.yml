@@ -79,6 +79,9 @@ nav:
     - Part 1: labs/03_tick_stack/lab03_tick_part1.md
     - Part 2: labs/03_tick_stack/lab03_tick_part2.md
   - Lab 04 ELK Stack:
+    - Security: labs/04_elk_stack/Security.md
+    - Setup Elastic & Kibana (No Security): labs/04_elk_stack/Setup_Elastic_Kibana_NoSecurity.md
+    - Add Logstash & Filebeat: labs/04_elk_stack/extra_material/adding_logstash_and_filebeat.md
     - Docker Cluster Setup: labs/04_elk_stack/set_up_elk_cluster_docker.md
     - Secure Docker Cluster: labs/04_elk_stack/set_up_elk_cluster_with_security_docker.md
     - Multipass Config: labs/04_elk_stack/extra_material/example_multipass_node_config.md
