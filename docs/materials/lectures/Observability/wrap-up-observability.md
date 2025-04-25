@@ -1,7 +1,6 @@
 # Monitoring Solutions Overview
 
-```
-graph TD
+```mermaid
     A[Monitoring] --> B[Metrics]
     A --> C[Logs]
     A --> D[Tracing]
