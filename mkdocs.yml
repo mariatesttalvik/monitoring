@@ -101,17 +101,18 @@ nav:
 
 - Materials:
   - Elasticsearch:
-    - Introduction: materials/lectures/Elasticsearch/Part1_Introduction.md
-    - Data Modeling: materials/lectures/Elasticsearch/Part2_Data_Modeling.md
-    - Search & Querying: materials/lectures/Elasticsearch/Part3_Search_Querying.md
-    - Advanced Querying: materials/lectures/Elasticsearch/Part4_Advanced_Querying.md
-    - Aggregations: materials/lectures/Elasticsearch/Part5_Aggregations.md
-    - Performance Tuning: materials/lectures/Elasticsearch/Part6_Performance_Tuning.md
-    - Monitoring: materials/lectures/Elasticsearch/Part7_Monitoring.md
-    - Security: materials/lectures/Elasticsearch/Part8_Security.md
-    - Backup & Restore: materials/lectures/Elasticsearch/Part9_Backup_Restore.md
-    - CI/CD Deployment: materials/lectures/Elasticsearch/Part10_Deployment_CI_CD.md
-    - HTTP & REST APIs: materials/lectures/Elasticsearch/Intro_HTTP_RESTful_API.md
+    - Overview: materials/lectures/Elasticsearch/elasticsearch.md
+    - Introduction: materials/lectures/Elasticsearch/arhive/Part1_Introduction.md
+    - Data Modeling: materials/lectures/Elasticsearch/arhive/Part2_Data_Modeling.md
+    - Search & Querying: materials/lectures/Elasticsearch/arhive/Part3_Search_Querying.md
+    - Advanced Querying: materials/lectures/Elasticsearch/arhive/Part4_Advanced_Querying.md
+    - Aggregations: materials/lectures/Elasticsearch/arhive/Part5_Aggregations.md
+    - Performance Tuning: materials/lectures/Elasticsearch/arhive/Part6_Performance_Tuning.md
+    - Monitoring: materials/lectures/Elasticsearch/arhive/Part7_Monitoring.md
+    - Security: materials/lectures/Elasticsearch/arhive/Part8_Security.md
+    - Backup & Restore: materials/lectures/Elasticsearch/arhive/Part9_Backup_Restore.md
+    - CI/CD Deployment: materials/lectures/Elasticsearch/arhive/Part10_Deployment_CI_CD.md
+    - HTTP & REST APIs: materials/lectures/Elasticsearch/arhive/Intro_HTTP_RESTful_API.md
   - Grafana:
     - Grafana: materials/lectures/Grafana/grafana.md
     - Loki: materials/lectures/Grafana/loki.md
