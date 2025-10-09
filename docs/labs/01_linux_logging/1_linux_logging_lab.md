@@ -17,17 +17,17 @@ Selle labori lõpuks oskad:
 Ehitame keskse logiserveri süsteemi, kus üks masin (LogServer) kogub logisid teiselt masinalt (LogClient). See on tüüpiline IT-taristu lahendus, kus kõik süsteemide logid tulevad ühte kohta, kus neid on lihtsam jälgida ja analüüsida.
 
 ```mermaid
-flowchart LR
-  subgraph Client["Client VM - 192.168.100.20"]
-    A[Rakendused] --> B[rsyslog client]
-  end
-  
-  subgraph Server["Log Server - 192.168.100.10"]
-    F[rsyslog server] --> G["/var/log/remote/syslog.log"]
-  end
-  
-  B -->|"UDP port 514"| F
-  G --> H[Logide salvestamine]
+graph LR
+    subgraph Client["Client VM - 192.168.100.20"]
+        A[Rakendused] --> B[rsyslog client]
+    end
+    
+    subgraph Server["Log Server - 192.168.100.10"]
+        F[rsyslog server] --> G["/var/log/remote/syslog.log"]
+    end
+    
+    B -->|"UDP port 514"| F
+    G --> H[Logide salvestamine]
 ```
 
 ---
@@ -152,6 +152,7 @@ Asenda sisu järgmisega:
 
 ```yaml
 network:
+  version: 2
   ethernets:
     enp0s3:
       addresses: [192.168.100.10/24]
@@ -160,13 +161,19 @@ network:
           via: 192.168.100.1
       nameservers:
         addresses: [8.8.8.8]
-  version: 2
 ```
 
 **Selgitus:**
 - `addresses: [192.168.100.10/24]` - VM1 saab staatilise IP 192.168.100.10
-- `via: 192.168.100.1` - gateway (VirtualBoxi NAT Network gateway)
+- `routes:` - marsruutimise seadistused
+  - `to: default` - vaikimisi marsruut (kõik, mis ei ole lokaalne)
+  - `via: 192.168.100.1` - gateway (VirtualBoxi NAT Network gateway)
 - `nameservers: [8.8.8.8]` - Google DNS (et saaks internetti)
+
+**TÄHTIS:** YAML on tundlik taanete suhtes! Kasuta alati tühikuid (mitte TAB):
+- `routes:` on joondatud `addresses:` alla (2 tühikut)
+- `- to: default` on 4 tühikut algusest
+- `via: 192.168.100.1` on 6 tühikut algusest
 
 Salvesta fail (`Ctrl+O`, `Enter`, `Ctrl+X`).
 
@@ -178,6 +185,7 @@ sudo nano /etc/netplan/00-installer-config.yaml
 
 ```yaml
 network:
+  version: 2
   ethernets:
     enp0s3:
       addresses: [192.168.100.20/24]
@@ -186,7 +194,6 @@ network:
           via: 192.168.100.1
       nameservers:
         addresses: [8.8.8.8]
-  version: 2
 ```
 
 Salvesta fail.
@@ -196,7 +203,11 @@ Salvesta fail.
 Mõlemas VM-s:
 
 ```bash
-# Rakenda uued seadistused
+# Testi konfiguratsiooni (120 sekundit, siis automaatselt rollback kui viga)
+sudo netplan try
+
+# Kui kõik OK, vajuta ENTER
+# Või kui soovid kohe rakendada ilma testita:
 sudo netplan apply
 
 # Kontrolli IP-aadressi
@@ -284,7 +295,15 @@ rsyslog saab kuulata logisid nii UDP (port 514) kui TCP (port 514) kaudu. Me kas
 sudo nano /etc/rsyslog.conf
 ```
 
-**Lisa faili lõppu järgmised read:**
+**Leia read, mis algavad `#module(load="imudp")` ja eemalda `#` märgid:**
+
+```
+# Luba UDP syslog vastuvõtt
+module(load="imudp")
+input(type="imudp" port="514")
+```
+
+**VÕI kui neid ridu ei ole, lisa faili lõppu:**
 
 ```
 # Luba UDP syslog vastuvõtt
@@ -350,12 +369,6 @@ systemctl status rsyslog
 Peaks olema "active (running)".
 
 **Kontrolli kas rsyslog kuulab pordil 514:**
-
-```bash
-sudo netstat -uln | grep 514
-```
-
-Või kui netstat ei ole paigaldatud:
 
 ```bash
 sudo ss -uln | grep 514
@@ -445,7 +458,7 @@ tail -f /var/log/remote/syslog.log
 Peaksid nägema oma testsõnumit:
 
 ```
-Dec  9 10:15:32 LogClient sysadmin: TEST: Tere logiserver! See on test kliendilt.
+Oct  9 10:15:32 LogClient sysadmin: TEST: Tere logiserver! See on test kliendilt.
 ```
 
 **Kui näed sõnumit - õnnitleme! Logide edastamine töötab!**
@@ -491,7 +504,7 @@ Saadetud logi #3
 ...
 ```
 
-**VM1 (serveris - teises terminali aknas või SSH sessioon is):**
+**VM1 (serveris - teises terminali aknas või SSH sessioonis):**
 
 ```bash
 # Vaata logisid reaalajas
@@ -501,9 +514,9 @@ tail -f /var/log/remote/syslog.log
 Peaksid nägema, kuidas logid ilmuvad iga 5 sekundi tagant!
 
 ```
-Dec  9 10:20:01 LogClient sysadmin: Automaatne testlogi #1: 2024-12-09 10:20:01
-Dec  9 10:20:06 LogClient sysadmin: Automaatne testlogi #2: 2024-12-09 10:20:06
-Dec  9 10:20:11 LogClient sysadmin: Automaatne testlogi #3: 2024-12-09 10:20:11
+Oct  9 10:20:01 LogClient sysadmin: Automaatne testlogi #1: 2024-10-09 10:20:01
+Oct  9 10:20:06 LogClient sysadmin: Automaatne testlogi #2: 2024-10-09 10:20:06
+Oct  9 10:20:11 LogClient sysadmin: Automaatne testlogi #3: 2024-10-09 10:20:11
 ```
 
 **Peata logi generaator kliendis:** Vajuta `Ctrl+C`
@@ -719,7 +732,23 @@ sudo nano /etc/netplan/00-installer-config.yaml
 Veendu, et:
 - Kõik taanded on 2 tühikut
 - Ei ole tabulaatoreid
-- Loendid (addresses, routes) on õigesti taandatud
+- `routes:` on joondatud `addresses:` tasemele (2 tühikut algusest)
+- `- to: default` on 4 tühikut algusest
+- `via: 192.168.100.1` on 6 tühikut algusest
+
+**Õige YAML struktuur:**
+```yaml
+network:
+  version: 2
+  ethernets:
+    enp0s3:
+      addresses: [192.168.100.10/24]
+      routes:
+        - to: default
+          via: 192.168.100.1
+      nameservers:
+        addresses: [8.8.8.8]
+```
 
 ---
 
@@ -770,7 +799,12 @@ Praegu lähevad kõik logid ühte faili. Professionaalses keskkonnas eraldatakse
 - Auth logid → `/var/log/remote/auth.log`
 - Kõik ülejäänud → `/var/log/remote/syslog.log`
 
-**Vihje:** Kasuta `facility.severity` süntaksit (õppis loengus).
+**Vihje:** Kasuta `facility.severity` süntaksit:
+
+```
+auth,authpriv.* /var/log/remote/auth.log
+*.* /var/log/remote/syslog.log
+```
 
 ### 10.2 logrotate seadistamine
 
@@ -783,6 +817,28 @@ Praegu kasvab `/var/log/remote/syslog.log` lõpmatult. Õpi kuidas logrotate sed
 
 **Vihje:** Vaata `/etc/logrotate.d/rsyslog` näidet.
 
+**Näidiskonfiguratsioon:**
+
+```bash
+sudo nano /etc/logrotate.d/remote
+```
+
+```
+/var/log/remote/*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0644 syslog adm
+    sharedscripts
+    postrotate
+        /usr/lib/rsyslog/rsyslog-rotate
+    endscript
+}
+```
+
 ### 10.3 TCP edastamine
 
 Vaheta UDP edastamine TCP vastu (usaldusväärsem).
@@ -791,6 +847,20 @@ Vaheta UDP edastamine TCP vastu (usaldusväärsem).
 1. Serveris lae `imtcp` moodul (mitte `imudp`)
 2. Kliendis muuda `@` → `@@` (kaks @-märki)
 3. Testi kas logid jõuavad kohale
+
+**Serveri konfiguratsioon (`/etc/rsyslog.conf`):**
+
+```
+# Luba TCP syslog vastuvõtt
+module(load="imtcp")
+input(type="imtcp" port="514")
+```
+
+**Kliendi konfiguratsioon (`/etc/rsyslog.d/forward.conf`):**
+
+```
+*.* @@192.168.100.10:514
+```
 
 ### 10.4 Hostname-põhine eraldamine
 
@@ -804,6 +874,13 @@ $template RemoteLogs,"/var/log/remote/%HOSTNAME%/syslog.log"
 ```
 
 Nüüd peaks tekkima kaust `/var/log/remote/LogClient/syslog.log`.
+
+**Ära unusta luua kausta:**
+
+```bash
+sudo mkdir -p /var/log/remote/LogClient
+sudo chown -R syslog:adm /var/log/remote/LogClient
+```
 
 ---
 

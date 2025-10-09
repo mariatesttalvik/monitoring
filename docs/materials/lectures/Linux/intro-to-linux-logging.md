@@ -119,14 +119,14 @@ rsyslog (Rocket-fast System for Log processing) on mitmekülgne ja võimas logim
 ### rsyslog töövoog
 
 ```mermaid
-graph TD
+graph LR
     A[Rakendused] -->|logisõnumid| B[rsyslog Core]
     C[Kernel] -->|kernel logid| B
     D[Systemd] -->|teenuse logid| B
     B --> E{Reeglid<br/>facility.severity}
-    E -->|auth.*| F["/var/log/auth.log"]
-    E -->|kern.*| G["/var/log/kern.log"]
-    E -->|*.*| H["Logiserver<br/>UDP/TCP 514"]
+    E -->|auth.*| F[/var/log/auth.log]
+    E -->|kern.*| G[/var/log/kern.log]
+    E -->|*.*| H[Logiserver<br/>UDP/TCP 514]
 ```
 
 ### Põhiomadused
@@ -192,11 +192,12 @@ logrotate on tööriist logifailide automaatseks haldamiseks, pööramiseks ja a
 | `missingok` | - | Ei viska viga kui fail puudub | Turvaline |
 | `notifempty` | - | Ei pööra tühje faile | Kokkuhoid |
 | `create` | mode owner group | Uue faili õigused | `create 640 www-data adm` |
+| `sharedscripts` | - | Käivita skript ainult üks kord | Efektiivne mitme faili puhul |
 
 ### Logrotate töövoog
 
 ```mermaid
-graph TD
+graph LR
     A[Cron käivitab logrotate] -->|iga päev| B{Kontrolli reegleid}
     B -->|rotate 7| C[access.log → access.log.1]
     C --> D[access.log.1 → access.log.2.gz]
@@ -428,6 +429,7 @@ Efektiivseks logide analüüsiks on vajalik oskus neis otsida:
   ```bash
   awk '/error/ {print $1, $2, $3}' /var/log/syslog
   ```
+
 ### Keerukamad otsingud ja analüüsid
 
 Linuxi käsurea tööriistad võimaldavad teha ka keerukamaid otsinguid ja analüüse, kombineerides erinevaid käske. Näiteks:
@@ -487,7 +489,7 @@ Selgitus:
 6. `delaycompress`: Kompressimine lükatakse edasi järgmise rotatsioonitsüklini. See on kasulik, kui rakendus võib veel kirjutada eelmisesse logifaili.
 7. `notifempty`: Tühje logifaile ei roteerita.
 8. `create 0640 www-data adm`: Pärast rotatsiooni luuakse uus tühi logifail õigustega 0640, omanikuks www-data ja grupiks adm.
-9. `sharedscripts`: Käivitab pre- ja post-rotatsiooniskriptid ainult üks kord, isegi kui roteeritakse mitu logifaili.
+9. `sharedscripts`: Käivitab pre- ja post-rotatsiooniskriptid ainult üks kord, isegi kui roteeritakse mitu logifaili. See on efektiivsem kui käivitada skript iga faili jaoks eraldi.
 10. `prerotate` ... `endscript`: Skript, mis käivitatakse enne logide roteerimist. Siin kontrollitakse, kas eksisteerib teatud kaust ja käivitatakse seal olevad skriptid.
 11. `postrotate` ... `endscript`: Skript, mis käivitatakse pärast logide roteerimist. Siin saadetakse Nginx protsessile signaal USR1, mis põhjustab logifailide uuesti avamise.
 
@@ -543,12 +545,17 @@ Tüüpiline keskse logiserveri ülesehitus koosneb kolmest komponendist:
 2. **Logiserver (log collector):** Keskne server, mis võtab logid vastu ja salvestab
 3. **Analüüsi tööriistad:** Tööriistad logide otsimiseks ja analüüsimiseks
 
-```
-[Web Server 1] ----\
-[Web Server 2] -----\
-[Database]     -------> [Keskne Logiserver] --> [Analüüs & Visualiseerimine]
-[App Server 1] -----/      - rsyslog                - Kibana/Grafana
-[App Server 2] ----/       - Logide säilitamine     - Elasticsearch
+```mermaid
+graph LR
+    A[Web Server 1] --> E[Keskne Logiserver]
+    B[Web Server 2] --> E
+    C[Database] --> E
+    D[App Server] --> E
+    E --> F[rsyslog]
+    F --> G[Logide säilitamine]
+    G --> H[Analüüs & Visualiseerimine]
+    H --> I[Kibana/Grafana]
+    H --> J[Elasticsearch]
 ```
 
 ## 4.3 Keskse logiserveri seadistamine
@@ -561,30 +568,38 @@ rsyslog serveris tuleb lubada logide vastuvõtmine võrgust. Vaikimisi rsyslog e
 # Redigeeri rsyslog konfiguratsioonifaili
 sudo nano /etc/rsyslog.conf
 
-# Lisa need read faili (eemalda # märk rea algusest):
+# Lisa need read faili lõppu (või aktiveeri olemasolevad):
 # UDP logide vastuvõtmiseks (port 514)
 module(load="imudp")
-input(type="imudp" port="514")
+input(type="imudp" port="514" address="0.0.0.0")
 
 # TCP logide vastuvõtmiseks (usaldusväärsem)
 module(load="imtcp")
-input(type="imtcp" port="514")
+input(type="imtcp" port="514" address="0.0.0.0")
+```
 
-# Määra, kuhu klientide logid salvestada
-# Järgnev reegelkirjeldus eraldab logid kliendi hostnäme järgi
-$template RemoteLogs,"/var/log/remote/%HOSTNAME%/%PROGRAMNAME%.log"
-*.* ?RemoteLogs
+**TÄHTIS:** 
+- `address="0.0.0.0"` = kuula KÕIKIDEL võrguliidestel (sh väline võrk)
+- `address="127.0.0.1"` = kuula AINULT localhost'il (testimiseks)
+- Kui jätad `address` ära, vaikimisi kuulab 0.0.0.0
+
+**Määra, kuhu klientide logid salvestada:**
+
+```bash
+# Uus RainerScript süntaks (soovitatav)
+template(name="RemoteLogs" type="string" string="/var/log/remote/%HOSTNAME%/%PROGRAMNAME%.log")
+*.* action(type="omfile" dynaFile="RemoteLogs")
 
 # Peata logide töötlemine pärast salvestamist (väldi duplikaate)
 & stop
 ```
 
 **Selgitus:**
-- `module(load="imudp")` - laeb UDP kuulamise mooduli
-- `input(type="imudp" port="514")` - hakkab kuulama port 514 UDP protokolliga
-- `$template` - loob malli, kuidas logifaile nimetatakse ja kuhu salvestatakse
+- `template(name="RemoteLogs"...)` - loob malli, kuidas logifaile nimetatakse
 - `%HOSTNAME%` - kliendi hostnäme
 - `%PROGRAMNAME%` - programmi nimi, mis logi saatis
+- `action(type="omfile"...)` - salvestab faili
+- `& stop` - lõpetab töötlemise (et sama logi ei läheks ka /var/log/syslog'i)
 
 ### Klient (VM2) seadistamine
 
@@ -592,20 +607,28 @@ Klientmasinates tuleb öelda rsyslog'ile, et saadaks logid keskserverisse.
 
 ```bash
 # Loo uus konfiguratsioonifail
-sudo nano /etc/rsyslog.d/send-to-server.conf
+sudo nano /etc/rsyslog.d/50-send-to-server.conf
 
 # Lisa järgmine rida (asenda keskse-logiserveri IP):
+*.* action(type="omfwd" target="192.168.100.10" port="514" protocol="udp")
+
+# Või TCP protokolliga (usaldusväärsem):
+*.* action(type="omfwd" target="192.168.100.10" port="514" protocol="tcp")
+```
+
+**Vana süntaks (töötab ka, aga deprecated):**
+```bash
+# UDP
 *.* @192.168.100.10:514
 
-# UDP protokoll: @
-# TCP protokoll: @@
-# TCP on usaldusväärsem, aga aeglasem
+# TCP
+*.* @@192.168.100.10:514
 ```
 
 **Selgitus:**
 - `*.*` - kõik facility'id ja severity'id
-- `@IP:port` - saada UDP kaudu
-- `@@IP:port` - saada TCP kaudu (usaldusväärsem)
+- `protocol="udp"` - kiire, aga võib pakette kaotada
+- `protocol="tcp"` - aeglasem, aga usaldusväärsem (garanteerib kohaletoimetamise)
 
 ### Tulemüüri seadistamine
 
@@ -630,6 +653,9 @@ sudo systemctl restart rsyslog
 
 # Kontrolli staatust
 sudo systemctl status rsyslog
+
+# Kontrolli kas rsyslog kuulab (serveris)
+sudo ss -uln | grep 514
 ```
 
 ### Testimine
@@ -651,7 +677,7 @@ tail -f /var/log/remote/client-hostname/syslog.log
 ### Kontrollküsimused
 
 1. Nimeta 3 peamist keskse logiserveri eelist. Selgita iga eelis praktilise näitega.
-2. Mis vahe on UDP (`@`) ja TCP (`@@`) protokollil logide saatmisel?
+2. Mis vahe on UDP ja TCP protokollil logide saatmisel?
 3. Miks rsyslog vaikimisi ei kuula võrgust? Mida tuleb teha, et ta hakkaks?
 4. Kuidas testid, kas logide edastamine töötab?
 
@@ -817,7 +843,7 @@ logger -p local0.info -t backup "Database backup completed"
 ```
 
 **3. Debugging keskse logiserveri seadistust:**
-   ```bash
+```bash
 # Kliendis
 logger -p local0.info "Test from client"
 
@@ -843,7 +869,7 @@ tail -f /var/log/remote/client-hostname/syslog.log
 
 **Miks oluline:** Logid võivad sisaldada tundlikku infot (paroolid, IP-d, kasutajanimed).
 
-   ```bash
+```bash
 # Õiged õigused
 -rw-r----- syslog:adm /var/log/syslog
 -rw------- syslog:syslog /var/log/auth.log  # Ainult syslog näeb
@@ -863,12 +889,30 @@ tail -f /var/log/remote/client-hostname/syslog.log
 
 **Lahendus:**
 ```bash
-# Kasuta TLS krüpteerimist
+# Kasuta TLS krüpteerimist (uus RainerScript süntaks)
 # /etc/rsyslog.conf
-$DefaultNetstreamDriver gtls
-$ActionSendStreamDriverMode 1
-$ActionSendStreamDriverAuthMode anon
-*.* @@secure-logserver:6514  # Port 6514 = TLS
+
+# Lae TLS moodul
+module(load="omfwd")
+
+# Seadista TLS
+global(
+    defaultNetstreamDriver="gtls"
+    defaultNetstreamDriverCAFile="/etc/ssl/ca.pem"
+    defaultNetstreamDriverCertFile="/etc/ssl/client-cert.pem"
+    defaultNetstreamDriverKeyFile="/etc/ssl/client-key.pem"
+)
+
+# Saada krüpteeritult
+*.* action(
+    type="omfwd"
+    target="secure-logserver"
+    port="6514"
+    protocol="tcp"
+    streamDriver="gtls"
+    streamDriverMode="1"
+    streamDriverAuthMode="x509/name"
+)
 ```
 
 ## 6.2 Jõudlus
@@ -939,7 +983,7 @@ rm -rf /var/log/archive/2024-01/
 ### Probleem 1: Logid ei ilmu
 
 **Checklist:**
-   ```bash
+```bash
 # 1. Kas rsyslog töötab?
 systemctl status rsyslog
 # Kui ei: systemctl start rsyslog
@@ -963,7 +1007,7 @@ sudo ufw status | grep 514
 
 ### Probleem 2: Logid jõuavad, aga valesse kohta
 
-   ```bash
+```bash
 # Kontrolli reegleid
 grep -r "myapp" /etc/rsyslog.d/
 
@@ -976,27 +1020,26 @@ grep -r "TEST MESSAGE" /var/log/
 
 ### Probleem 3: Keskne logiserver ei saa logisid
 
-   ```bash
+```bash
 # Klient poolel:
 # 1. Kas võrk toimib?
 ping <logiserver-ip>
 
 # 2. Kas rsyslog saadab?
-grep "@<logiserver-ip>" /etc/rsyslog.d/*.conf
+grep "target=" /etc/rsyslog.d/*.conf
 
 # 3. Testi käsitsi
 logger -n <logiserver-ip> -P 514 "Manual test"
 
 # Server poolel:
 # 1. Kas rsyslog kuulab?
-netstat -uln | grep 514
-ss -uln | grep 514
+sudo ss -uln | grep 514
 
 # 2. Kas tulemüür lubab?
 sudo ufw status | grep 514
 
 # 3. Kas logid saabuvad?
-tcpdump -i any port 514
+sudo tcpdump -i any port 514
 ```
 
 ### Probleem 4: journalctl annab "No journal files"
@@ -1052,7 +1095,7 @@ Selles loengus käsitlesime Linux logimise põhitõdesid:
 
 **Laboris** õpid praktiliselt:
 - Seadistama keskse logiserveri (2 VM)
-- Konfiguree rsyslog'i klient → server edastust
+- Konfigureerima rsyslog'i klient → server edastust
 - Kasutama logger käsku testimiseks
 - Lugema ja analüüsima logifaile
 - Lahendama levinumaid probleeme
