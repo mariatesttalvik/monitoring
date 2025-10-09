@@ -9,7 +9,7 @@ Selle labori lõpuks oskad:
 1. **Seadistada** kahest virtuaalmasinast koosneva keskse logiserveri süsteemi
 2. **Konfigureerida** rsyslog teenust nii serveris kui kliendis
 3. **Edastada** logisid võrgu kaudu kliendist serverisse
-4. **Testimata** logide edastamist ja kontrollida nende saabumist
+4. **Testida** logide edastamist ja kontrollida nende saabumist
 5. **Lahendada** levinumaid logimise probleeme (võrk, õigused, tulemüür)
 
 ## Mida me ehitame?
@@ -33,7 +33,7 @@ flowchart TD
 
 ---
 
-## 1. Keskko nna Ettevalmistamine
+## 1. Keskkonna Ettevalmistamine
 
 ### 1.1 Nõutav tarkvara
 
@@ -144,25 +144,25 @@ Praegu kasutavad VM-id DHCP-d, mis tähendab, et nende IP-aadressid võivad muut
 
 **VM1 (LogServer) - 192.168.100.10:**
 
-   ```bash
+```bash
 # Muuda netplan konfiguratsioonifaili
-   sudo nano /etc/netplan/00-installer-config.yaml
-   ```
+sudo nano /etc/netplan/00-installer-config.yaml
+```
 
 Asenda sisu järgmisega:
 
-   ```yaml
-   network:
-     ethernets:
-       enp0s3:
-         addresses: [192.168.100.10/24]
-         routes:
-           - to: default
-             via: 192.168.100.1
-         nameservers:
-           addresses: [8.8.8.8]
-     version: 2
-   ```
+```yaml
+network:
+  ethernets:
+    enp0s3:
+      addresses: [192.168.100.10/24]
+      routes:
+        - to: default
+          via: 192.168.100.1
+      nameservers:
+        addresses: [8.8.8.8]
+  version: 2
+```
 
 **Selgitus:**
 - `addresses: [192.168.100.10/24]` - VM1 saab staatilise IP 192.168.100.10
@@ -177,18 +177,18 @@ Salvesta fail (`Ctrl+O`, `Enter`, `Ctrl+X`).
 sudo nano /etc/netplan/00-installer-config.yaml
 ```
 
-   ```yaml
-   network:
-     ethernets:
-       enp0s3:
-         addresses: [192.168.100.20/24]
-         routes:
-           - to: default
-             via: 192.168.100.1
-         nameservers:
-           addresses: [8.8.8.8]
-     version: 2
-   ```
+```yaml
+network:
+  ethernets:
+    enp0s3:
+      addresses: [192.168.100.20/24]
+      routes:
+        - to: default
+          via: 192.168.100.1
+      nameservers:
+        addresses: [8.8.8.8]
+  version: 2
+```
 
 Salvesta fail.
 
@@ -196,9 +196,9 @@ Salvesta fail.
 
 Mõlemas VM-s:
 
-   ```bash
+```bash
 # Rakenda uued seadistused
-   sudo netplan apply
+sudo netplan apply
 
 # Kontrolli IP-aadressi
 ip addr show enp0s3
@@ -582,13 +582,13 @@ Kui midagi ei tööta, kontrolli neid asju järjekorras.
 
 ### Probleem 1: Logid ei jõua serverisse
 
-**Sümptom:** `tail -f /var/log/remote/syslog.log` ei näita klaskuvaid logisid.
+**Sümptom:** `tail -f /var/log/remote/syslog.log` ei näita saabuvaid logisid.
 
 **Lahendus:**
 
 1. **Kontrolli võrguühendust:**
 
-   ```bash
+```bash
 # Kliendis (VM2)
 ping -c 3 192.168.100.10
 ```
@@ -606,9 +606,9 @@ Kui ei näe midagi - rsyslog ei kuula. Kontrolli `/etc/rsyslog.conf` seadistust 
 
 3. **Kontrolli rsyslog staatust mõlemas VM-s:**
 
-   ```bash
-   systemctl status rsyslog
-   ```
+```bash
+systemctl status rsyslog
+```
 
 Kui näed "failed" või "inactive" - taaskäivita:
 
