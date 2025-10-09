@@ -17,18 +17,17 @@ Selle labori lõpuks oskad:
 Ehitame keskse logiserveri süsteemi, kus üks masin (LogServer) kogub logisid teiselt masinalt (LogClient). See on tüüpiline IT-taristu lahendus, kus kõik süsteemide logid tulevad ühte kohta, kus neid on lihtsam jälgida ja analüüsida.
 
 ```mermaid
-flowchart TD
-  subgraph Client["Client VM (VM2) - 192.168.100.20"]
-    A[Rakendused] --> B[rsyslog]
-    B -->|logger käsud| B
+flowchart LR
+  subgraph Client["Client VM - 192.168.100.20"]
+    A[Rakendused] --> B[rsyslog client]
   end
   
-  subgraph Server["Log Server (VM1) - 192.168.100.10"]
-    F[rsyslog] --> G[/var/log/remote/syslog.log]
-    G --> H[Logide analüüs]
+  subgraph Server["Log Server - 192.168.100.10"]
+    F[rsyslog server] --> G["/var/log/remote/syslog.log"]
   end
   
-  B -->|UDP 514| F
+  B -->|"UDP port 514"| F
+  G --> H[Logide salvestamine]
 ```
 
 ---
