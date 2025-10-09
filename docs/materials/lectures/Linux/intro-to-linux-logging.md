@@ -119,14 +119,14 @@ rsyslog (Rocket-fast System for Log processing) on mitmekülgne ja võimas logim
 ### rsyslog töövoog
 
 ```mermaid
-graph LR
-    A[Rakendused] -->|logisõnumid| B[rsyslog]
+graph TD
+    A[Rakendused] -->|logisõnumid| B[rsyslog Core]
     C[Kernel] -->|kernel logid| B
     D[Systemd] -->|teenuse logid| B
-    B -->|filtreerimine| E{Reeglid}
-    E -->|match| F[/var/log/syslog]
-    E -->|match| G[/var/log/auth.log]
-    E -->|match| H[Võrk: Logiserver]
+    B --> E{Reeglid<br/>facility.severity}
+    E -->|auth.*| F["/var/log/auth.log"]
+    E -->|kern.*| G["/var/log/kern.log"]
+    E -->|*.*| H["Logiserver<br/>UDP/TCP 514"]
 ```
 
 ### Põhiomadused
