@@ -69,10 +69,8 @@ nav:
 
 - Labs:
   - Lab 01 Linux Logging:
-    - Simple: labs/01_linux_logging/Simple_Linux_Logging_Lab.md
-    - Basic: labs/01_linux_logging/1_linux_logging_lab.md
-    - Advanced: labs/01_linux_logging/2_linux_logging_lab_advanced.md
-    - Testing: labs/01_linux_logging/3_linux_logging_lab_testing.md
+    - Labor: labs/01_linux_logging/1_linux_logging_lab.md
+    - Lisapraktika: labs/01_linux_logging/lisapraktika.md
   - Lab 02 Prometheus:
     - Part 1: labs/02_prometheus/lab02_prometheus_part1.md
     - Part 2: labs/02_prometheus/lab02_prometheus_part2.md

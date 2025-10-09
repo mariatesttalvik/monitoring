@@ -1,54 +1,148 @@
-# Logging, Monitoring, and Observability Guide
+# Süsteemide Monitooring ja Jälgitavus - Kursusematerjalid
 
-This project is a course site powered by [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+See repositoorium sisaldab monitooringu ja jälgitavuse kursuse õppematerjale. Kursus on koostatud MkDocs ja Material for MkDocs abil.
 
-## 🧠 Where to Make Changes
+## 📚 Kursuse Ülevaade
 
-- All documentation lives inside the `docs/` folder.
-- The navigation and site config is defined in `mkdocs.yml`.
-- Most content lives under:
-  - `docs/labs/` – practical lab guides
-  - `docs/lectures/` – theory and reference
-  - `docs/final_project/` – final project setup
-  - `docs/resources/` – extra tips, setup, and guides
+**Maht:** 50h (põhirada) + 15h (valikmoodulid)  
+**Tase:** Keskaste kuni edasijõudnud  
+**Keel:** Eesti keel  
+**Formaat:** Modulaarne ülesehitus
 
-## 🚀 How to Run Locally
+### Põhirada (50h - kohustuslik)
 
-Create a virtual environment and install dependencies:
+1. **Linux Logimine** (6h) - Syslog, Journald, Logrotate
+2. **Prometheus & Grafana** (11h) - Mõõdikute kogumine ja visualiseerimine
+3. **ELK Stack** (11h) - Elasticsearch, Logstash, Kibana
+4. **Jaeger & OpenTelemetry** (7h) - Hajutatud jälgimine
+5. **Hoiatuste Haldus** (3h) - PagerDuty, Alertmanager
+6. **Lõpuprojekt** (12h) - Terviklik monitooringulahendus
 
+### Valikmoodulid (15h - vali 1-2)
+
+- **TICK Stack** (6h) - Telegraf, InfluxDB, Chronograf, Kapacitor
+- **Splunk Enterprise** (7h) - Enterprise-taseme lahendused
+- **Zabbix** (9h) - Traditsiooniline infrastruktuuri monitooring
+
+## 📁 Materjalide Struktuur
+
+Kogu dokumentatsioon asub `docs/` kaustas:
+
+- **`docs/labs/`** - Praktilised laboritööd
+  - `01_linux_logging/` - Linux logide haldus
+  - `02_prometheus/` - Prometheus ja Grafana (põhirada)
+  - `03_tick_stack/` - TICK Stack (valikmoodul)
+  - `04_elk_stack/` - ELK Stack (põhirada)
+  - `05_splunk/` - Splunk (valikmoodul)
+  - `06_zabbix/` - Zabbix (valikmoodul)
+  - `07_jaeger/` - Jaeger ja OpenTelemetry (põhirada)
+  - `08_alerting/` - Hoiatuste haldus (põhirada)
+
+- **`docs/materials/lectures/`** - Loengumaterjalid ja teooria
+  - `Observability/` - Jälgitavuse alused
+  - `Linux/` - Linux logimise teooria
+  - `Prometheus/` - Prometheus teooria
+  - `Elasticsearch/` - Elasticsearch teooria
+  - `Grafana/` - Grafana ja Loki
+  - `Splunk/` - Splunk teooria
+  - `TICK/` - TICK Stack teooria
+  - `Zabbix/` - Zabbix teooria
+
+- **`docs/final_project/`** - Lõpuprojekti materjalid
+  - `final_project_building_monsystem.md` - Projekti kirjeldus
+  - `help/` - Abistavad materjalid ja starter code
+
+- **`docs/resources/`** - Lisaressursid
+  - Seadistuse juhendid (GitHub, VS Code, Digital Ocean)
+  - Sertifikaatide haldus
+  - Täiendav lugemine
+
+---
+
+## 🛠️ Õpetajale - Saidi Haldamine
+
+### Lokaalne Arendus
+
+1. **Loo virtuaalne keskkond:**
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 ```
 
-Then serve the site:
+2. **Paigalda sõltuvused:**
+```bash
+pip install mkdocs-material
+```
 
+3. **Käivita arenduserver:**
 ```bash
 mkdocs serve
 ```
 
-It’ll open your local version at [http://127.0.0.1:8000](http://127.0.0.1:8000).
+Sait avaneb aadressil: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-## 📦 How to Deploy
+### Sisu Muutmine
 
-This pushes the site to the `gh-pages` branch:
+1. **Leia õige `.md` fail** `docs/` kaustas
+2. **Redigeeri Markdown formaadis**
+3. **Salvesta** - muudatused ilmuvad automaatselt
+
+### Uue Lehe Lisamine
+
+1. Loo uus `.md` fail sobivasse `docs/` alamkausta
+2. Lisa `mkdocs.yml` navigatsioonimenyüüsse:
+
+```yaml
+nav:
+  - Avaleht: index.md
+  - Laborid:
+      - Uus Labor: labs/09_new_lab/lab.md
+```
+
+### Deploymine GitHub Pages
 
 ```bash
 mkdocs gh-deploy --clean
 ```
 
-## ✅ Check Before Deploying
+### Material for MkDocs Funktsioonid
 
-- Are you on the correct branch? Usually: `maria-loengud`
-- Did you build with `mkdocs build` or test with `mkdocs serve`?
-- Are all new or renamed files listed in `mkdocs.yml` nav?
+**Admonitions (Infokastid):**
+```markdown
+!!! info "Pealkiri"
+    Sisu siia
 
-## 🧼 .gitignore Suggestions
-
-```gitignore
-.venv/
-.DS_Store
-__pycache__/
-site/
+!!! warning "Hoiatus"
+    Tähtis teave
 ```
+
+**Nupud:**
+```markdown
+[Loe edasi →](link.md){ .md-button .md-button--primary }
+```
+
+**Koodiplokid:**
+```markdown
+​```bash
+echo "Alati märgi keel!"
+​```
+```
+
+### Kontrollnimekiri Enne Deployimist
+
+- [ ] `mkdocs build` töötab ilma vigadeta?
+- [ ] Kõik uued failid on `mkdocs.yml` navigatsioonis?
+- [ ] Kõik lingid töötavad?
+- [ ] Kõik koodiplokid on keelega märgistatud?
+
+---
+
+## 📖 Kasulikud Lingid
+
+- [MkDocs dokumentatsioon](https://www.mkdocs.org/)
+- [Material for MkDocs dokumentatsioon](https://squidfunk.github.io/mkdocs-material/)
+- [Markdown juhend](https://www.markdownguide.org/)
+
+---
+
+**Edukat õppimist!** 🚀
