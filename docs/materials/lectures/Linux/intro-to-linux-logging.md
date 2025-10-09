@@ -123,10 +123,10 @@ graph LR
     A[Rakendused] -->|logisõnumid| B[rsyslog Core]
     C[Kernel] -->|kernel logid| B
     D[Systemd] -->|teenuse logid| B
-    B --> E{Reeglid<br/>facility.severity}
+    B --> E{Reeglid}
     E -->|auth.*| F[/var/log/auth.log]
     E -->|kern.*| G[/var/log/kern.log]
-    E -->|*.*| H[Logiserver<br/>UDP/TCP 514]
+    E -->|*.*| H[Logiserver UDP/TCP 514]
 ```
 
 ### Põhiomadused
@@ -177,9 +177,10 @@ logrotate on tööriist logifailide automaatseks haldamiseks, pööramiseks ja a
 **Probleem:** Nginx access.log on 50GB. Ketas on täis. Süsteem crashib.
 
 **Lahendus:** logrotate pöörab logifaile automaatselt:
-1. `access.log` → `access.log.1` (uus tühi fail luuakse)
-2. `access.log.1` → `access.log.2.gz` (kompresseeritakse)
-3. `access.log.7.gz` → kustutatakse (säilitatakse 7 päeva)
+
+1. access.log → access.log.1 (uus tühi fail luuakse)
+2. access.log.1 → access.log.2.gz (kompresseeritakse)
+3. access.log.7.gz → kustutatakse (säilitatakse 7 päeva)
 
 ### Peamised konfiguratsioonivõimalused
 
@@ -607,6 +608,7 @@ Näide: `auth.err` = autentimise viga, `mail.info` = mail serveri info
 **Stsenaarium:** Sul on üks `/var/log/syslog` fail kus on KÕIK logid - mail server, SSH, cron, kernel, jne. See on 10GB päevas ja on võimatu lugeda.
 
 **Lahendus:** Kasuta facility/severity, et suunata erinevad logid erinevatesse failidesse:
+
 - `auth.*` → `/var/log/auth.log` (kõik SSH/login logid)
 - `mail.*` → `/var/log/mail.log` (mail server logid)
 - `*.err` → `/var/log/errors.log` (KÕIK vead ühes kohas!)
@@ -645,7 +647,8 @@ Näide: `auth.err` = autentimise viga, `mail.info` = mail serveri info
 
 ### Kuidas valida õige taset?
 
-**Reeglid:**
+**Kuidas valida õige taset?**
+
 - **emerg/alert** - ainult kui KOGU süsteem on ohus
 - **crit** - teenus ei tööta
 - **err** - midagi ebaõnnestus, aga teenus töötab
@@ -977,14 +980,16 @@ Selles loengus käsitlesime Linux logimise põhitõdesid:
 
 ## Järgmine samm
 
-**Laboris** õpid praktiliselt:
+**Laboris õpid praktiliselt:**
+
 - Seadistama keskse logiserveri (2 VM)
 - Konfigureerima rsyslog'i klient → server edastust
 - Kasutama logger käsku testimiseks
 - Lugema ja analüüsima logifaile
 - Lahendama levinumaid probleeme
 
-**Lisapraktikas** (kui jõuad):
+**Lisapraktikas (kui jõuad):**
+
 - Logide kategoriseerimine (auth, kern, daemon)
 - logrotate seadistamine
 - auditd praktilised näited
