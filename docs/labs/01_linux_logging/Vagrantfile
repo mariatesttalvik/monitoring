@@ -1,0 +1,105 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # Ubuntu 22.04 LTS base box
+  config.vm.box = "ubuntu/jammy64"
+  
+  # LogServer (VM1) - 192.168.100.10
+  config.vm.define "logserver" do |server|
+    server.vm.hostname = "logserver"
+    server.vm.network "private_network", ip: "192.168.100.10"
+    
+    server.vm.provider "virtualbox" do |vb|
+      vb.name = "LogServer"
+      vb.memory = "2048"
+      vb.cpus = 1
+    end
+    
+    # Provisioning - seadista rsyslog server
+    server.vm.provision "shell", inline: <<-SHELL
+      # Uuenda süsteemi
+      apt-get update
+      apt-get install -y rsyslog
+      
+      # Seadista rsyslog serveriks
+      cat >> /etc/rsyslog.conf <<EOF
+
+# Luba UDP logide vastuvõtt
+module(load="imudp")
+input(type="imudp" port="514")
+EOF
+      
+      # Loo kaust kauglogidele
+      mkdir -p /var/log/remote
+      chmod 755 /var/log/remote
+      chown syslog:adm /var/log/remote
+      
+      # Seadista logide marsruutimine
+      cat > /etc/rsyslog.d/remote.conf <<EOF
+# Kõik saabuvad logid → remote faili
+*.* /var/log/remote/syslog.log
+EOF
+      
+      # Taaskäivita rsyslog
+      systemctl restart rsyslog
+      systemctl enable rsyslog
+      
+      echo "==================================="
+      echo "LogServer on valmis!"
+      echo "IP: 192.168.100.10"
+      echo "Logid: /var/log/remote/syslog.log"
+      echo "==================================="
+    SHELL
+  end
+  
+  # LogClient (VM2) - 192.168.100.20
+  config.vm.define "logclient" do |client|
+    client.vm.hostname = "logclient"
+    client.vm.network "private_network", ip: "192.168.100.20"
+    
+    client.vm.provider "virtualbox" do |vb|
+      vb.name = "LogClient"
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+    
+    # Provisioning - seadista rsyslog klient
+    client.vm.provision "shell", inline: <<-SHELL
+      # Uuenda süsteemi
+      apt-get update
+      apt-get install -y rsyslog
+      
+      # Seadista logide edastamine
+      cat > /etc/rsyslog.d/forward.conf <<EOF
+# Edasta kõik logid logiserveri
+*.* @192.168.100.10:514
+EOF
+      
+      # Taaskäivita rsyslog
+      systemctl restart rsyslog
+      systemctl enable rsyslog
+      
+      # Loo testskript
+      cat > /home/vagrant/test-logs.sh <<'EOF'
+#!/bin/bash
+counter=1
+while true; do
+    logger "Testlogi #$counter: $(date)"
+    echo "Saadetud: #$counter"
+    counter=$((counter + 1))
+    sleep 5
+done
+EOF
+      chmod +x /home/vagrant/test-logs.sh
+      chown vagrant:vagrant /home/vagrant/test-logs.sh
+      
+      echo "==================================="
+      echo "LogClient on valmis!"
+      echo "IP: 192.168.100.20"
+      echo "Testi: logger 'TEST sõnum'"
+      echo "Skript: ./test-logs.sh"
+      echo "==================================="
+    SHELL
+  end
+end
