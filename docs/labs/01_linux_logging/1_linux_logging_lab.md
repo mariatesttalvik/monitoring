@@ -1,154 +1,128 @@
 # Linux Logimise Labor: Keskse Logiserveri Ehitamine
 
-**Eeldused:** Linux põhikäsud, võrgu alused, VirtualBox kasutamine • **Platvorm:** Ubuntu Server 22.04 LTS, VirtualBox • **Kestus:** 2-3h
+**Eeldused:** Linux põhikäsud, võrgu alused, VirtualBox kasutamine  
+**Platvorm:** Ubuntu Server 22.04 LTS, VirtualBox  
+**Kestus:** 2-3h
 
-## Õpiväljundid
+## Mida me täna teeme?
 
-Selle labori lõpuks oskad:
-
-1. **Seadistada** kahest virtuaalmasinast koosneva keskse logiserveri süsteemi
-2. **Konfigureerida** rsyslog teenust nii serveris kui kliendis
-3. **Edastada** logisid võrgu kaudu kliendist serverisse
-4. **Testida** logide edastamist ja kontrollida nende saabumist
-5. **Lahendada** levinumaid logimise probleeme (võrk, õigused, tulemüür)
-
-## Mida me ehitame?
-
-Ehitame keskse logiserveri süsteemi, kus üks masin (LogServer) kogub logisid teiselt masinalt (LogClient). See on tüüpiline IT-taristu lahendus, kus kõik süsteemide logid tulevad ühte kohta, kus neid on lihtsam jälgida ja analüüsida.
+Täna ehitame süsteemi, kus üks arvuti (LogServer) kogub logisid teiselt arvutilt (LogClient). See on nagu postkontor - kõik kirjad tulevad ühte kohta, kus neid on lihtsam hallata.
 
 ```mermaid
 graph LR
-    subgraph Client["Client VM - 192.168.100.20"]
-        A[Rakendused] --> B[rsyslog client]
-    end
-    
-    subgraph Server["Log Server - 192.168.100.10"]
-        F[rsyslog server] --> G["/var/log/remote/syslog.log"]
-    end
-    
-    B -->|"UDP port 514"| F
-    G --> H[Logide salvestamine]
+    A[LogClient<br/>192.168.100.20] -->|Saadab logid| B[LogServer<br/>192.168.100.10]
+    B --> C[Salvestab<br/>/var/log/remote/]
 ```
+
+**Miks see on kasulik?**
+- ✅ Kui üks server katki läheb, logid on juba turvaliselt teises kohas
+- ✅ Saad vaadata kõiki logisid ühest kohast
+- ✅ Päris IT-firmades tehakse täpselt nii!
 
 ---
 
-## 1. Keskkonna Ettevalmistamine
+## Samm 1: Loo kaks virtuaalmasinat
 
-### 1.1 Nõutav tarkvara
+### 1.1 Mis sul vaja läheb?
 
-Enne labori alustamist kontrolli, et sul on:
-
-| Tarkvara | Versioon | Otstarve |
-|----------|----------|----------|
-| VirtualBox | 7.0+ | Virtuaalmasinate jaoks |
+| Asi | Kui palju | Miks |
+|-----|-----------|------|
+| VirtualBox | versioon 7.0+ | Virtuaalmasinate jaoks |
 | Ubuntu Server ISO | 22.04 LTS | Operatsioonisüsteem |
-| Vaba kettaruumi | ~50GB | Kahe VM jaoks |
-| RAM | 4GB+ | VM-ide jaoks |
+| Vaba kettaruum | ~50GB | Kahe masina jaoks |
+| Vaba RAM | 4GB+ | Et VM-id töötaksid |
 
-### 1.2 Virtuaalmasinate loomine
+### 1.2 Loo esimene VM (LogServer)
 
-Loome kaks virtuaalmasinat VirtualBoxis. Esimene on logiserver (kogub logisid), teine on klient (saadab logisid).
-
-**VM1 - LogServer:**
-
-1. Ava VirtualBox → **New**
-2. Seadista järgmised parameetrid:
+1. Ava VirtualBox
+2. Kliki **New** (uus masin)
+3. Täida väljad:
 
 ```
-Name: LogServer
-Type: Linux
-Version: Ubuntu (64-bit)
-Memory: 2048 MB (2GB)
-Hard Disk: 20GB (VDI, Dynamically allocated)
-Network: NAT Network (loome järgmises sammus)
+Nimi: LogServer
+Tüüp: Linux
+Versioon: Ubuntu (64-bit)
+RAM: 2048 MB (2GB)
+Kõvaketas: 20GB
 ```
 
-**VM2 - LogClient:**
+**Miks 2GB RAM-i?** See server salvestab logisid, seega vajab rohkem mälu.
+
+### 1.3 Loo teine VM (LogClient)
+
+Korda samu samme, aga väiksema mäluga:
 
 ```
-Name: LogClient
-Type: Linux
-Version: Ubuntu (64-bit)
-Memory: 1024 MB (1GB)
-Hard Disk: 20GB (VDI, Dynamically allocated)
-Network: NAT Network (sama mis VM1-l)
+Nimi: LogClient
+Tüüp: Linux
+Versioon: Ubuntu (64-bit)
+RAM: 1024 MB (1GB)
+Kõvaketas: 20GB
 ```
 
-**Miks need seadistused?**
-- LogServer vajab rohkem RAM-i, sest ta salvestab logisid
-- NAT Network võimaldab VM-idel omavahel suhelda, aga on eraldatud host süsteemist
-- 20GB on piisav lihtsa logiserveri jaoks
+### 1.4 Seadista võrk (et masinad näeksid teineteist)
 
-### 1.3 Võrgu seadistamine
-
-Enne VM-ide käivitamist loome neile eraldi võrgu. See on oluline, et VM-id näeksid teineteist.
-
-**Loo NAT Network VirtualBoxis:**
+**Loo ühine võrk:**
 
 1. VirtualBox → **File** → **Preferences** → **Network**
-2. **NAT Networks** tab → kliki **+** (Add)
+2. **NAT Networks** → kliki **+** (pluss)
 3. Seadista:
-
-```
-Network Name: LogLab
-Network CIDR: 192.168.100.0/24
-Enable DHCP: ✓ (märgitud)
-```
-
+   - **Name:** LogLab
+   - **CIDR:** 192.168.100.0/24
+   - **Enable DHCP:** ✓ (märgi linnuke)
 4. Kliki **OK**
 
-**Määra mõlemale VM-le see võrk:**
+**Ühenda mõlemad VM-id selle võrguga:**
 
 1. Vali VM → **Settings** → **Network**
-2. Adapter 1:
+2. **Adapter 1:**
    - Attached to: **NAT Network**
    - Name: **LogLab**
 
-### 1.4 Ubuntu Server paigaldamine
+💡 **Mis on NAT Network?** See on nagu privaatne WiFi ainult sinu VM-ide jaoks.
 
-Paigalda Ubuntu Server mõlemale VM-le. See protsess on identne mõlema jaoks.
+### 1.5 Paigalda Ubuntu Server
 
-**Käivita VM ja järgi paigaldusviisardit:**
+Tee seda mõlemas VM-is (kaks korda sama protsess):
 
-1. Vali ISO fail (ubuntu-22.04-live-server-amd64.iso)
-2. Vali **Ubuntu Server (minimized)**
-3. Võrgu seadistus: **DHCP** (praegu, muudame hiljem staatiliseks)
-4. Ketta partitsioneerimine: **Use entire disk**
-5. Loo kasutaja:
-   - Nimi: `sysadmin`
-   - Parool: (vali turvaline)
-6. Märgi: **Install OpenSSH server** ✓
-7. Lõpeta paigaldus ja taaskäivita
+1. Käivita VM
+2. Vali Ubuntu Server ISO fail
+3. Vali **Ubuntu Server (minimized)**
+4. Võrk: **DHCP** (praegu automaatne)
+5. Ketas: **Use entire disk**
+6. Loo kasutaja:
+   - Username: `sysadmin`
+   - Password: (vali mingi parool)
+7. Märgi: **Install OpenSSH server** ✓
+8. Lõpeta ja taaskäivita
 
-Korda samu samme mõlema VM jaoks (LogServer ja LogClient).
-
-**Kontrolli kas mõlemad VM-id töötavad:**
+**Kontrolli kas töötab:**
 
 ```bash
-# Logi sisse kui sysadmin
-# Kontrolli süsteemi
+# Logi sisse
+# Kirjuta:
 uname -a
 ip addr show
 ```
 
-Peaksid nägema Ubuntu kerneli versiooni ja võrgu liidese teavet.
+Peaksid nägema Ubuntu versiooni ja IP aadressi.
 
 ---
 
-## 2. Staatiliste IP-aadresside Seadistamine
+## Samm 2: Anna masinatele kindlad IP aadressid
 
-Praegu kasutavad VM-id DHCP-d, mis tähendab, et nende IP-aadressid võivad muutuda. Logiserveri jaoks vajame kindlat IP-aadressi, mida klient teab.
+**Probleem:** Praegu on IP aadressid automaatsed (DHCP) ja võivad muutuda.  
+**Lahendus:** Anname igale masinale kindla IP aadressi.
 
-### 2.1 Netplan konfiguratsiooni muutmine
+### 2.1 LogServer → 192.168.100.10
 
-**VM1 (LogServer) - 192.168.100.10:**
+**VM1-s (LogServer):**
 
 ```bash
-# Muuda netplan konfiguratsioonifaili
 sudo nano /etc/netplan/00-installer-config.yaml
 ```
 
-Asenda sisu järgmisega:
+Kustuta kõik mis seal on ja kirjuta see:
 
 ```yaml
 network:
@@ -163,21 +137,19 @@ network:
         addresses: [8.8.8.8]
 ```
 
-**Selgitus:**
-- `addresses: [192.168.100.10/24]` - VM1 saab staatilise IP 192.168.100.10
-- `routes:` - marsruutimise seadistused
-  - `to: default` - vaikimisi marsruut (kõik, mis ei ole lokaalne)
-  - `via: 192.168.100.1` - gateway (VirtualBoxi NAT Network gateway)
-- `nameservers: [8.8.8.8]` - Google DNS (et saaks internetti)
+**TÄHTIS!** 
+- Kasuta tühikuid, MITTE Tab klahvi
+- `routes:` ja `addresses:` peavad olema joondatud
+- Salvesta: `Ctrl+O`, `Enter`, `Ctrl+X`
 
-**TÄHTIS:** YAML on tundlik taanete suhtes! Kasuta alati tühikuid (mitte TAB):
-- `routes:` on joondatud `addresses:` alla (2 tühikut)
-- `- to: default` on 4 tühikut algusest
-- `via: 192.168.100.1` on 6 tühikut algusest
+💡 **Mis see tähendab?**
+- `192.168.100.10` = selle masina IP
+- `192.168.100.1` = värav (gateway)
+- `8.8.8.8` = Google DNS (et saaks internetti)
 
-Salvesta fail (`Ctrl+O`, `Enter`, `Ctrl+X`).
+### 2.2 LogClient → 192.168.100.20
 
-**VM2 (LogClient) - 192.168.100.20:**
+**VM2-s (LogClient):**
 
 ```bash
 sudo nano /etc/netplan/00-installer-config.yaml
@@ -196,130 +168,120 @@ network:
         addresses: [8.8.8.8]
 ```
 
-Salvesta fail.
+Sama nagu enne, aga IP on `.20` lõpus.
 
-### 2.2 Rakenda võrguseadistused
+### 2.3 Rakenda muudatused
 
-Mõlemas VM-s:
+**Mõlemas VM-is:**
 
 ```bash
-# Testi konfiguratsiooni (120 sekundit, siis automaatselt rollback kui viga)
+# Testi (120 sekundit aega, siis tagasi rullitakse kui ei tööta)
 sudo netplan try
 
 # Kui kõik OK, vajuta ENTER
-# Või kui soovid kohe rakendada ilma testita:
-sudo netplan apply
 
-# Kontrolli IP-aadressi
+# Kontrolli IP-d
 ip addr show enp0s3
 ```
 
 Peaksid nägema:
-```
-inet 192.168.100.10/24  # või .20 kliendis
-```
+- VM1: `192.168.100.10`
+- VM2: `192.168.100.20`
 
-**Testi võrguühendust:**
+### 2.4 Testi võrku
 
 ```bash
-# Testi internetti
+# VM1-s testi internetti:
 ping -c 3 8.8.8.8
 
-# Kliendis testi serverit
+# VM2-s testi serveri:
 ping -c 3 192.168.100.10
 
-# Serveris testi klienti
+# VM1-s testi klienti:
 ping -c 3 192.168.100.20
 ```
 
-Kui kõik 3 testi töötavad - võrk on valmis! Kui mõni ei tööta, vaata troubleshooting sektsiooni.
+Kui kõik 3 töötavad → SUPER! Võrk on valmis! 🎉
+
+Kui ei tööta → vaata hiljem "Probleemide lahendamine" osa.
 
 ---
 
-## 3. rsyslog Paigaldamine ja Põhiseadistamine
+## Samm 3: Paigalda rsyslog
 
-rsyslog on juba Ubuntu Serveris olemas, aga me kontrollime ja uuendame süsteemi.
+rsyslog on programm, mis haldab logisid. Ubuntu-s on see juba olemas, aga kontrollime.
 
-### 3.1 Pakettide paigaldamine
-
-Mõlemas VM-s:
+**Mõlemas VM-is:**
 
 ```bash
-# Uuenda pakettide nimekirja
+# Uuenda paketinimekirja
 sudo apt update
 
-# Paigalda rsyslog (kui ei ole juba)
+# Paigalda rsyslog
 sudo apt install -y rsyslog
 
-# Kontrolli rsyslog versiooni
+# Kontrolli versiooni
 rsyslogd -v
 ```
 
-Peaksid nägema midagi sellist:
-```
-rsyslogd 8.2112.0 ...
-```
-
-**Kontrolli kas rsyslog töötab:**
+**Kontrolli kas töötab:**
 
 ```bash
 systemctl status rsyslog
 ```
 
-Peaks olema:
-```
-● rsyslog.service - System Logging Service
-     Loaded: loaded
-     Active: active (running)
-```
+Peaksid nägema: `Active: active (running)` ✅
 
-Kui näed "inactive (dead)", käivita see:
+Kui näed `inactive` → käivita:
 
 ```bash
 sudo systemctl start rsyslog
 sudo systemctl enable rsyslog
 ```
 
+💡 **Mis vahe on `start` ja `enable` vahel?**
+- `start` = käivita praegu
+- `enable` = käivita alati kui arvuti käivitub
+
 ---
 
-## 4. Logiserveri (VM1) Seadistamine
+## Samm 4: Seadista LogServer (VM1)
 
-Nüüd muudame VM1 logiServeriks, mis võtab vastu logisid võrgust. Vaikimisi rsyslog EI kuula võrku - me peame selle sisse lülitama.
+Nüüd muudame VM1 nii, et ta hakkab võtma logisid vastu.
 
-### 4.1 Luba UDP logide vastuvõtt
+### 4.1 Luba logide kuulamine
 
-rsyslog saab kuulata logisid nii UDP (port 514) kui TCP (port 514) kaudu. Me kasutame UDP, kuna see on kiirem ja piisav õppeotstarbelel.
+**VM1-s:**
 
 ```bash
-# Muuda rsyslog põhikonfiguratsioon
 sudo nano /etc/rsyslog.conf
 ```
 
-**Leia read, mis algavad `#module(load="imudp")` ja eemalda `#` märgid:**
+Otsi selle faili lõpust ridu, mis algavad `#module(load="imudp")`.
+
+**Kas leidsid?** Eemalda alguses olev `#` märk:
 
 ```
-# Luba UDP syslog vastuvõtt
+# Luba UDP logide kuulamine
 module(load="imudp")
 input(type="imudp" port="514")
 ```
 
-**VÕI kui neid ridu ei ole, lisa faili lõppu:**
+**Ei leidnud?** Lisa faili lõppu:
 
 ```
-# Luba UDP syslog vastuvõtt
+# Luba UDP logide kuulamine
 module(load="imudp")
 input(type="imudp" port="514")
 ```
 
-**Selgitus:**
-- `module(load="imudp")` - laeb UDP sisendmooduli
-- `input(type="imudp" port="514")` - kuulab UDP port 514-l (standard syslog port)
+Salvesta: `Ctrl+O`, `Enter`, `Ctrl+X`
 
-Salvesta fail.
+💡 **Mis see teeb?**
+- rsyslog hakkab kuulama võrgust tulevaid logisid
+- Port 514 on standardne port syslog logidele
 
-### 4.2 Loo kaust kauglogidele
-
-Loome eraldi kausta, kuhu saabuvad kliendi logid. See hoiab asjad korraldatud.
+### 4.2 Loo kaust logidele
 
 ```bash
 # Loo kaust
@@ -330,494 +292,382 @@ sudo chmod 755 /var/log/remote
 sudo chown syslog:adm /var/log/remote
 ```
 
-**Miks need õigused?**
-- `755` = owner (syslog) saab kirjutada, teised ainult lugeda
-- `syslog:adm` = rsyslog protsess (töötab kasutajana "syslog") saab kirjutada
+💡 **Miks need õigused?**
+- `syslog` kasutaja saab kirjutada
+- `adm` grupp saab lugeda
+- Teised saavad ainult lugeda
 
-### 4.3 Seadista logide marsruutimine
-
-Nüüd ütleme rsyslog'ile, et kõik saabuvad logid pannakse `/var/log/remote/syslog.log` faili.
+### 4.3 Ütle kuhu logid salvestada
 
 ```bash
-# Loo uus konfiguratsioonifail
 sudo nano /etc/rsyslog.d/remote.conf
 ```
 
-Lisa sinna:
+Kirjuta sinna:
 
 ```
-# Kõik saabuvad logid → remote faili
+# Kõik saabuvad logid lähevad siia:
 *.* /var/log/remote/syslog.log
 ```
 
-**Selgitus:**
-- `*.*` = kõik facility'd (auth, kern, mail, jne) ja kõik severity'd (info, warning, error, jne)
-- `/var/log/remote/syslog.log` = salvestamise asukoht
-
 Salvesta fail.
+
+💡 **Mis see tähendab?**
+- `*.*` = kõik logid (kõik tüübid, kõik tasemed)
+- `/var/log/remote/syslog.log` = salvestamise koht
 
 ### 4.4 Taaskäivita rsyslog
 
 ```bash
-# Taaskäivita teenus
 sudo systemctl restart rsyslog
+```
 
-# Kontrolli kas käivitus õnnestus
+**Kontrolli kas töötab:**
+
+```bash
 systemctl status rsyslog
 ```
 
-Peaks olema "active (running)".
-
-**Kontrolli kas rsyslog kuulab pordil 514:**
+**Kontrolli kas kuulab porti 514:**
 
 ```bash
 sudo ss -uln | grep 514
 ```
 
-Peaksid nägema:
-```
-udp   0.0.0.0:514   0.0.0.0:*
-```
+Peaksid nägema midagi nagu: `udp   0.0.0.0:514`
 
-See tähendab, et rsyslog kuulab UDP port 514 kõikidel võrguliidestel. Kui ei näe - kontrolli konfiguratsiooni vigu:
-
-```bash
-sudo rsyslogd -N1
-```
+✅ Kui näed → rsyslog kuulab!  
+❌ Kui ei näe → midagi läks valesti, vaata troubleshooting osa
 
 ---
 
-## 5. Kliendi (VM2) Seadistamine
+## Samm 5: Seadista LogClient (VM2)
 
-Nüüd seadistame VM2, et see saadaks kõik oma logid VM1-le (logiserveri).
+Nüüd ütleme VM2-le, et saada kõik logid VM1-le.
 
-### 5.1 Konfigureeri logide edastamine
+### 5.1 Seadista edastamine
+
+**VM2-s:**
 
 ```bash
-# Loo edastamise konfiguratsioon
 sudo nano /etc/rsyslog.d/forward.conf
 ```
 
-Lisa sinna:
+Kirjuta sinna:
 
 ```
-# Edasta kõik logid logiserveri (VM1)
+# Saada kõik logid serverisse
 *.* @192.168.100.10:514
 ```
 
-**Selgitus:**
-- `*.*` = kõik logid (nagu serveris)
-- `@192.168.100.10:514` = saada UDP kaudu VM1 IP-le port 514
-  - `@` = UDP (üks @ märk)
-  - `@@` = TCP (kaks @ märki) - oleks usaldusväärsem, aga aeglasem
-
-**Miks UDP?**
-- Kiirem
-- Väiksem režii
-- Piisav õppeotstarbelel (production'is võiks kasutada TCP või TCP+TLS)
-
 Salvesta fail.
+
+💡 **Mis see tähendab?**
+- `*.*` = kõik logid
+- `@` = UDP protokoll (kiire)
+- `192.168.100.10:514` = serveri IP ja port
+
+**Kas on `@@` parem?**
+- `@` = UDP = kiirem, aga võib logisid kaotada
+- `@@` = TCP = aeglasem, aga usaldusväärsem
+- Õppimiseks on `@` piisav
 
 ### 5.2 Taaskäivita rsyslog
 
 ```bash
 sudo systemctl restart rsyslog
-
-# Kontrolli staatust
 systemctl status rsyslog
 ```
 
-Peaks olema "active (running)".
+Peab olema `active (running)` ✅
 
 ---
 
-## 6. Testimine ja Kontrollimine
+## Samm 6: TESTI!
 
-Nüüd on aeg testida, kas logid liiguvad kliendist serverisse!
+Nüüd on aeg testida kas töötab!
 
-### 6.1 Testi logger käsuga
+### 6.1 Saada testlogi
 
-`logger` käsk võimaldab käsitsi saata testsõnumeid syslog'i.
-
-**VM2 (kliendis):**
+**VM2-s (klient):**
 
 ```bash
-# Saada testlogi
-logger "TEST: Tere logiserver! See on test kliendilt."
+logger "TERE! See on testlogi kliendilt!"
 ```
 
-Peaksid nägema terminalis midagi (või mitte - oleneb seadistusest). Aga oluline on kontrollida, kas logi jõudis serveri.
+### 6.2 Kontrolli serveris
 
-**VM1 (serveris):**
+**VM1-s (server):**
 
 ```bash
-# Vaata remote logifaili lõppu
 tail -f /var/log/remote/syslog.log
 ```
 
-Peaksid nägema oma testsõnumit:
+**Mida peaksid nägema?**
 
 ```
-Oct  9 10:15:32 LogClient sysadmin: TEST: Tere logiserver! See on test kliendilt.
+Oct  9 10:15:32 LogClient sysadmin: TERE! See on testlogi kliendilt!
 ```
 
-**Kui näed sõnumit - õnnitleme! Logide edastamine töötab!**
+✅ **Näed oma sõnumit?** → SUPER! See töötab! 🎉  
+❌ **Ei näe?** → Mine jaotise 8 juurde (Probleemide lahendamine)
 
-(Vajuta `Ctrl+C` et `tail -f` peatada)
+Vajuta `Ctrl+C` et `tail -f` peatada.
 
-### 6.2 Logi generaatori skript
+### 6.3 Tee automaatne testija
 
-Testime põhjalikumalt - loome skripti, mis genereerib pidevalt logisid.
-
-**VM2 (kliendis):**
+**VM2-s loo skript:**
 
 ```bash
-# Loo logi generaatori skript
-cat << 'EOF' > ~/generate_logs.sh
+cat << 'EOF' > ~/test-logs.sh
 #!/bin/bash
-# Lihtsne logi generaator testimiseks
-
 counter=1
 while true; do
-    logger "Automaatne testlogi #$counter: $(date '+%Y-%m-%d %H:%M:%S')"
-    echo "Saadetud logi #$counter"
+    logger "Testlogi #$counter: $(date)"
+    echo "Saadetud: #$counter"
     counter=$((counter + 1))
     sleep 5
 done
 EOF
 
-# Anna skriptile käivitamisõigus
-chmod +x ~/generate_logs.sh
+chmod +x ~/test-logs.sh
 ```
 
-**Käivita skript:**
+**Käivita:**
 
 ```bash
-./generate_logs.sh
+./test-logs.sh
 ```
 
 Peaksid nägema:
 ```
-Saadetud logi #1
-Saadetud logi #2
-Saadetud logi #3
-...
+Saadetud: #1
+Saadetud: #2
+Saadetud: #3
 ```
 
-**VM1 (serveris - teises terminali aknas või SSH sessioonis):**
+**VM1-s vaata logisid:**
 
 ```bash
-# Vaata logisid reaalajas
 tail -f /var/log/remote/syslog.log
 ```
 
-Peaksid nägema, kuidas logid ilmuvad iga 5 sekundi tagant!
+Peaksid nägema iga 5 sekundi tagant uut logi! 🎉
 
-```
-Oct  9 10:20:01 LogClient sysadmin: Automaatne testlogi #1: 2024-10-09 10:20:01
-Oct  9 10:20:06 LogClient sysadmin: Automaatne testlogi #2: 2024-10-09 10:20:06
-Oct  9 10:20:11 LogClient sysadmin: Automaatne testlogi #3: 2024-10-09 10:20:11
-```
-
-**Peata logi generaator kliendis:** Vajuta `Ctrl+C`
-
-### 6.3 Kontrolli logide arvu
-
-**VM1 (serveris):**
-
-```bash
-# Loe mitu rida on remote logis
-wc -l /var/log/remote/syslog.log
-
-# Otsi konkreetseid sõnumeid
-grep "Automaatne testlogi" /var/log/remote/syslog.log | wc -l
-
-# Vaata viimast 10 rida
-tail -10 /var/log/remote/syslog.log
-```
+Peata testija: `Ctrl+C`
 
 ---
 
-## 7. Tulemüüri Seadistamine (Valikuline)
+## Samm 7: Tulemüür (kui vaja)
 
-Ubuntu Server 22.04 vaikimisi ei ole tulemüür aktiivne, aga production keskkonnas peaks see olema. Õpime kuidas seda seadistada.
+Ubuntu Server vaikimisi ei ole tulemüür peal, aga õpime kuidas seda seadistada.
 
-### 7.1 Kontrolli tulemüüri staatust
+### 7.1 Kontrolli kas tulemüür töötab
 
-**VM1 (serveris):**
+**VM1-s:**
 
 ```bash
 sudo ufw status
 ```
 
-Kui näed "Status: inactive" - tulemüür ei ole aktiivne. Kui on aktiivne ja logid ei jõua kohale, pead lisama reegli.
+Kui näed `Status: inactive` → tulemüür ei ole aktiivne (OK!)
 
-### 7.2 Lisa rsyslog reegel
+Kui näed `Status: active` → peame lisama reegli.
+
+### 7.2 Lisa reegel
 
 ```bash
-# Luba UDP port 514
+# Luba port 514
 sudo ufw allow 514/udp
 
-# Luba SSH (ära lukusta ennast välja!)
+# Luba SSH (et saaks sisse logida)
 sudo ufw allow 22/tcp
 
-# Aktiveeri tulemüür
+# Lülita tulemüür sisse
 sudo ufw enable
-
-# Kontrolli reegleid
-sudo ufw status numbered
 ```
 
-Peaksid nägema:
-```
-Status: active
-
-     To                         Action      From
-     --                         ------      ----
-[ 1] 22/tcp                     ALLOW IN    Anywhere
-[ 2] 514/udp                    ALLOW IN    Anywhere
-```
-
-**Testi uuesti logger käsuga VM2-s:**
+**Testi uuesti:**
 
 ```bash
-logger "TEST: Kontrollin pärast tulemüüri seadistamist"
-```
+# VM2-s
+logger "TEST pärast tulemüüri"
 
-Kontrolli VM1-s, kas logi saabus.
+# VM1-s
+tail /var/log/remote/syslog.log
+```
 
 ---
 
-## 8. Probleemide Lahendamine
+## Samm 8: Kui midagi ei tööta
 
-Kui midagi ei tööta, kontrolli neid asju järjekorras.
+### Probleem: Logid ei jõua serverisse
 
-### Probleem 1: Logid ei jõua serverisse
+**Kontrolli sammhaaval:**
 
-**Sümptom:** `tail -f /var/log/remote/syslog.log` ei näita saabuvaid logisid.
-
-**Lahendus:**
-
-1. **Kontrolli võrguühendust:**
+**1. Kas võrk töötab?**
 
 ```bash
-# Kliendis (VM2)
+# VM2-s
 ping -c 3 192.168.100.10
 ```
 
-Kui ping ei tööta - võrguseadistus on vale. Mine tagasi §2 juurde.
+❌ Ei tööta → mine tagasi Samm 2 juurde ja kontrolli IP aadresse
 
-2. **Kontrolli kas rsyslog kuulab serveris:**
+**2. Kas rsyslog kuulab serveris?**
 
 ```bash
-# Serveris (VM1)
+# VM1-s
 sudo ss -uln | grep 514
 ```
 
-Kui ei näe midagi - rsyslog ei kuula. Kontrolli `/etc/rsyslog.conf` seadistust (§4.1).
+❌ Ei näe midagi → kontrolli `/etc/rsyslog.conf` (Samm 4.1)
 
-3. **Kontrolli rsyslog staatust mõlemas VM-s:**
+**3. Kas rsyslog töötab?**
 
 ```bash
+# Mõlemas VM-s
 systemctl status rsyslog
 ```
 
-Kui näed "failed" või "inactive" - taaskäivita:
+❌ Näed `failed` → vaata vigu:
 
 ```bash
-sudo systemctl restart rsyslog
+sudo journalctl -u rsyslog -n 50
 ```
 
-4. **Kontrolli konfiguratsiooni vigu:**
+**4. Kas konfiguratsioonis on vigu?**
 
 ```bash
 sudo rsyslogd -N1
 ```
 
-Kui näed vigu - paranda need ja taaskäivita rsyslog.
-
-5. **Vaata rsyslog logisid:**
+Kui näed vigu → paranda need failis ja taaskäivita:
 
 ```bash
-# Serveris
-sudo journalctl -u rsyslog -f
-```
-
-Võid näha vigu või hoiatusi, mis aitavad probleemi tuvastada.
-
-### Probleem 2: Õiguste vead
-
-**Sümptom:** rsyslog logib viga "cannot open file /var/log/remote/syslog.log"
-
-**Lahendus:**
-
-```bash
-# Serveris (VM1)
-# Kontrolli kausta õigusi
-ls -ld /var/log/remote
-
-# Kui õigused on valed:
-sudo chown syslog:adm /var/log/remote
-sudo chmod 755 /var/log/remote
-
-# Kontrolli faili õigusi
-ls -l /var/log/remote/syslog.log
-
-# Kui fail eksisteerib, aga õigused on valed:
-sudo chown syslog:adm /var/log/remote/syslog.log
-sudo chmod 644 /var/log/remote/syslog.log
-
-# Taaskäivita rsyslog
 sudo systemctl restart rsyslog
 ```
 
-### Probleem 3: Tulemüür blokeerib
-
-**Sümptom:** Ping töötab, aga logid ei jõua kohale.
-
-**Lahendus:**
+### Probleem: Õiguste viga
 
 ```bash
-# Serveris (VM1)
-# Kontrolli tulemüüri
-sudo ufw status
+# Serveris kontrolli:
+ls -ld /var/log/remote
 
-# Kui on aktiivne, aga reeglit ei ole:
-sudo ufw allow 514/udp
-
-# Kontrolli kas port on avatud
-sudo ss -uln | grep 514
+# Paranda:
+sudo chown syslog:adm /var/log/remote
+sudo chmod 755 /var/log/remote
+sudo systemctl restart rsyslog
 ```
 
-### Probleem 4: Vale IP-aadress konfiguratsioonis
-
-**Sümptom:** Logid ei jõua kohale, aga kõik muu tundub töötavat.
-
-**Lahendus:**
+### Probleem: Vale IP aadress
 
 ```bash
-# Kliendis (VM2)
-# Kontrolli edastamise konfiguratsiooni
+# Kliendis kontrolli:
 cat /etc/rsyslog.d/forward.conf
 ```
 
-Peab olema:
-```
-*.* @192.168.100.10:514
-```
+Peab olema: `*.* @192.168.100.10:514`
 
-Kui IP on vale - paranda ja taaskäivita rsyslog.
-
-### Probleem 5: netplan apply annab vea
-
-**Sümptom:** `sudo netplan apply` annab YAML süntaksi vea.
-
-**Lahendus:**
-
-YAML on tundlik taanete (indentation) suhtes! Kasuta alati **tühikuid, mitte tabulaatoreid**.
+Kui on vale → paranda ja:
 
 ```bash
-# Kontrolli konfiguratsioon
-sudo netplan try
-```
-
-See rakendab konfiguratsioonile 120 sekundiks - kui midagi läheb valesti, rullib automaatselt tagasi.
-
-Kui viga on YAML süntaksis, paranda fail:
-
-```bash
-sudo nano /etc/netplan/00-installer-config.yaml
-```
-
-Veendu, et:
-- Kõik taanded on 2 tühikut
-- Ei ole tabulaatoreid
-- `routes:` on joondatud `addresses:` tasemele (2 tühikut algusest)
-- `- to: default` on 4 tühikut algusest
-- `via: 192.168.100.1` on 6 tühikut algusest
-
-**Õige YAML struktuur:**
-```yaml
-network:
-  version: 2
-  ethernets:
-    enp0s3:
-      addresses: [192.168.100.10/24]
-      routes:
-        - to: default
-          via: 192.168.100.1
-      nameservers:
-        addresses: [8.8.8.8]
+sudo systemctl restart rsyslog
 ```
 
 ---
 
-## 9. Kontrollnimekiri
+## Kontrollnimekiri
 
 Veendu, et kõik on tehtud:
 
-### VM1 (LogServer)
+### LogServer (VM1)
 
-- [ ] VM on loodud ja Ubuntu Server paigaldatud
-- [ ] Staatiline IP: 192.168.100.10
-- [ ] rsyslog on paigaldatud ja käivitatud
-- [ ] UDP port 514 kuulatakse (`ss -uln | grep 514`)
-- [ ] Kaust `/var/log/remote` on loodud õigete õigustega
-- [ ] Konfiguratsioon `/etc/rsyslog.conf` sisaldab imudp moodulit
-- [ ] Konfiguratsioon `/etc/rsyslog.d/remote.conf` on loodud
-- [ ] Logid saabuvad `/var/log/remote/syslog.log` faili
-- [ ] Tulemüür lubab porti 514/udp (kui ufw on aktiivne)
+- [ ] IP on 192.168.100.10
+- [ ] rsyslog kuulab porti 514
+- [ ] Kaust `/var/log/remote` on olemas
+- [ ] Fail `/etc/rsyslog.d/remote.conf` on olemas
+- [ ] Logid saabuvad faili
 
-### VM2 (LogClient)
+### LogClient (VM2)
 
-- [ ] VM on loodud ja Ubuntu Server paigaldatud
-- [ ] Staatiline IP: 192.168.100.20
-- [ ] rsyslog on paigaldatud ja käivitatud
-- [ ] Konfiguratsioon `/etc/rsyslog.d/forward.conf` on loodud
-- [ ] Edastamine serveri IP-le toimib
-- [ ] Logger käsk genereerib logisid
+- [ ] IP on 192.168.100.20
+- [ ] Fail `/etc/rsyslog.d/forward.conf` on olemas
+- [ ] Logger käsk saadab logisid
 - [ ] Logid jõuavad serverisse
 
-### Funktsionaalsus
+### Testimine
 
-- [ ] Ping töötab mõlemas suunas (VM1 ↔ VM2)
-- [ ] `logger "test"` käsk kliendis → logi ilmub serverisse
-- [ ] `tail -f /var/log/remote/syslog.log` näitab saabuvaid logisid
-- [ ] Logi generaatori skript töötab
+- [ ] Ping töötab mõlemas suunas
+- [ ] `logger "test"` → logi ilmub serveris
+- [ ] Automaatne testija töötab
 
 ---
 
-## 10. Edasised Sammud (Lisapraktika)
+## Lisaülesanded (kui jõuad)
 
-Kui oled põhilabori lõpetanud, proovi neid väljakutseid:
+### Ülesanne 1: Eralda auth logid
 
-### 10.1 Eraldatud logikategooriad
+**Eesmärk:** Pane SSH logid eraldi faili.
 
-Praegu lähevad kõik logid ühte faili. Professionaalses keskkonnas eraldatakse logid kategooriate kaupa (auth, mail, daemon).
-
-**Ülesanne:** Muuda `/etc/rsyslog.d/remote.conf`, et:
-- Auth logid → `/var/log/remote/auth.log`
-- Kõik ülejäänud → `/var/log/remote/syslog.log`
-
-**Vihje:** Kasuta `facility.severity` süntaksit:
+**Serveris muuda `/etc/rsyslog.d/remote.conf`:**
 
 ```
 auth,authpriv.* /var/log/remote/auth.log
 *.* /var/log/remote/syslog.log
 ```
 
-### 10.2 logrotate seadistamine
+**Testi:**
 
-Praegu kasvab `/var/log/remote/syslog.log` lõpmatult. Õpi kuidas logrotate seda haldab.
+```bash
+# Kliendis
+sudo su   # sisene root kasutajana
+exit
 
-**Ülesanne:** Loo `/etc/logrotate.d/remote` konfiguratsioon, mis:
-- Pöörab logisid iga päev
-- Hoiab 7 päeva logisid
-- Kompresseerib vanad logid
+# Serveris vaata
+tail /var/log/remote/auth.log
+```
 
-**Vihje:** Vaata `/etc/logrotate.d/rsyslog` näidet.
+### Ülesanne 2: TCP edastamine
 
-**Näidiskonfiguratsioon:**
+**Eesmärk:** Kasuta TCP-d UDP asemel (usaldusväärsem).
+
+**Serveris `/etc/rsyslog.conf`:**
+
+```
+module(load="imtcp")
+input(type="imtcp" port="514")
+```
+
+**Kliendis `/etc/rsyslog.d/forward.conf`:**
+
+```
+*.* @@192.168.100.10:514
+```
+
+(Pane tähele `@@` - kaks @ märki!)
+
+**Mõlemas:**
+
+```bash
+sudo systemctl restart rsyslog
+```
+
+**Testi:**
+
+```bash
+# Kliendis
+logger "TEST TCP edastamine"
+
+# Serveris
+tail /var/log/remote/syslog.log
+```
+
+### Ülesanne 3: Logide pööramine
+
+**Eesmärk:** Ära lase logidel ketast täita.
+
+**Serveris:**
 
 ```bash
 sudo nano /etc/logrotate.d/remote
@@ -832,135 +682,42 @@ sudo nano /etc/logrotate.d/remote
     missingok
     notifempty
     create 0644 syslog adm
-    sharedscripts
-    postrotate
-        /usr/lib/rsyslog/rsyslog-rotate
-    endscript
 }
 ```
 
-### 10.3 TCP edastamine
-
-Vaheta UDP edastamine TCP vastu (usaldusväärsem).
-
-**Ülesanne:**
-1. Serveris lae `imtcp` moodul (mitte `imudp`)
-2. Kliendis muuda `@` → `@@` (kaks @-märki)
-3. Testi kas logid jõuavad kohale
-
-**Serveri konfiguratsioon (`/etc/rsyslog.conf`):**
-
-```
-# Luba TCP syslog vastuvõtt
-module(load="imtcp")
-input(type="imtcp" port="514")
-```
-
-**Kliendi konfiguratsioon (`/etc/rsyslog.d/forward.conf`):**
-
-```
-*.* @@192.168.100.10:514
-```
-
-### 10.4 Hostname-põhine eraldamine
-
-Praegu lähevad kõik klientide logid samasse faili. Professionaalses keskkonnas luuakse igale kliendile oma kaust.
-
-**Ülesanne:** Muuda `/etc/rsyslog.d/remote.conf`, et kasutada template'i:
-
-```
-$template RemoteLogs,"/var/log/remote/%HOSTNAME%/syslog.log"
-*.* ?RemoteLogs
-```
-
-Nüüd peaks tekkima kaust `/var/log/remote/LogClient/syslog.log`.
-
-**Ära unusta luua kausta:**
+**Testi:**
 
 ```bash
-sudo mkdir -p /var/log/remote/LogClient
-sudo chown -R syslog:adm /var/log/remote/LogClient
+sudo logrotate -f /etc/logrotate.d/remote
+ls -lh /var/log/remote/
 ```
 
 ---
 
-## 11. Labori Lõpetamine
+## Kokkuvõte
 
-### 11.1 Dokumenteerimine
+### Mida sa õppisid?
 
-Loo fail `lab_report.txt` järgmise sisuga:
+- ✅ Kuidas seadistada kahte VM-i
+- ✅ Kuidas anda staatiline IP aadress
+- ✅ Kuidas rsyslog logisid võrgus edastab
+- ✅ Kuidas teste teha (logger käsk)
+- ✅ Kuidas probleeme lahendada
 
-```bash
-# VM1-s
-cat > ~/lab_report.txt << EOF
-Linux Logimise Labor - Aruanne
-================================
+### Mis järgmiseks?
 
-Õpilane: [Sinu Nimi]
-Kuupäev: $(date '+%Y-%m-%d')
+- Proovi lisaülesandeid
+- Loo kolmas VM ja saada tema logid ka serverisse
+- Õpi kuidas seda TLS-iga turvaliseks teha
 
-VM Konfiguratsioon:
--------------------
-LogServer IP: 192.168.100.10
-LogClient IP: 192.168.100.20
-
-rsyslog Versioon:
------------------
-$(rsyslogd -v | head -1)
-
-Võrgu Staatus:
---------------
-$(ip addr show enp0s3 | grep inet)
-
-rsyslog Staatus:
-----------------
-$(systemctl status rsyslog | head -3)
-
-Kuulatavad Pordid:
-------------------
-$(sudo ss -uln | grep 514)
-
-Testimise Tulemus:
-------------------
-$(tail -5 /var/log/remote/syslog.log)
-
-Probleemid ja Lahendused:
---------------------------
-[Kirjelda siia mis probleeme kohtasid ja kuidas lahendasid]
-
-Järeldused:
------------
-[Mis sa õppisid? Mis oli keeruline? Mis oli lihtne?]
-EOF
-
-cat ~/lab_report.txt
-```
-
-### 11.2 Puhastamine (Cleanup)
-
-Kui tahad säilitada VM-id tulevikuks, võta snapshot:
-
-**VirtualBoxis:**
-1. Seiska VM
-2. Vali VM → **Snapshots** → **Take**
-3. Anna nimi: "Linux Logging Lab - Working"
-
-Kui tahad VM-id kustutada:
-
-1. Seiska mõlemad VM-id
-2. VirtualBox → vali VM → **Remove** → **Delete all files**
+**Palju õnne! Sa tegid päris IT-taristu komponendi! 🎉**
 
 ---
 
-## Kas vajad abi?
+## Abi vajad?
 
-Kui jääd hätta:
-
-1. **Kontrolli troubleshooting sektsiooni** (§8) - 90% probleemidest on seal kirjeldatud
-2. **Vaata rsyslog logisid:** `sudo journalctl -u rsyslog -f`
-3. **Kontrolli konfiguratsiooni:** `sudo rsyslogd -N1`
-4. **Küsi õpetajalt** - nad on abiks!
-5. **Google täpse veateate** - lisa "ubuntu 22.04 rsyslog" otsingusse
-6. **Vaata dokumentatsiooni:** [https://www.rsyslog.com/doc/](https://www.rsyslog.com/doc/)
-
-**Edu laboriga!** Sa ehitad õige IT-taristu komponendi - keskse logiserveri, mida kasutatakse igas suuremas organisatsioonis.
+1. Kontrolli troubleshooting osa (Samm 8)
+2. Vaata logisid: `sudo journalctl -u rsyslog -f`
+3. Kontrolli konfigi: `sudo rsyslogd -N1`
+4. Küsi õpetajalt
+5. Google: "ubuntu 22.04 rsyslog" + sinu viga

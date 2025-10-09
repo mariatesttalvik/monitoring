@@ -560,119 +560,23 @@ graph LR
 
 ## 4.3 Keskse logiserveri seadistamine
 
-### Logiserver (VM1) seadistamine
+### Põhimõtted
 
-rsyslog serveris tuleb lubada logide vastuvõtmine võrgust. Vaikimisi rsyslog ei kuula võrku - see on turvakaalutlus.
+**Logiserver konfiguratsioon:**
+1. Luba UDP/TCP port 514 kuulamine
+2. Määra kuhu saabuvad logid salvestada (nt `/var/log/remote/`)
+3. Ava tulemüüris port 514
 
-```bash
-# Redigeeri rsyslog konfiguratsioonifaili
-sudo nano /etc/rsyslog.conf
+**Klient konfiguratsioon:**
+1. Määra logiserveri IP ja port
+2. Vali protokoll: UDP (kiire) või TCP (usaldusväärsem)
+3. Taaskäivita rsyslog teenus
 
-# Lisa need read faili lõppu (või aktiveeri olemasolevad):
-# UDP logide vastuvõtmiseks (port 514)
-module(load="imudp")
-input(type="imudp" port="514" address="0.0.0.0")
+**Testimine:**
+- Kasuta `logger` käsku testsõnumi saatmiseks
+- Kontrolli serveris kas logid saabuvad
 
-# TCP logide vastuvõtmiseks (usaldusväärsem)
-module(load="imtcp")
-input(type="imtcp" port="514" address="0.0.0.0")
-```
-
-**TÄHTIS:** 
-- `address="0.0.0.0"` = kuula KÕIKIDEL võrguliidestel (sh väline võrk)
-- `address="127.0.0.1"` = kuula AINULT localhost'il (testimiseks)
-- Kui jätad `address` ära, vaikimisi kuulab 0.0.0.0
-
-**Määra, kuhu klientide logid salvestada:**
-
-```bash
-# Uus RainerScript süntaks (soovitatav)
-template(name="RemoteLogs" type="string" string="/var/log/remote/%HOSTNAME%/%PROGRAMNAME%.log")
-*.* action(type="omfile" dynaFile="RemoteLogs")
-
-# Peata logide töötlemine pärast salvestamist (väldi duplikaate)
-& stop
-```
-
-**Selgitus:**
-- `template(name="RemoteLogs"...)` - loob malli, kuidas logifaile nimetatakse
-- `%HOSTNAME%` - kliendi hostnäme
-- `%PROGRAMNAME%` - programmi nimi, mis logi saatis
-- `action(type="omfile"...)` - salvestab faili
-- `& stop` - lõpetab töötlemise (et sama logi ei läheks ka /var/log/syslog'i)
-
-### Klient (VM2) seadistamine
-
-Klientmasinates tuleb öelda rsyslog'ile, et saadaks logid keskserverisse.
-
-```bash
-# Loo uus konfiguratsioonifail
-sudo nano /etc/rsyslog.d/50-send-to-server.conf
-
-# Lisa järgmine rida (asenda keskse-logiserveri IP):
-*.* action(type="omfwd" target="192.168.100.10" port="514" protocol="udp")
-
-# Või TCP protokolliga (usaldusväärsem):
-*.* action(type="omfwd" target="192.168.100.10" port="514" protocol="tcp")
-```
-
-**Vana süntaks (töötab ka, aga deprecated):**
-```bash
-# UDP
-*.* @192.168.100.10:514
-
-# TCP
-*.* @@192.168.100.10:514
-```
-
-**Selgitus:**
-- `*.*` - kõik facility'id ja severity'id
-- `protocol="udp"` - kiire, aga võib pakette kaotada
-- `protocol="tcp"` - aeglasem, aga usaldusväärsem (garanteerib kohaletoimetamise)
-
-### Tulemüüri seadistamine
-
-Logiserver peab lubama sissetulevad ühendused pordile 514:
-
-```bash
-# Ubuntu/Debian
-sudo ufw allow 514/udp
-sudo ufw allow 514/tcp
-
-# RHEL/CentOS
-sudo firewall-cmd --permanent --add-port=514/udp
-sudo firewall-cmd --permanent --add-port=514/tcp
-sudo firewall-cmd --reload
-```
-
-### Teenuste taaskäivitamine
-
-```bash
-# Mõlemas masinas
-sudo systemctl restart rsyslog
-
-# Kontrolli staatust
-sudo systemctl status rsyslog
-
-# Kontrolli kas rsyslog kuulab (serveris)
-sudo ss -uln | grep 514
-```
-
-### Testimine
-
-Klientmasinast saada testlog:
-
-```bash
-logger "Test message from client"
-```
-
-Logiserveris kontrolli:
-
-```bash
-# Vaata kliendi nimega kausta
-ls -la /var/log/remote/
-tail -f /var/log/remote/client-hostname/syslog.log
-```
+> **Märkus:** Detailsed konfiguratsioonijuhised on laboris!
 
 ### Kontrollküsimused
 
@@ -888,32 +792,12 @@ tail -f /var/log/remote/client-hostname/syslog.log
 **Probleem:** UDP @ port 514 on krüptimata → keegi võib logisid lugeda või võltsida.
 
 **Lahendus:**
-```bash
-# Kasuta TLS krüpteerimist (uus RainerScript süntaks)
-# /etc/rsyslog.conf
+- Kasuta TLS/SSL krüpteerimist
+- Seadista sertifikaadid (CA, client cert, key)
+- Kasuta porti 6514 (standard TLS syslog port)
+- rsyslog toetab täielikku TLS/SSL krüpteerimist
 
-# Lae TLS moodul
-module(load="omfwd")
-
-# Seadista TLS
-global(
-    defaultNetstreamDriver="gtls"
-    defaultNetstreamDriverCAFile="/etc/ssl/ca.pem"
-    defaultNetstreamDriverCertFile="/etc/ssl/client-cert.pem"
-    defaultNetstreamDriverKeyFile="/etc/ssl/client-key.pem"
-)
-
-# Saada krüpteeritult
-*.* action(
-    type="omfwd"
-    target="secure-logserver"
-    port="6514"
-    protocol="tcp"
-    streamDriver="gtls"
-    streamDriverMode="1"
-    streamDriverAuthMode="x509/name"
-)
-```
+> **Märkus:** TLS seadistamine on keeruline ja käsitletakse eraldi täiendavas materjalis.
 
 ## 6.2 Jõudlus
 
