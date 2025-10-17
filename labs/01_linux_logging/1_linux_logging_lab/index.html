@@ -1,0 +1,4870 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/01_linux_logging/1_linux_logging_lab/">
+      
+      
+        <link rel="prev" href="../../../final_project/help/virtualbox_wsl/">
+      
+      
+        <link rel="next" href="../lisapraktika/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Labor - Logging, Monitoring, and Observability Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#linux-logimise-labor-keskse-logiserveri-ehitamine" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Logging, Monitoring, and Observability Guide" class="md-header__button md-logo" aria-label="Logging, Monitoring, and Observability Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Logging, Monitoring, and Observability Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Labor
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../materials/lectures/Observability/intro_logging_monitoring_observability/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Observability
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../final_project/final_project_building_monsystem/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Final Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../materials/lectures/Elasticsearch/elasticsearch/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Materials
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../resources/github-guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Resources
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Logging, Monitoring, and Observability Guide" class="md-nav__button md-logo" aria-label="Logging, Monitoring, and Observability Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Logging, Monitoring, and Observability Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Observability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Observability/intro_logging_monitoring_observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Foundations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Observability/wrap-up-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wrap-Up
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Final Project
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Final Project
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/final_project_building_monsystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/topology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Topology
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Help
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Help
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/elk_stack_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ELK Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/hints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hints
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/kibana_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kibana Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/networking_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Networking Debug
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/starter_code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Starter Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/virtualbox_wsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox & WSL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Labs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Labs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 01 Linux Logging
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 01 Linux Logging
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Labor
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Labor
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mida-me-tana-teeme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mida me täna teeme?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-1-loo-kaks-virtuaalmasinat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 1: Loo kaks virtuaalmasinat
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 1: Loo kaks virtuaalmasinat">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-mis-sul-vaja-laheb" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 Mis sul vaja läheb?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-loo-esimene-vm-logserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 Loo esimene VM (LogServer)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-loo-teine-vm-logclient" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 Loo teine VM (LogClient)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-seadista-vork-et-masinad-naeksid-teineteist" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4 Seadista võrk (et masinad näeksid teineteist)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-paigalda-ubuntu-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5 Paigalda Ubuntu Server
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-2-anna-masinatele-kindlad-ip-aadressid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 2: Anna masinatele kindlad IP aadressid
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 2: Anna masinatele kindlad IP aadressid">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-logserver-19216810010" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 LogServer → 192.168.100.10
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-logclient-19216810020" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 LogClient → 192.168.100.20
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-rakenda-muudatused" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Rakenda muudatused
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-testi-vorku" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 Testi võrku
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-3-paigalda-rsyslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 3: Paigalda rsyslog
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-4-seadista-logserver-vm1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 4: Seadista LogServer (VM1)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 4: Seadista LogServer (VM1)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-luba-logide-kuulamine" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 Luba logide kuulamine
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-loo-kaust-logidele" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 Loo kaust logidele
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-utle-kuhu-logid-salvestada" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 Ütle kuhu logid salvestada
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-taaskaivita-rsyslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.4 Taaskäivita rsyslog
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-5-seadista-logclient-vm2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 5: Seadista LogClient (VM2)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 5: Seadista LogClient (VM2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-seadista-edastamine" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Seadista edastamine
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-taaskaivita-rsyslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Taaskäivita rsyslog
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-6-testi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 6: TESTI!
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 6: TESTI!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-saada-testlogi" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 Saada testlogi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-kontrolli-serveris" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 Kontrolli serveris
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-tee-automaatne-testija" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3 Tee automaatne testija
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-7-tulemuur-kui-vaja" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 7: Tulemüür (kui vaja)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 7: Tulemüür (kui vaja)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-kontrolli-kas-tulemuur-tootab" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Kontrolli kas tulemüür töötab
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-lisa-reegel" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Lisa reegel
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-8-kui-midagi-ei-toota" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 8: Kui midagi ei tööta
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 8: Kui midagi ei tööta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#probleem-logid-ei-joua-serverisse" class="md-nav__link">
+    <span class="md-ellipsis">
+      Probleem: Logid ei jõua serverisse
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probleem-oiguste-viga" class="md-nav__link">
+    <span class="md-ellipsis">
+      Probleem: Õiguste viga
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probleem-vale-ip-aadress" class="md-nav__link">
+    <span class="md-ellipsis">
+      Probleem: Vale IP aadress
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kontrollnimekiri" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kontrollnimekiri
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kontrollnimekiri">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logserver-vm1" class="md-nav__link">
+    <span class="md-ellipsis">
+      LogServer (VM1)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logclient-vm2" class="md-nav__link">
+    <span class="md-ellipsis">
+      LogClient (VM2)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testimine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testimine
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lisaulesanded-kui-jouad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lisaülesanded (kui jõuad)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lisaülesanded (kui jõuad)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ulesanne-1-eralda-auth-logid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ülesanne 1: Eralda auth logid
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ulesanne-2-tcp-edastamine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ülesanne 2: TCP edastamine
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ulesanne-3-logide-pooramine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ülesanne 3: Logide pööramine
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kokkuvote" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kokkuvõte
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kokkuvõte">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mida-sa-oppisid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mida sa õppisid?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mis-jargmiseks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mis järgmiseks?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#abi-vajad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Abi vajad?
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lisapraktika/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lisapraktika
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 02 Prometheus
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 02 Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_prometheus/lab02_prometheus_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_prometheus/lab02_prometheus_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_prometheus/lab02_prometheus_part3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_prometheus/lab02_prometheus_part4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 4
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_prometheus/lab02_prometheus_part5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 5
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 03 TICK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 03 TICK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_tick_stack/lab03_tick_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_tick_stack/lab03_tick_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 04 ELK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 04 ELK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_elk_stack/lab04_elastic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 05 Splunk
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 05 Splunk
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_splunk/splunk_cloud_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cloud Lab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_splunk/splunk_cluster_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cluster Lab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 06 Zabbix
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 06 Zabbix
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_zabbix/monitoring-lab-manual-part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_zabbix/monitoring-lab-manual-part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_zabbix/monitoring-lab-manual-part3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_zabbix/monitoring-lab-manual-extra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Extra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 07 Jaeger
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 07 Jaeger
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_jaeger/1_jaeger_app_traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1 - App Traces
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_jaeger/2_jaeger_opentel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2 - OpenTelemetry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_jaeger/3_jaeger_spans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3 - Spans
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 08 Alerting (PagerDuty)
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 08 Alerting (PagerDuty)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08_alerting/pagerduty/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PagerDuty Lab Manual
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Materials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Materials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Elasticsearch
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Elasticsearch
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part1_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part2_Data_Modeling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part3_Search_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Search & Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part4_Advanced_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part5_Aggregations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Aggregations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part6_Performance_Tuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance Tuning
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part7_Monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part8_Security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part9_Backup_Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backup & Restore
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part10_Deployment_CI_CD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CI/CD Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Intro_HTTP_RESTful_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HTTP & REST APIs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Grafana
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Grafana/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Grafana/loki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Loki
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Linux
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Linux
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Linux/intro-to-linux-logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Logging in Linux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Prometheus/intro-to-prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Splunk
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            Splunk
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Splunk/intro-to-splunk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            TICK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/TICK/intro-to-tick-stack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Zabbix
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            Zabbix
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Zabbix/zabbix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Zabbix/zabbix_reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix Reading
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/github-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/konto-digital_ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DigitalOcean Account
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/vscode-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VS Code Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reading
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reading
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/additional-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    General
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/additional-reading/zabbix-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Cert Manager
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cert Manager
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/elastic-cert_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Elastic Certs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/hashicorp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HashiCorp
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_6" id="__nav_6_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    VM Setup
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_6">
+            <span class="md-nav__icon md-icon"></span>
+            VM Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_zabbix/vm/MultipassSetupforMonitoringLab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multipass
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_zabbix/vm/VirtualBoxSetupGuideforMonitoringLab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mida-me-tana-teeme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mida me täna teeme?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-1-loo-kaks-virtuaalmasinat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 1: Loo kaks virtuaalmasinat
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 1: Loo kaks virtuaalmasinat">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-mis-sul-vaja-laheb" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 Mis sul vaja läheb?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-loo-esimene-vm-logserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 Loo esimene VM (LogServer)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-loo-teine-vm-logclient" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 Loo teine VM (LogClient)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-seadista-vork-et-masinad-naeksid-teineteist" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4 Seadista võrk (et masinad näeksid teineteist)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-paigalda-ubuntu-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5 Paigalda Ubuntu Server
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-2-anna-masinatele-kindlad-ip-aadressid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 2: Anna masinatele kindlad IP aadressid
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 2: Anna masinatele kindlad IP aadressid">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-logserver-19216810010" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 LogServer → 192.168.100.10
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-logclient-19216810020" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 LogClient → 192.168.100.20
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-rakenda-muudatused" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Rakenda muudatused
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-testi-vorku" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 Testi võrku
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-3-paigalda-rsyslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 3: Paigalda rsyslog
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-4-seadista-logserver-vm1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 4: Seadista LogServer (VM1)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 4: Seadista LogServer (VM1)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-luba-logide-kuulamine" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 Luba logide kuulamine
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-loo-kaust-logidele" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 Loo kaust logidele
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-utle-kuhu-logid-salvestada" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 Ütle kuhu logid salvestada
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-taaskaivita-rsyslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.4 Taaskäivita rsyslog
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-5-seadista-logclient-vm2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 5: Seadista LogClient (VM2)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 5: Seadista LogClient (VM2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-seadista-edastamine" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Seadista edastamine
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-taaskaivita-rsyslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Taaskäivita rsyslog
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-6-testi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 6: TESTI!
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 6: TESTI!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-saada-testlogi" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 Saada testlogi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-kontrolli-serveris" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 Kontrolli serveris
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-tee-automaatne-testija" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3 Tee automaatne testija
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-7-tulemuur-kui-vaja" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 7: Tulemüür (kui vaja)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 7: Tulemüür (kui vaja)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-kontrolli-kas-tulemuur-tootab" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Kontrolli kas tulemüür töötab
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-lisa-reegel" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Lisa reegel
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samm-8-kui-midagi-ei-toota" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 8: Kui midagi ei tööta
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Samm 8: Kui midagi ei tööta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#probleem-logid-ei-joua-serverisse" class="md-nav__link">
+    <span class="md-ellipsis">
+      Probleem: Logid ei jõua serverisse
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probleem-oiguste-viga" class="md-nav__link">
+    <span class="md-ellipsis">
+      Probleem: Õiguste viga
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probleem-vale-ip-aadress" class="md-nav__link">
+    <span class="md-ellipsis">
+      Probleem: Vale IP aadress
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kontrollnimekiri" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kontrollnimekiri
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kontrollnimekiri">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logserver-vm1" class="md-nav__link">
+    <span class="md-ellipsis">
+      LogServer (VM1)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logclient-vm2" class="md-nav__link">
+    <span class="md-ellipsis">
+      LogClient (VM2)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testimine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testimine
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lisaulesanded-kui-jouad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lisaülesanded (kui jõuad)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lisaülesanded (kui jõuad)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ulesanne-1-eralda-auth-logid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ülesanne 1: Eralda auth logid
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ulesanne-2-tcp-edastamine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ülesanne 2: TCP edastamine
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ulesanne-3-logide-pooramine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ülesanne 3: Logide pööramine
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kokkuvote" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kokkuvõte
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kokkuvõte">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mida-sa-oppisid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mida sa õppisid?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mis-jargmiseks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mis järgmiseks?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#abi-vajad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Abi vajad?
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="linux-logimise-labor-keskse-logiserveri-ehitamine">Linux Logimise Labor: Keskse Logiserveri Ehitamine<a class="headerlink" href="#linux-logimise-labor-keskse-logiserveri-ehitamine" title="Permanent link">&para;</a></h1>
+<p><strong>Eeldused:</strong> Linux põhikäsud, võrgu alused, VirtualBox kasutamine<br />
+<strong>Platvorm:</strong> Ubuntu Server 22.04 LTS, VirtualBox<br />
+<strong>Kestus:</strong> 2-3h</p>
+<h2 id="mida-me-tana-teeme">Mida me täna teeme?<a class="headerlink" href="#mida-me-tana-teeme" title="Permanent link">&para;</a></h2>
+<p>Täna ehitame süsteemi, kus üks arvuti (LogServer) kogub logisid teiselt arvutilt (LogClient). See on nagu postkontor - kõik kirjad tulevad ühte kohta, kus neid on lihtsam hallata.</p>
+<pre class="mermaid"><code>graph LR
+    A[LogClient&lt;br/&gt;192.168.100.20] --&gt;|Saadab logid| B[LogServer&lt;br/&gt;192.168.100.10]
+    B --&gt; C[Salvestab&lt;br/&gt;/var/log/remote/]</code></pre>
+<p><strong>Miks see on kasulik?</strong>
+- ✅ Kui üks server katki läheb, logid on juba turvaliselt teises kohas
+- ✅ Saad vaadata kõiki logisid ühest kohast
+- ✅ Päris IT-firmades tehakse täpselt nii!</p>
+<hr />
+<h2 id="samm-1-loo-kaks-virtuaalmasinat">Samm 1: Loo kaks virtuaalmasinat<a class="headerlink" href="#samm-1-loo-kaks-virtuaalmasinat" title="Permanent link">&para;</a></h2>
+<h3 id="11-mis-sul-vaja-laheb">1.1 Mis sul vaja läheb?<a class="headerlink" href="#11-mis-sul-vaja-laheb" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Asi</th>
+<th>Kui palju</th>
+<th>Miks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VirtualBox</td>
+<td>versioon 7.0+</td>
+<td>Virtuaalmasinate jaoks</td>
+</tr>
+<tr>
+<td>Ubuntu Server ISO</td>
+<td>22.04 LTS</td>
+<td>Operatsioonisüsteem</td>
+</tr>
+<tr>
+<td>Vaba kettaruum</td>
+<td>~50GB</td>
+<td>Kahe masina jaoks</td>
+</tr>
+<tr>
+<td>Vaba RAM</td>
+<td>4GB+</td>
+<td>Et VM-id töötaksid</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-loo-esimene-vm-logserver">1.2 Loo esimene VM (LogServer)<a class="headerlink" href="#12-loo-esimene-vm-logserver" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Ava VirtualBox</li>
+<li>Kliki <strong>New</strong> (uus masin)</li>
+<li>Täida väljad:</li>
+</ol>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Nimi: LogServer
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Tüüp: Linux
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Versioon: Ubuntu (64-bit)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>RAM: 2048 MB (2GB)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Kõvaketas: 20GB
+</span></code></pre></div>
+<p><strong>Miks 2GB RAM-i?</strong> See server salvestab logisid, seega vajab rohkem mälu.</p>
+<h3 id="13-loo-teine-vm-logclient">1.3 Loo teine VM (LogClient)<a class="headerlink" href="#13-loo-teine-vm-logclient" title="Permanent link">&para;</a></h3>
+<p>Korda samu samme, aga väiksema mäluga:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Nimi: LogClient
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Tüüp: Linux
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Versioon: Ubuntu (64-bit)
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>RAM: 1024 MB (1GB)
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Kõvaketas: 20GB
+</span></code></pre></div>
+<h3 id="14-seadista-vork-et-masinad-naeksid-teineteist">1.4 Seadista võrk (et masinad näeksid teineteist)<a class="headerlink" href="#14-seadista-vork-et-masinad-naeksid-teineteist" title="Permanent link">&para;</a></h3>
+<p><strong>Loo ühine võrk:</strong></p>
+<ol>
+<li>VirtualBox → <strong>File</strong> → <strong>Preferences</strong> → <strong>Network</strong></li>
+<li><strong>NAT Networks</strong> → kliki <strong>+</strong> (pluss)</li>
+<li>Seadista:</li>
+<li><strong>Name:</strong> LogLab</li>
+<li><strong>CIDR:</strong> 192.168.100.0/24</li>
+<li><strong>Enable DHCP:</strong> ✓ (märgi linnuke)</li>
+<li>Kliki <strong>OK</strong></li>
+</ol>
+<p><strong>Ühenda mõlemad VM-id selle võrguga:</strong></p>
+<ol>
+<li>Vali VM → <strong>Settings</strong> → <strong>Network</strong></li>
+<li><strong>Adapter 1:</strong></li>
+<li>Attached to: <strong>NAT Network</strong></li>
+<li>Name: <strong>LogLab</strong></li>
+</ol>
+<p>💡 <strong>Mis on NAT Network?</strong> See on nagu privaatne WiFi ainult sinu VM-ide jaoks.</p>
+<h3 id="15-paigalda-ubuntu-server">1.5 Paigalda Ubuntu Server<a class="headerlink" href="#15-paigalda-ubuntu-server" title="Permanent link">&para;</a></h3>
+<p>Tee seda mõlemas VM-is (kaks korda sama protsess):</p>
+<ol>
+<li>Käivita VM</li>
+<li>Vali Ubuntu Server ISO fail</li>
+<li>Vali <strong>Ubuntu Server (minimized)</strong></li>
+<li>Võrk: <strong>DHCP</strong> (praegu automaatne)</li>
+<li>Ketas: <strong>Use entire disk</strong></li>
+<li>Loo kasutaja:</li>
+<li>Username: <code>sysadmin</code></li>
+<li>Password: (vali mingi parool)</li>
+<li>Märgi: <strong>Install OpenSSH server</strong> ✓</li>
+<li>Lõpeta ja taaskäivita</li>
+</ol>
+<p><strong>Kontrolli kas töötab:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Logi sisse</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Kirjuta:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>uname<span class="w"> </span>-a
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
+</span></code></pre></div>
+<p>Peaksid nägema Ubuntu versiooni ja IP aadressi.</p>
+<hr />
+<h2 id="samm-2-anna-masinatele-kindlad-ip-aadressid">Samm 2: Anna masinatele kindlad IP aadressid<a class="headerlink" href="#samm-2-anna-masinatele-kindlad-ip-aadressid" title="Permanent link">&para;</a></h2>
+<p><strong>Probleem:</strong> Praegu on IP aadressid automaatsed (DHCP) ja võivad muutuda.<br />
+<strong>Lahendus:</strong> Anname igale masinale kindla IP aadressi.</p>
+<h3 id="21-logserver-19216810010">2.1 LogServer → 192.168.100.10<a class="headerlink" href="#21-logserver-19216810010" title="Permanent link">&para;</a></h3>
+<p><strong>VM1-s (LogServer):</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/netplan/00-installer-config.yaml
+</span></code></pre></div>
+<p>Kustuta kõik mis seal on ja kirjuta see:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">network</span><span class="p">:</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">ethernets</span><span class="p">:</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">enp0s3</span><span class="p">:</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">addresses</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">192.168.100.10/24</span><span class="p p-Indicator">]</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">routes</span><span class="p">:</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">          </span><span class="nt">via</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.100.1</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">nameservers</span><span class="p">:</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span><span class="nt">addresses</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">8.8.8.8</span><span class="p p-Indicator">]</span>
+</span></code></pre></div>
+<p><strong>TÄHTIS!</strong> 
+- Kasuta tühikuid, MITTE Tab klahvi
+- <code>routes:</code> ja <code>addresses:</code> peavad olema joondatud
+- Salvesta: <code>Ctrl+O</code>, <code>Enter</code>, <code>Ctrl+X</code></p>
+<p>💡 <strong>Mis see tähendab?</strong>
+- <code>192.168.100.10</code> = selle masina IP
+- <code>192.168.100.1</code> = värav (gateway)
+- <code>8.8.8.8</code> = Google DNS (et saaks internetti)</p>
+<h3 id="22-logclient-19216810020">2.2 LogClient → 192.168.100.20<a class="headerlink" href="#22-logclient-19216810020" title="Permanent link">&para;</a></h3>
+<p><strong>VM2-s (LogClient):</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/netplan/00-installer-config.yaml
+</span></code></pre></div>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">network</span><span class="p">:</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">ethernets</span><span class="p">:</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">enp0s3</span><span class="p">:</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span><span class="nt">addresses</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">192.168.100.20/24</span><span class="p p-Indicator">]</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">      </span><span class="nt">routes</span><span class="p">:</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">          </span><span class="nt">via</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.100.1</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">      </span><span class="nt">nameservers</span><span class="p">:</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">        </span><span class="nt">addresses</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">8.8.8.8</span><span class="p p-Indicator">]</span>
+</span></code></pre></div>
+<p>Sama nagu enne, aga IP on <code>.20</code> lõpus.</p>
+<h3 id="23-rakenda-muudatused">2.3 Rakenda muudatused<a class="headerlink" href="#23-rakenda-muudatused" title="Permanent link">&para;</a></h3>
+<p><strong>Mõlemas VM-is:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Testi (120 sekundit aega, siis tagasi rullitakse kui ei tööta)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>netplan<span class="w"> </span>try
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Kui kõik OK, vajuta ENTER</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Kontrolli IP-d</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span>enp0s3
+</span></code></pre></div>
+<p>Peaksid nägema:
+- VM1: <code>192.168.100.10</code>
+- VM2: <code>192.168.100.20</code></p>
+<h3 id="24-testi-vorku">2.4 Testi võrku<a class="headerlink" href="#24-testi-vorku" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># VM1-s testi internetti:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">8</span>.8.8.8
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># VM2-s testi serveri:</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">192</span>.168.100.10
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># VM1-s testi klienti:</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">192</span>.168.100.20
+</span></code></pre></div>
+<p>Kui kõik 3 töötavad → SUPER! Võrk on valmis! 🎉</p>
+<p>Kui ei tööta → vaata hiljem "Probleemide lahendamine" osa.</p>
+<hr />
+<h2 id="samm-3-paigalda-rsyslog">Samm 3: Paigalda rsyslog<a class="headerlink" href="#samm-3-paigalda-rsyslog" title="Permanent link">&para;</a></h2>
+<p>rsyslog on programm, mis haldab logisid. Ubuntu-s on see juba olemas, aga kontrollime.</p>
+<p><strong>Mõlemas VM-is:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Uuenda paketinimekirja</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Paigalda rsyslog</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>rsyslog
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Kontrolli versiooni</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>rsyslogd<span class="w"> </span>-v
+</span></code></pre></div>
+<p><strong>Kontrolli kas töötab:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>rsyslog
+</span></code></pre></div>
+<p>Peaksid nägema: <code>Active: active (running)</code> ✅</p>
+<p>Kui näed <code>inactive</code> → käivita:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>rsyslog
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rsyslog
+</span></code></pre></div>
+<p>💡 <strong>Mis vahe on <code>start</code> ja <code>enable</code> vahel?</strong>
+- <code>start</code> = käivita praegu
+- <code>enable</code> = käivita alati kui arvuti käivitub</p>
+<hr />
+<h2 id="samm-4-seadista-logserver-vm1">Samm 4: Seadista LogServer (VM1)<a class="headerlink" href="#samm-4-seadista-logserver-vm1" title="Permanent link">&para;</a></h2>
+<p>Nüüd muudame VM1 nii, et ta hakkab võtma logisid vastu.</p>
+<h3 id="41-luba-logide-kuulamine">4.1 Luba logide kuulamine<a class="headerlink" href="#41-luba-logide-kuulamine" title="Permanent link">&para;</a></h3>
+<p><strong>VM1-s:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/rsyslog.conf
+</span></code></pre></div>
+<p>Otsi selle faili lõpust ridu, mis algavad <code>#module(load="imudp")</code>.</p>
+<p><strong>Kas leidsid?</strong> Eemalda alguses olev <code>#</code> märk:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># Luba UDP logide kuulamine
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>module(load=&quot;imudp&quot;)
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>input(type=&quot;imudp&quot; port=&quot;514&quot;)
+</span></code></pre></div>
+<p><strong>Ei leidnud?</strong> Lisa faili lõppu:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># Luba UDP logide kuulamine
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>module(load=&quot;imudp&quot;)
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>input(type=&quot;imudp&quot; port=&quot;514&quot;)
+</span></code></pre></div>
+<p>Salvesta: <code>Ctrl+O</code>, <code>Enter</code>, <code>Ctrl+X</code></p>
+<p>💡 <strong>Mis see teeb?</strong>
+- rsyslog hakkab kuulama võrgust tulevaid logisid
+- Port 514 on standardne port syslog logidele</p>
+<h3 id="42-loo-kaust-logidele">4.2 Loo kaust logidele<a class="headerlink" href="#42-loo-kaust-logidele" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Loo kaust</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/log/remote
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Määra õigused</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>/var/log/remote
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>sudo<span class="w"> </span>chown<span class="w"> </span>syslog:adm<span class="w"> </span>/var/log/remote
+</span></code></pre></div>
+<p>💡 <strong>Miks need õigused?</strong>
+- <code>syslog</code> kasutaja saab kirjutada
+- <code>adm</code> grupp saab lugeda
+- Teised saavad ainult lugeda</p>
+<h3 id="43-utle-kuhu-logid-salvestada">4.3 Ütle kuhu logid salvestada<a class="headerlink" href="#43-utle-kuhu-logid-salvestada" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/rsyslog.d/remote.conf
+</span></code></pre></div>
+<p>Kirjuta sinna:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># Kõik saabuvad logid lähevad siia:
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>*.* /var/log/remote/syslog.log
+</span></code></pre></div>
+<p>Salvesta fail.</p>
+<p>💡 <strong>Mis see tähendab?</strong>
+- <code>*.*</code> = kõik logid (kõik tüübid, kõik tasemed)
+- <code>/var/log/remote/syslog.log</code> = salvestamise koht</p>
+<h3 id="44-taaskaivita-rsyslog">4.4 Taaskäivita rsyslog<a class="headerlink" href="#44-taaskaivita-rsyslog" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+</span></code></pre></div>
+<p><strong>Kontrolli kas töötab:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>rsyslog
+</span></code></pre></div>
+<p><strong>Kontrolli kas kuulab porti 514:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>sudo<span class="w"> </span>ss<span class="w"> </span>-uln<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">514</span>
+</span></code></pre></div>
+<p>Peaksid nägema midagi nagu: <code>udp   0.0.0.0:514</code></p>
+<p>✅ Kui näed → rsyslog kuulab!<br />
+❌ Kui ei näe → midagi läks valesti, vaata troubleshooting osa</p>
+<hr />
+<h2 id="samm-5-seadista-logclient-vm2">Samm 5: Seadista LogClient (VM2)<a class="headerlink" href="#samm-5-seadista-logclient-vm2" title="Permanent link">&para;</a></h2>
+<p>Nüüd ütleme VM2-le, et saada kõik logid VM1-le.</p>
+<h3 id="51-seadista-edastamine">5.1 Seadista edastamine<a class="headerlink" href="#51-seadista-edastamine" title="Permanent link">&para;</a></h3>
+<p><strong>VM2-s:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/rsyslog.d/forward.conf
+</span></code></pre></div>
+<p>Kirjuta sinna:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a># Saada kõik logid serverisse
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>*.* @192.168.100.10:514
+</span></code></pre></div>
+<p>Salvesta fail.</p>
+<p>💡 <strong>Mis see tähendab?</strong>
+- <code>*.*</code> = kõik logid
+- <code>@</code> = UDP protokoll (kiire)
+- <code>192.168.100.10:514</code> = serveri IP ja port</p>
+<p><strong>Kas on <code>@@</code> parem?</strong>
+- <code>@</code> = UDP = kiirem, aga võib logisid kaotada
+- <code>@@</code> = TCP = aeglasem, aga usaldusväärsem
+- Õppimiseks on <code>@</code> piisav</p>
+<h3 id="52-taaskaivita-rsyslog">5.2 Taaskäivita rsyslog<a class="headerlink" href="#52-taaskaivita-rsyslog" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>rsyslog
+</span></code></pre></div>
+<p>Peab olema <code>active (running)</code> ✅</p>
+<hr />
+<h2 id="samm-6-testi">Samm 6: TESTI!<a class="headerlink" href="#samm-6-testi" title="Permanent link">&para;</a></h2>
+<p>Nüüd on aeg testida kas töötab!</p>
+<h3 id="61-saada-testlogi">6.1 Saada testlogi<a class="headerlink" href="#61-saada-testlogi" title="Permanent link">&para;</a></h3>
+<p><strong>VM2-s (klient):</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>logger<span class="w"> </span><span class="s2">&quot;TERE! See on testlogi kliendilt!&quot;</span>
+</span></code></pre></div>
+<h3 id="62-kontrolli-serveris">6.2 Kontrolli serveris<a class="headerlink" href="#62-kontrolli-serveris" title="Permanent link">&para;</a></h3>
+<p><strong>VM1-s (server):</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/remote/syslog.log
+</span></code></pre></div>
+<p><strong>Mida peaksid nägema?</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Oct  9 10:15:32 LogClient sysadmin: TERE! See on testlogi kliendilt!
+</span></code></pre></div>
+<p>✅ <strong>Näed oma sõnumit?</strong> → SUPER! See töötab! 🎉<br />
+❌ <strong>Ei näe?</strong> → Mine jaotise 8 juurde (Probleemide lahendamine)</p>
+<p>Vajuta <code>Ctrl+C</code> et <code>tail -f</code> peatada.</p>
+<h3 id="63-tee-automaatne-testija">6.3 Tee automaatne testija<a class="headerlink" href="#63-tee-automaatne-testija" title="Permanent link">&para;</a></h3>
+<p><strong>VM2-s loo skript:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>cat<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39; &gt; ~/test-logs.sh</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="s">#!/bin/bash</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="s">counter=1</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="s">while true; do</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="s">    logger &quot;Testlogi #$counter: $(date)&quot;</span>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="s">    echo &quot;Saadetud: #$counter&quot;</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="s">    counter=$((counter + 1))</span>
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a><span class="s">    sleep 5</span>
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="s">done</span>
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="s">EOF</span>
+</span><span id="__span-27-11"><a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>
+</span><span id="__span-27-12"><a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>chmod<span class="w"> </span>+x<span class="w"> </span>~/test-logs.sh
+</span></code></pre></div>
+<p><strong>Käivita:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>./test-logs.sh
+</span></code></pre></div>
+<p>Peaksid nägema:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Saadetud: #1
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>Saadetud: #2
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>Saadetud: #3
+</span></code></pre></div></p>
+<p><strong>VM1-s vaata logisid:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/remote/syslog.log
+</span></code></pre></div>
+<p>Peaksid nägema iga 5 sekundi tagant uut logi! 🎉</p>
+<p>Peata testija: <code>Ctrl+C</code></p>
+<hr />
+<h2 id="samm-7-tulemuur-kui-vaja">Samm 7: Tulemüür (kui vaja)<a class="headerlink" href="#samm-7-tulemuur-kui-vaja" title="Permanent link">&para;</a></h2>
+<p>Ubuntu Server vaikimisi ei ole tulemüür peal, aga õpime kuidas seda seadistada.</p>
+<h3 id="71-kontrolli-kas-tulemuur-tootab">7.1 Kontrolli kas tulemüür töötab<a class="headerlink" href="#71-kontrolli-kas-tulemuur-tootab" title="Permanent link">&para;</a></h3>
+<p><strong>VM1-s:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>status
+</span></code></pre></div>
+<p>Kui näed <code>Status: inactive</code> → tulemüür ei ole aktiivne (OK!)</p>
+<p>Kui näed <code>Status: active</code> → peame lisama reegli.</p>
+<h3 id="72-lisa-reegel">7.2 Lisa reegel<a class="headerlink" href="#72-lisa-reegel" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Luba port 514</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">514</span>/udp
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Luba SSH (et saaks sisse logida)</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">22</span>/tcp
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="c1"># Lülita tulemüür sisse</span>
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>sudo<span class="w"> </span>ufw<span class="w"> </span><span class="nb">enable</span>
+</span></code></pre></div>
+<p><strong>Testi uuesti:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># VM2-s</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>logger<span class="w"> </span><span class="s2">&quot;TEST pärast tulemüüri&quot;</span>
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># VM1-s</span>
+</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>tail<span class="w"> </span>/var/log/remote/syslog.log
+</span></code></pre></div>
+<hr />
+<h2 id="samm-8-kui-midagi-ei-toota">Samm 8: Kui midagi ei tööta<a class="headerlink" href="#samm-8-kui-midagi-ei-toota" title="Permanent link">&para;</a></h2>
+<h3 id="probleem-logid-ei-joua-serverisse">Probleem: Logid ei jõua serverisse<a class="headerlink" href="#probleem-logid-ei-joua-serverisse" title="Permanent link">&para;</a></h3>
+<p><strong>Kontrolli sammhaaval:</strong></p>
+<p><strong>1. Kas võrk töötab?</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># VM2-s</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">192</span>.168.100.10
+</span></code></pre></div>
+<p>❌ Ei tööta → mine tagasi Samm 2 juurde ja kontrolli IP aadresse</p>
+<p><strong>2. Kas rsyslog kuulab serveris?</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># VM1-s</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>sudo<span class="w"> </span>ss<span class="w"> </span>-uln<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">514</span>
+</span></code></pre></div>
+<p>❌ Ei näe midagi → kontrolli <code>/etc/rsyslog.conf</code> (Samm 4.1)</p>
+<p><strong>3. Kas rsyslog töötab?</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Mõlemas VM-s</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>rsyslog
+</span></code></pre></div>
+<p>❌ Näed <code>failed</code> → vaata vigu:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>rsyslog<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span>
+</span></code></pre></div>
+<p><strong>4. Kas konfiguratsioonis on vigu?</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>sudo<span class="w"> </span>rsyslogd<span class="w"> </span>-N1
+</span></code></pre></div>
+<p>Kui näed vigu → paranda need failis ja taaskäivita:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+</span></code></pre></div>
+<h3 id="probleem-oiguste-viga">Probleem: Õiguste viga<a class="headerlink" href="#probleem-oiguste-viga" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Serveris kontrolli:</span>
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>ls<span class="w"> </span>-ld<span class="w"> </span>/var/log/remote
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># Paranda:</span>
+</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>sudo<span class="w"> </span>chown<span class="w"> </span>syslog:adm<span class="w"> </span>/var/log/remote
+</span><span id="__span-40-6"><a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>/var/log/remote
+</span><span id="__span-40-7"><a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+</span></code></pre></div>
+<h3 id="probleem-vale-ip-aadress">Probleem: Vale IP aadress<a class="headerlink" href="#probleem-vale-ip-aadress" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="c1"># Kliendis kontrolli:</span>
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>cat<span class="w"> </span>/etc/rsyslog.d/forward.conf
+</span></code></pre></div>
+<p>Peab olema: <code>*.* @192.168.100.10:514</code></p>
+<p>Kui on vale → paranda ja:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+</span></code></pre></div>
+<hr />
+<h2 id="kontrollnimekiri">Kontrollnimekiri<a class="headerlink" href="#kontrollnimekiri" title="Permanent link">&para;</a></h2>
+<p>Veendu, et kõik on tehtud:</p>
+<h3 id="logserver-vm1">LogServer (VM1)<a class="headerlink" href="#logserver-vm1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] IP on 192.168.100.10</li>
+<li>[ ] rsyslog kuulab porti 514</li>
+<li>[ ] Kaust <code>/var/log/remote</code> on olemas</li>
+<li>[ ] Fail <code>/etc/rsyslog.d/remote.conf</code> on olemas</li>
+<li>[ ] Logid saabuvad faili</li>
+</ul>
+<h3 id="logclient-vm2">LogClient (VM2)<a class="headerlink" href="#logclient-vm2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] IP on 192.168.100.20</li>
+<li>[ ] Fail <code>/etc/rsyslog.d/forward.conf</code> on olemas</li>
+<li>[ ] Logger käsk saadab logisid</li>
+<li>[ ] Logid jõuavad serverisse</li>
+</ul>
+<h3 id="testimine">Testimine<a class="headerlink" href="#testimine" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Ping töötab mõlemas suunas</li>
+<li>[ ] <code>logger "test"</code> → logi ilmub serveris</li>
+<li>[ ] Automaatne testija töötab</li>
+</ul>
+<hr />
+<h2 id="lisaulesanded-kui-jouad">Lisaülesanded (kui jõuad)<a class="headerlink" href="#lisaulesanded-kui-jouad" title="Permanent link">&para;</a></h2>
+<h3 id="ulesanne-1-eralda-auth-logid">Ülesanne 1: Eralda auth logid<a class="headerlink" href="#ulesanne-1-eralda-auth-logid" title="Permanent link">&para;</a></h3>
+<p><strong>Eesmärk:</strong> Pane SSH logid eraldi faili.</p>
+<p><strong>Serveris muuda <code>/etc/rsyslog.d/remote.conf</code>:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>auth,authpriv.* /var/log/remote/auth.log
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>*.* /var/log/remote/syslog.log
+</span></code></pre></div>
+<p><strong>Testi:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># Kliendis</span>
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>sudo<span class="w"> </span>su<span class="w">   </span><span class="c1"># sisene root kasutajana</span>
+</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="nb">exit</span>
+</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>
+</span><span id="__span-44-5"><a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a><span class="c1"># Serveris vaata</span>
+</span><span id="__span-44-6"><a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>tail<span class="w"> </span>/var/log/remote/auth.log
+</span></code></pre></div>
+<h3 id="ulesanne-2-tcp-edastamine">Ülesanne 2: TCP edastamine<a class="headerlink" href="#ulesanne-2-tcp-edastamine" title="Permanent link">&para;</a></h3>
+<p><strong>Eesmärk:</strong> Kasuta TCP-d UDP asemel (usaldusväärsem).</p>
+<p><strong>Serveris <code>/etc/rsyslog.conf</code>:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>module(load=&quot;imtcp&quot;)
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>input(type=&quot;imtcp&quot; port=&quot;514&quot;)
+</span></code></pre></div>
+<p><strong>Kliendis <code>/etc/rsyslog.d/forward.conf</code>:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>*.* @@192.168.100.10:514
+</span></code></pre></div>
+<p>(Pane tähele <code>@@</code> - kaks @ märki!)</p>
+<p><strong>Mõlemas:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+</span></code></pre></div>
+<p><strong>Testi:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="c1"># Kliendis</span>
+</span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a>logger<span class="w"> </span><span class="s2">&quot;TEST TCP edastamine&quot;</span>
+</span><span id="__span-48-3"><a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a>
+</span><span id="__span-48-4"><a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a><span class="c1"># Serveris</span>
+</span><span id="__span-48-5"><a id="__codelineno-48-5" name="__codelineno-48-5" href="#__codelineno-48-5"></a>tail<span class="w"> </span>/var/log/remote/syslog.log
+</span></code></pre></div>
+<h3 id="ulesanne-3-logide-pooramine">Ülesanne 3: Logide pööramine<a class="headerlink" href="#ulesanne-3-logide-pooramine" title="Permanent link">&para;</a></h3>
+<p><strong>Eesmärk:</strong> Ära lase logidel ketast täita.</p>
+<p><strong>Serveris:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/logrotate.d/remote
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>/var/log/remote/*.log {
+</span><span id="__span-50-2"><a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>    daily
+</span><span id="__span-50-3"><a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a>    rotate 7
+</span><span id="__span-50-4"><a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a>    compress
+</span><span id="__span-50-5"><a id="__codelineno-50-5" name="__codelineno-50-5" href="#__codelineno-50-5"></a>    delaycompress
+</span><span id="__span-50-6"><a id="__codelineno-50-6" name="__codelineno-50-6" href="#__codelineno-50-6"></a>    missingok
+</span><span id="__span-50-7"><a id="__codelineno-50-7" name="__codelineno-50-7" href="#__codelineno-50-7"></a>    notifempty
+</span><span id="__span-50-8"><a id="__codelineno-50-8" name="__codelineno-50-8" href="#__codelineno-50-8"></a>    create 0644 syslog adm
+</span><span id="__span-50-9"><a id="__codelineno-50-9" name="__codelineno-50-9" href="#__codelineno-50-9"></a>}
+</span></code></pre></div>
+<p><strong>Testi:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>sudo<span class="w"> </span>logrotate<span class="w"> </span>-f<span class="w"> </span>/etc/logrotate.d/remote
+</span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/log/remote/
+</span></code></pre></div>
+<hr />
+<h2 id="kokkuvote">Kokkuvõte<a class="headerlink" href="#kokkuvote" title="Permanent link">&para;</a></h2>
+<h3 id="mida-sa-oppisid">Mida sa õppisid?<a class="headerlink" href="#mida-sa-oppisid" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ Kuidas seadistada kahte VM-i</li>
+<li>✅ Kuidas anda staatiline IP aadress</li>
+<li>✅ Kuidas rsyslog logisid võrgus edastab</li>
+<li>✅ Kuidas teste teha (logger käsk)</li>
+<li>✅ Kuidas probleeme lahendada</li>
+</ul>
+<h3 id="mis-jargmiseks">Mis järgmiseks?<a class="headerlink" href="#mis-jargmiseks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Proovi lisaülesandeid</li>
+<li>Loo kolmas VM ja saada tema logid ka serverisse</li>
+<li>Õpi kuidas seda TLS-iga turvaliseks teha</li>
+</ul>
+<p><strong>Palju õnne! Sa tegid päris IT-taristu komponendi! 🎉</strong></p>
+<hr />
+<h2 id="abi-vajad">Abi vajad?<a class="headerlink" href="#abi-vajad" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Kontrolli troubleshooting osa (Samm 8)</li>
+<li>Vaata logisid: <code>sudo journalctl -u rsyslog -f</code></li>
+<li>Kontrolli konfigi: <code>sudo rsyslogd -N1</code></li>
+<li>Küsi õpetajalt</li>
+<li>Google: "ubuntu 22.04 rsyslog" + sinu viga</li>
+</ol>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 9, 2025 12:21:09 UTC">October 9, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["mermaid", "navigation.tabs", "navigation.top", "navigation.expand", "navigation.sections", "navigation.indexes", "navigation.tracking", "navigation.instant", "toc.follow", "toc.sticky", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
+      
+        <script src="../../../js/extra.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,5199 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Observability/wrap-up-observability/">
+      
+      
+        <link rel="prev" href="../intro_logging_monitoring_observability/">
+      
+      
+        <link rel="next" href="../../../../final_project/final_project_building_monsystem/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Wrap-Up - Logging, Monitoring, and Observability Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#final-assessment-guidance" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Logging, Monitoring, and Observability Guide" class="md-header__button md-logo" aria-label="Logging, Monitoring, and Observability Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Logging, Monitoring, and Observability Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Wrap-Up
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../intro_logging_monitoring_observability/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Observability
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../final_project/final_project_building_monsystem/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Final Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../labs/01_linux_logging/1_linux_logging_lab/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Elasticsearch/elasticsearch/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Materials
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../resources/github-guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Resources
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Logging, Monitoring, and Observability Guide" class="md-nav__button md-logo" aria-label="Logging, Monitoring, and Observability Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Logging, Monitoring, and Observability Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Observability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intro_logging_monitoring_observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Foundations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Wrap-Up
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wrap-Up
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#final-assessment-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Final Assessment Guidance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Final Assessment Guidance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparing-for-your-course-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing for Your Course Assessment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparing for Your Course Assessment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-concepts-to-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Concepts to Review
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practice Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-project-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Final Project Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation Criteria
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-we-covered" class="md-nav__link">
+    <span class="md-ellipsis">
+      What We Covered
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What We Covered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-monitoring-stacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Monitoring Stacks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-skills-developed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Skills Developed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Takeaways
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observability-pillars" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observability Pillars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distributed-tracing-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Distributed Tracing Deep Dive
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distributed Tracing Deep Dive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-tracing-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Tracing Concepts:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leading-tracing-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Leading Tracing Tools:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opentelemetry-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry Framework
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-solutions-well-study" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Solutions We'll Study
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Solutions We&#39;ll Study">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prometheus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prometheus
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tick-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      TICK Stack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elk-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      ELK Stack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grafana
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-solutions-overview-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Solutions (Overview Only)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Solutions (Overview Only)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modern-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modern Alternatives
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enterprise Solutions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Comparison
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed Comparison">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cost Scale:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprehensive-solution-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Solution Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comprehensive Solution Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-core-solutions-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Core Solutions Comparison
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-modern-monitoring-trends" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Modern Monitoring Trends
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Modern Monitoring Trends">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-trends" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Trends
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Directions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-selection-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Selection Guide
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Selection Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#by-organization-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      By Organization Size
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-key-takeaways-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Key Takeaways &amp; Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Key Takeaways &amp; Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-you-should-remember" class="md-nav__link">
+    <span class="md-ellipsis">
+      What You Should Remember
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-implementation-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Implementation Pitfalls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-maturity-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring Maturity Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-real-world-integration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Real-World Integration Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Real-World Integration Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modern-observability-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modern Observability Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Implementation Steps
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-future-of-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Future of Observability
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Future of Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emerging-technologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Emerging Technologies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-trends" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Trends
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-source-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      Open Source Future
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enterprise Roadmap
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-next-steps-continuing-education" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Next Steps &amp; Continuing Education
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Next Steps &amp; Continuing Education">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#skill-development-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Skill Development Path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-learning-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommended Learning Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-projects-for-reinforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Projects for Reinforcement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instructors-final-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instructor's Final Recommendations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Final Project
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Final Project
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/final_project_building_monsystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/topology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Topology
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Help
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Help
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/elk_stack_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ELK Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/hints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hints
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/kibana_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kibana Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/networking_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Networking Debug
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/starter_code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Starter Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../final_project/help/virtualbox_wsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox & WSL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Labs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Labs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 01 Linux Logging
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 01 Linux Logging
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/01_linux_logging/1_linux_logging_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Labor
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/01_linux_logging/lisapraktika/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lisapraktika
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 02 Prometheus
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 02 Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/02_prometheus/lab02_prometheus_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/02_prometheus/lab02_prometheus_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/02_prometheus/lab02_prometheus_part3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/02_prometheus/lab02_prometheus_part4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 4
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/02_prometheus/lab02_prometheus_part5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 5
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 03 TICK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 03 TICK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/03_tick_stack/lab03_tick_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/03_tick_stack/lab03_tick_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 04 ELK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 04 ELK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/04_elk_stack/lab04_elastic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 05 Splunk
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 05 Splunk
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/05_splunk/splunk_cloud_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cloud Lab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/05_splunk/splunk_cluster_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cluster Lab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 06 Zabbix
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 06 Zabbix
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/06_zabbix/monitoring-lab-manual-part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/06_zabbix/monitoring-lab-manual-part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/06_zabbix/monitoring-lab-manual-part3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/06_zabbix/monitoring-lab-manual-extra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Extra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 07 Jaeger
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 07 Jaeger
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/07_jaeger/1_jaeger_app_traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1 - App Traces
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/07_jaeger/2_jaeger_opentel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2 - OpenTelemetry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/07_jaeger/3_jaeger_spans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3 - Spans
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 08 Alerting (PagerDuty)
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 08 Alerting (PagerDuty)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/08_alerting/pagerduty/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PagerDuty Lab Manual
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Materials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Materials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Elasticsearch
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Elasticsearch
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Part1_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Part2_Data_Modeling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Part3_Search_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Search & Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Part4_Advanced_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Part5_Aggregations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Aggregations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Part6_Performance_Tuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance Tuning
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Part7_Monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Part8_Security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Part9_Backup_Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backup & Restore
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Part10_Deployment_CI_CD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CI/CD Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Elasticsearch/arhive/Intro_HTTP_RESTful_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HTTP & REST APIs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Grafana
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Grafana/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Grafana/loki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Loki
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Linux
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Linux
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Linux/intro-to-linux-logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Logging in Linux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Prometheus/intro-to-prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Splunk
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            Splunk
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Splunk/intro-to-splunk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            TICK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TICK/intro-to-tick-stack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Zabbix
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            Zabbix
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Zabbix/zabbix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Zabbix/zabbix_reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix Reading
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/github-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/konto-digital_ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DigitalOcean Account
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/vscode-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VS Code Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reading
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reading
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/additional-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    General
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/additional-reading/zabbix-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Cert Manager
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cert Manager
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/cert_manager/basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/cert_manager/automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/cert_manager/elastic-cert_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Elastic Certs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../resources/cert_manager/hashicorp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HashiCorp
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_6" id="__nav_6_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    VM Setup
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_6">
+            <span class="md-nav__icon md-icon"></span>
+            VM Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/06_zabbix/vm/MultipassSetupforMonitoringLab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multipass
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../labs/06_zabbix/vm/VirtualBoxSetupGuideforMonitoringLab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#final-assessment-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Final Assessment Guidance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Final Assessment Guidance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparing-for-your-course-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing for Your Course Assessment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparing for Your Course Assessment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-concepts-to-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Concepts to Review
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practice Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-project-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Final Project Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation Criteria
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-we-covered" class="md-nav__link">
+    <span class="md-ellipsis">
+      What We Covered
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What We Covered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-monitoring-stacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Monitoring Stacks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-skills-developed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Skills Developed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Takeaways
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observability-pillars" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observability Pillars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distributed-tracing-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Distributed Tracing Deep Dive
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distributed Tracing Deep Dive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-tracing-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Tracing Concepts:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leading-tracing-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Leading Tracing Tools:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opentelemetry-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry Framework
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-solutions-well-study" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Solutions We'll Study
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Solutions We&#39;ll Study">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prometheus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prometheus
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tick-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      TICK Stack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elk-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      ELK Stack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grafana
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-solutions-overview-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Solutions (Overview Only)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Solutions (Overview Only)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modern-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modern Alternatives
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enterprise Solutions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Comparison
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed Comparison">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cost Scale:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprehensive-solution-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Solution Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comprehensive Solution Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-core-solutions-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Core Solutions Comparison
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-modern-monitoring-trends" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Modern Monitoring Trends
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Modern Monitoring Trends">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-trends" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Trends
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Directions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-selection-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Selection Guide
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Selection Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#by-organization-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      By Organization Size
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-key-takeaways-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Key Takeaways &amp; Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Key Takeaways &amp; Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-you-should-remember" class="md-nav__link">
+    <span class="md-ellipsis">
+      What You Should Remember
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-implementation-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Implementation Pitfalls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-maturity-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring Maturity Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-real-world-integration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Real-World Integration Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Real-World Integration Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modern-observability-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modern Observability Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Implementation Steps
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-future-of-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Future of Observability
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Future of Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emerging-technologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Emerging Technologies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-trends" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Trends
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-source-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      Open Source Future
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enterprise Roadmap
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-next-steps-continuing-education" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Next Steps &amp; Continuing Education
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Next Steps &amp; Continuing Education">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#skill-development-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Skill Development Path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-learning-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommended Learning Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-projects-for-reinforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Projects for Reinforcement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instructors-final-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instructor's Final Recommendations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h2 id="final-assessment-guidance">Final Assessment Guidance<a class="headerlink" href="#final-assessment-guidance" title="Permanent link">&para;</a></h2>
+<h3 id="preparing-for-your-course-assessment">Preparing for Your Course Assessment<a class="headerlink" href="#preparing-for-your-course-assessment" title="Permanent link">&para;</a></h3>
+<h4 id="key-concepts-to-review">Key Concepts to Review<a class="headerlink" href="#key-concepts-to-review" title="Permanent link">&para;</a></h4>
+<ul>
+<li>The differences between monitoring and observability</li>
+<li>The three pillars: metrics, logs, and traces</li>
+<li>Strengths and weaknesses of each monitoring stack</li>
+<li>Implementation considerations for different environments</li>
+<li>Cost and scaling factors for each solution</li>
+</ul>
+<h4 id="practice-questions">Practice Questions<a class="headerlink" href="#practice-questions" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Compare and contrast Prometheus and the TICK Stack for IoT monitoring</li>
+<li>How would you implement log aggregation in a microservices environment?</li>
+<li>Describe a complete observability solution for a cloud-native application</li>
+<li>What factors would influence your choice between ELK and Loki?</li>
+<li>How does distributed tracing complement metrics and logging?</li>
+</ol>
+<h4 id="final-project-guidelines">Final Project Guidelines<a class="headerlink" href="#final-project-guidelines" title="Permanent link">&para;</a></h4>
+<p>Your final project should demonstrate your ability to:
+- Select appropriate monitoring tools for a specific use case
+- Configure basic collection, storage, and visualization
+- Create meaningful dashboards that tell a story
+- Implement effective alerting with minimal noise
+- Document your solution and justify your choices</p>
+<h4 id="evaluation-criteria">Evaluation Criteria<a class="headerlink" href="#evaluation-criteria" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Technical accuracy</strong>: Correct implementation of tools</li>
+<li><strong>Design decisions</strong>: Appropriate tool selection</li>
+<li><strong>Effectiveness</strong>: Dashboards that provide actionable insights</li>
+<li><strong>Completeness</strong>: Coverage of key system components</li>
+<li><strong>Documentation</strong>: Clear explanation of your approach</li>
+</ul>
+<p>Good luck with your assessment! Remember that the goal is to demonstrate your understanding of observability concepts and your ability to apply them in real-world scenarios.## Course Summary</p>
+<p>This course provided a comprehensive exploration of modern observability and monitoring solutions, equipping you with the knowledge to make informed decisions for your specific environment.</p>
+<h3 id="what-we-covered">What We Covered<a class="headerlink" href="#what-we-covered" title="Permanent link">&para;</a></h3>
+<h4 id="core-monitoring-stacks">Core Monitoring Stacks<a class="headerlink" href="#core-monitoring-stacks" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Prometheus</strong>: Metrics collection optimized for Kubernetes</li>
+<li><strong>TICK Stack</strong>: Time-series platform for IoT and custom metrics</li>
+<li><strong>ELK Stack</strong>: Powerful log processing and analysis</li>
+<li><strong>Grafana</strong>: Visualization platform connecting multiple data sources</li>
+<li><strong>Distributed Tracing</strong>: Transaction flow visualization with Jaeger/Tempo</li>
+</ul>
+<h4 id="practical-skills-developed">Practical Skills Developed<a class="headerlink" href="#practical-skills-developed" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Deploying and configuring monitoring tools</li>
+<li>Creating effective dashboards and alerts</li>
+<li>Correlating signals across metrics, logs, and traces</li>
+<li>Scaling observability solutions for enterprise needs</li>
+<li>Implementing modern observability practices</li>
+</ul>
+<h4 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Observability is more than monitoring—it's about gaining actionable insights</li>
+<li>The right solution depends on your specific requirements and environment</li>
+<li>Open-source options provide robust capabilities with community support</li>
+<li>Enterprise solutions offer integration and support at a premium</li>
+<li>Future trends point toward unified observability and intelligence## Advanced Observability &amp; Tracing</li>
+</ul>
+<h3 id="observability-pillars">Observability Pillars<a class="headerlink" href="#observability-pillars" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Pillar</th>
+<th>Description</th>
+<th>Key Tools</th>
+<th>Benefits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Metrics</strong></td>
+<td>Numeric representations of data measured over time</td>
+<td>Prometheus, TICK Stack</td>
+<td>• System health overview<br>• Performance trends<br>• Alerting capabilities</td>
+</tr>
+<tr>
+<td><strong>Logs</strong></td>
+<td>Timestamped records of discrete events</td>
+<td>ELK Stack, Loki</td>
+<td>• Detailed event information<br>• Debugging context<br>• Audit trails</td>
+</tr>
+<tr>
+<td><strong>Traces</strong></td>
+<td>End-to-end transaction flow visualization</td>
+<td>Jaeger, Tempo, Zipkin</td>
+<td>• Request path visualization<br>• Bottleneck identification<br>• Service dependencies</td>
+</tr>
+</tbody>
+</table>
+<h3 id="distributed-tracing-deep-dive">Distributed Tracing Deep Dive<a class="headerlink" href="#distributed-tracing-deep-dive" title="Permanent link">&para;</a></h3>
+<p><img alt="Distributed Tracing Concept" src="https://miro.medium.com/max/1400/1*zIRucGfnpJGVpAd-0sBDwA.png" /></p>
+<pre class="mermaid"><code>flowchart TD
+    A[User Request] --&gt; B[API Gateway]
+    B --&gt; C[Auth Service]
+    B --&gt; D[Product Service]
+    D --&gt; E[Database]
+    D --&gt; F[Inventory Service]
+    F --&gt; G[Supplier Service]</code></pre>
+<h4 id="key-tracing-concepts">Key Tracing Concepts:<a class="headerlink" href="#key-tracing-concepts" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Spans</strong>: Individual operations within a trace</li>
+<li><strong>Context Propagation</strong>: Passing trace information between services</li>
+<li><strong>Sampling</strong>: Capturing representative subset of traces</li>
+<li><strong>Correlation</strong>: Connecting traces with logs and metrics</li>
+<li><strong>Service Graphs</strong>: Automatically generated topology maps</li>
+</ul>
+<h4 id="leading-tracing-tools">Leading Tracing Tools:<a class="headerlink" href="#leading-tracing-tools" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Strengths</th>
+<th>Ecosystem</th>
+<th>When to Choose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Jaeger</strong></td>
+<td>• Open source<br>• Strong Kubernetes integration</td>
+<td>CNCF, works with Prometheus</td>
+<td>✅ Kubernetes environments<br>✅ Microservices architecture</td>
+</tr>
+<tr>
+<td><strong>Zipkin</strong></td>
+<td>• Simpler architecture<br>• Broad language support</td>
+<td>Spring Cloud, works with many frameworks</td>
+<td>✅ Existing Spring stack<br>✅ Simpler deployments</td>
+</tr>
+<tr>
+<td><strong>Tempo</strong></td>
+<td>• Grafana native<br>• Efficient storage</td>
+<td>Grafana ecosystem, works with Loki</td>
+<td>✅ Already using Grafana<br>✅ High-volume tracing</td>
+</tr>
+<tr>
+<td><strong>AWS X-Ray</strong></td>
+<td>• AWS integration<br>• Serverless support</td>
+<td>AWS ecosystem</td>
+<td>✅ AWS-hosted applications<br>✅ Lambda functions</td>
+</tr>
+</tbody>
+</table>
+<h4 id="opentelemetry-framework">OpenTelemetry Framework<a class="headerlink" href="#opentelemetry-framework" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Universal standard for telemetry data</li>
+<li>Vendor-neutral instrumentation</li>
+<li>Reduces tool switching costs</li>
+<li>Supported by major cloud providers# Observability &amp; Monitoring Course - Final Overview</li>
+</ul>
+<pre class="mermaid"><code>flowchart TD
+    A[Monitoring] --&gt; B[Metrics]
+    A --&gt; C[Logs]
+    A --&gt; D[Tracing]
+
+    B --&gt; B1[Prometheus]
+    B --&gt; B2[TICK]
+
+    C --&gt; C1[ELK]
+    C --&gt; C2[Loki]
+
+    D --&gt; D1[Tempo]
+    D --&gt; D2[Jaeger]</code></pre>
+<h2 id="core-solutions-well-study">Core Solutions We'll Study<a class="headerlink" href="#core-solutions-well-study" title="Permanent link">&para;</a></h2>
+<h3 id="prometheus">Prometheus<a class="headerlink" href="#prometheus" title="Permanent link">&para;</a></h3>
+<p><img alt="Prometheus Architecture" src="https://www.kubecost.com/images/kubernetes-devops-tools/kube-prometheus-1.png" />
+- Metrics collection and alerting
+- Perfect for Kubernetes monitoring
+- Pull-based architecture</p>
+<h3 id="tick-stack">TICK Stack<a class="headerlink" href="#tick-stack" title="Permanent link">&para;</a></h3>
+<p><img alt="TICK Stack Architecture" src="https://www.influxdata.com/wp-content/uploads/Influx-1.0-Diagram_04.20.2020v2.png" />
+- Time-series data platform
+- <strong>Components:</strong>
+  - Telegraf: Data collection
+  - InfluxDB: Time-series database
+  - Chronograf: Visualization
+  - Kapacitor: Processing and alerting</p>
+<h3 id="elk-stack">ELK Stack<a class="headerlink" href="#elk-stack" title="Permanent link">&para;</a></h3>
+<p><img alt="ELK Stack Architecture" src="https://datawrangler.mo.cloudinary.net/images/post/14-ELK-stack/img1.png" />
+- Logs processing and analysis
+- <strong>Components:</strong>
+  - Elasticsearch: Search &amp; storage
+  - Logstash: Log processing
+  - Kibana: Visualization
+  - Beats: Data shippers</p>
+<h3 id="grafana">Grafana<a class="headerlink" href="#grafana" title="Permanent link">&para;</a></h3>
+<p><img alt="Grafana Enterprise Stack" src="https://grafana.com/media/products/assets/ges/Grafana_Enterprise_Stack_blog.jpg?w=1504" />
+- Visualization platform
+- Multiple data source support
+- Dashboarding solution</p>
+<h2 id="additional-solutions-overview-only">Additional Solutions (Overview Only)<a class="headerlink" href="#additional-solutions-overview-only" title="Permanent link">&para;</a></h2>
+<h3 id="modern-alternatives">Modern Alternatives<a class="headerlink" href="#modern-alternatives" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Grafana Loki</strong>
+<img alt="Loki Architecture" src="https://grafana.com/docs/loki/latest/get-started/loki_architecture_components.svg" /></li>
+<li>Like Prometheus, but for logs</li>
+<li>Lightweight and cost-effective</li>
+</ul>
+<h3 id="enterprise-solutions">Enterprise Solutions<a class="headerlink" href="#enterprise-solutions" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Datadog</strong>
+<img alt="Datadog Architecture" src="https://www.nitorinfotech.com/wp-content/uploads/2023/07/Datadog-architectural-diagram-Nitor-Infotech.jpg" /></li>
+<li>Full-stack monitoring</li>
+<li>
+<p>Cloud-native platform</p>
+</li>
+<li>
+<p><strong>Splunk</strong>
+<img alt="Splunk Architecture" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*D_cM2DvH3ozKJg_2YsmLQA.png" /></p>
+</li>
+<li>Enterprise log management</li>
+<li>Security and analytics focus</li>
+</ul>
+<h2 id="detailed-comparison">Detailed Comparison<a class="headerlink" href="#detailed-comparison" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th>Type</th>
+<th>Cost</th>
+<th>Specific Use Cases</th>
+<th>Best For</th>
+<th>Infrastructure</th>
+<th>Course Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prometheus</td>
+<td>Metrics</td>
+<td>Free, Open Source</td>
+<td>• Container monitoring<br>• Microservices metrics<br>• Auto-scaling</td>
+<td>• Kubernetes environments<br>• Cloud-native apps</td>
+<td>• Small to large scale<br>• Requires own infrastructure</td>
+<td>Detailed</td>
+</tr>
+<tr>
+<td>TICK</td>
+<td>Metrics &amp; Events</td>
+<td>Free + Enterprise options</td>
+<td>• IoT monitoring<br>• System metrics<br>• Network data</td>
+<td>• Real-time analytics<br>• Custom metrics</td>
+<td>• Medium to large scale<br>• Can be resource-heavy</td>
+<td>Detailed</td>
+</tr>
+<tr>
+<td>ELK</td>
+<td>Logs</td>
+<td>Free + Paid features</td>
+<td>• Log analysis<br>• Application monitoring<br>• Search functionality</td>
+<td>• Full-text search<br>• Application logs<br>• Business analytics</td>
+<td>• Resource intensive<br>• Scales well</td>
+<td>Detailed</td>
+</tr>
+<tr>
+<td>Grafana</td>
+<td>Visualization</td>
+<td>Free + Enterprise</td>
+<td>• Dashboard creation<br>• Metric visualization<br>• Alert management</td>
+<td>• Multi-source dashboards</td>
+<td>• Light on resources<br>• Works with any data source</td>
+<td>Detailed</td>
+</tr>
+<tr>
+<td>Loki</td>
+<td>Logs</td>
+<td>Free, Open Source</td>
+<td>• Container logs<br>• Application logs</td>
+<td>• Kubernetes environments<br>• Cost-sensitive setups</td>
+<td>• Lightweight<br>• Efficient storage</td>
+<td>Overview</td>
+</tr>
+<tr>
+<td>Datadog</td>
+<td>Full-stack</td>
+<td>Expensive, Commercial</td>
+<td>• Full system monitoring<br>• APM<br>• Cloud monitoring</td>
+<td>• Enterprise environments<br>• Complex systems</td>
+<td>• SaaS (no infrastructure needed)</td>
+<td>Overview</td>
+</tr>
+<tr>
+<td>Splunk</td>
+<td>Logs &amp; Analytics</td>
+<td>Most Expensive, Enterprise</td>
+<td>• Security monitoring<br>• Compliance<br>• Business intelligence</td>
+<td>• Large enterprises<br>• Security operations</td>
+<td>• Very resource intensive<br>• Complex setup</td>
+<td>Overview</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cost-scale">Cost Scale:<a class="headerlink" href="#cost-scale" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Free</strong>: Prometheus, Community versions</li>
+<li><strong>Moderate</strong>: ELK Stack (with paid features), TICK (enterprise), Grafana Enterprise</li>
+<li><strong>Expensive</strong>: Datadog ($15-23 per host/month)</li>
+<li><strong>Very Expensive</strong>: Splunk ($150+ per GB/day)</li>
+</ul>
+<h1 id="comprehensive-solution-overview">Comprehensive Solution Overview<a class="headerlink" href="#comprehensive-solution-overview" title="Permanent link">&para;</a></h1>
+<pre class="mermaid"><code>flowchart TD
+    A[Monitoring Solutions] --&gt; B[Open Source]
+    A --&gt; C[Enterprise]
+
+    B --&gt; D[Metrics Based]
+    B --&gt; E[Log Based]
+    B --&gt; F[Visualization]
+
+    D --&gt; D1[Prometheus]
+    D --&gt; D2[TICK Stack]
+
+    E --&gt; E1[ELK Stack]
+    E --&gt; E2[Loki]
+
+    F --&gt; F1[Grafana]
+
+    C --&gt; G[Full Stack]
+    C --&gt; H[Enterprise Logs]
+
+    G --&gt; G1[Datadog]
+    H --&gt; H1[Splunk]</code></pre>
+<h2 id="2-core-solutions-comparison">2. Core Solutions Comparison<a class="headerlink" href="#2-core-solutions-comparison" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th>Type</th>
+<th>Cost</th>
+<th>Main Strength</th>
+<th>Main Challenge</th>
+<th>Best Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prometheus</td>
+<td>Metrics</td>
+<td>Free</td>
+<td>K8s Integration</td>
+<td>Scaling Storage</td>
+<td>Container Monitoring</td>
+</tr>
+<tr>
+<td>TICK</td>
+<td>Time Series</td>
+<td>Mixed</td>
+<td>Real-time Data</td>
+<td>Complex Setup</td>
+<td>IoT &amp; Streaming</td>
+</tr>
+<tr>
+<td>ELK</td>
+<td>Logs</td>
+<td>Mixed</td>
+<td>Search Power</td>
+<td>Resource Heavy</td>
+<td>Log Analysis</td>
+</tr>
+<tr>
+<td>Grafana</td>
+<td>Visualization</td>
+<td>Free+</td>
+<td>Multi-Source</td>
+<td>Plugin Management</td>
+<td>Universal Dashboards</td>
+</tr>
+<tr>
+<td>Loki</td>
+<td>Logs</td>
+<td>Free</td>
+<td>K8s Friendly</td>
+<td>Limited Search</td>
+<td>Container Logs</td>
+</tr>
+<tr>
+<td>Datadog</td>
+<td>Full Stack</td>
+<td>$$</td>
+<td>Easy to Use</td>
+<td>Expensive</td>
+<td>Enterprise Cloud</td>
+</tr>
+<tr>
+<td>Splunk</td>
+<td>Enterprise</td>
+<td>$$</td>
+<td>Power &amp; Scale</td>
+<td>Very Expensive</td>
+<td>Large Enterprise</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-modern-monitoring-trends">3. Modern Monitoring Trends<a class="headerlink" href="#3-modern-monitoring-trends" title="Permanent link">&para;</a></h2>
+<h3 id="current-trends">Current Trends<a class="headerlink" href="#current-trends" title="Permanent link">&para;</a></h3>
+<ul>
+<li>🔄 <strong>Observability over Monitoring</strong>: Shift from reactive monitoring to proactive observability with metrics, logs, and traces</li>
+<li>🤖 <strong>AI/ML Integration</strong>: Automated anomaly detection and predictive analytics</li>
+<li>☁️ <strong>Cloud-Native Solutions</strong>: Kubernetes-native monitoring tools</li>
+<li>🔗 <strong>OpenTelemetry Adoption</strong>: Standardized instrumentation protocols</li>
+<li>📊 <strong>Real-Time Analytics</strong>: Stream processing for immediate insights</li>
+<li>🔍 <strong>Distributed Tracing</strong>: End-to-end request flow visualization</li>
+</ul>
+<h3 id="future-directions">Future Directions<a class="headerlink" href="#future-directions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>🎯 <strong>AIOps Integration</strong>: AI-powered IT operations</li>
+<li>🔐 <strong>Enhanced Security Monitoring</strong>: SecOps and DevSecOps integration</li>
+<li>🌐 <strong>Edge Monitoring</strong>: Decentralized observability for edge deployments</li>
+<li>⚡ <strong>Real-Time Processing</strong>: Sub-second detection and resolution</li>
+<li>🤝 <strong>Unified Observability Platforms</strong>: Consolidated tooling</li>
+<li>🧠 <strong>Contextual Intelligence</strong>: Business metrics correlation with technical telemetry</li>
+<li>🌍 <strong>eBPF Technology</strong>: Kernel-level observability without code changes</li>
+</ul>
+<h2 id="4-selection-guide">4. Selection Guide<a class="headerlink" href="#4-selection-guide" title="Permanent link">&para;</a></h2>
+<h3 id="by-organization-size">By Organization Size<a class="headerlink" href="#by-organization-size" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    A[Small Scale] --&gt; B[Prometheus + Grafana]
+    A --&gt; C[Loki for Logs]
+
+    D[Medium Scale] --&gt; E[TICK or Prometheus]
+    D --&gt; F[ELK Stack]
+    D --&gt; G[Grafana]
+
+    H[Large Scale] --&gt; I[Datadog/Splunk]
+    H --&gt; J[Custom Solutions]</code></pre>
+<ul>
+<li><strong>Small</strong>: Low cost, community support, easy start</li>
+<li><strong>Medium</strong>: Balanced features, mixed open/commercial, good scalability</li>
+<li><strong>Large</strong>: Full support, enterprise features, comprehensive tools</li>
+</ul>
+<h2 id="5-key-takeaways-best-practices">5. Key Takeaways &amp; Best Practices<a class="headerlink" href="#5-key-takeaways-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="what-you-should-remember">What You Should Remember<a class="headerlink" href="#what-you-should-remember" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>No One-Size-Fits-All</strong>: Choose tools based on your specific requirements</li>
+<li><strong>Start with the Basics</strong>: Implement core monitoring before advanced observability</li>
+<li><strong>Follow the Three Pillars</strong>: Metrics, logs, and traces provide complete visibility</li>
+<li><strong>Consider Total Cost</strong>: Factor in infrastructure, storage, and maintenance</li>
+<li><strong>Plan for Scale</strong>: Today's solution should accommodate tomorrow's growth</li>
+</ul>
+<h3 id="common-implementation-pitfalls">Common Implementation Pitfalls<a class="headerlink" href="#common-implementation-pitfalls" title="Permanent link">&para;</a></h3>
+<ul>
+<li>⚠️ <strong>Alert Fatigue</strong>: Too many alerts lead to ignored critical notifications</li>
+<li>⚠️ <strong>Data Hoarding</strong>: Collecting everything without purpose wastes resources</li>
+<li>⚠️ <strong>Tool Sprawl</strong>: Using too many disconnected tools creates silos</li>
+<li>⚠️ <strong>Neglecting User Experience</strong>: Technical dashboards that business users can't understand</li>
+<li>⚠️ <strong>Missing Context</strong>: Failing to correlate signals across metrics, logs, and traces</li>
+</ul>
+<h3 id="monitoring-maturity-model">Monitoring Maturity Model<a class="headerlink" href="#monitoring-maturity-model" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Focus</th>
+<th>Characteristics</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Level 1: Basic</strong></td>
+<td>Reactive</td>
+<td>• Basic metrics<br>• Manual checks<br>• Ad-hoc troubleshooting</td>
+<td>• Simple dashboards<br>• System logs<br>• Infrastructure metrics</td>
+</tr>
+<tr>
+<td><strong>Level 2: Standardized</strong></td>
+<td>Proactive</td>
+<td>• Consistent metrics<br>• Centralized logging<br>• Defined alerts</td>
+<td>• Prometheus<br>• ELK Stack<br>• Grafana</td>
+</tr>
+<tr>
+<td><strong>Level 3: Advanced</strong></td>
+<td>Comprehensive</td>
+<td>• Custom instrumentations<br>• Tracing<br>• SLOs/SLIs</td>
+<td>• APM tools<br>• Distributed tracing<br>• Custom metrics</td>
+</tr>
+<tr>
+<td><strong>Level 4: Optimized</strong></td>
+<td>Intelligence</td>
+<td>• Anomaly detection<br>• Predictive analytics<br>• Automation</td>
+<td>• AIOps<br>• ML-based solutions<br>• Advanced correlation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-real-world-integration-example">6. Real-World Integration Example<a class="headerlink" href="#6-real-world-integration-example" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A[Application] --&gt; B[Metrics/Prometheus]
+    A --&gt; C[Logs/ELK]
+    A --&gt; D[Traces/Jaeger]
+
+    B --&gt; E[Grafana]
+    C --&gt; E
+    D --&gt; E
+
+    E --&gt; F[Alerting]
+    E --&gt; G[Dashboards]
+
+    H[OpenTelemetry] --&gt; B
+    H --&gt; C
+    H --&gt; D</code></pre>
+<h3 id="modern-observability-architecture">Modern Observability Architecture<a class="headerlink" href="#modern-observability-architecture" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Data Collection Layer</strong></li>
+<li>OpenTelemetry for standardized instrumentation</li>
+<li>Agent-based and agentless collection</li>
+<li>
+<p>Push and pull mechanisms</p>
+</li>
+<li>
+<p><strong>Storage Layer</strong></p>
+</li>
+<li>Time-series databases for metrics</li>
+<li>Document stores for logs</li>
+<li>
+<p>Specialized trace storage</p>
+</li>
+<li>
+<p><strong>Processing Layer</strong></p>
+</li>
+<li>Stream processing for real-time analysis</li>
+<li>Correlation between signals</li>
+<li>
+<p>Aggregation and sampling</p>
+</li>
+<li>
+<p><strong>Visualization Layer</strong></p>
+</li>
+<li>Unified dashboards</li>
+<li>Cross-signal correlation views</li>
+<li>
+<p>Custom business views</p>
+</li>
+<li>
+<p><strong>Action Layer</strong></p>
+</li>
+<li>Alert management</li>
+<li>Incident response automation</li>
+<li>Continuous feedback loop</li>
+</ol>
+<h3 id="practical-implementation-steps">Practical Implementation Steps<a class="headerlink" href="#practical-implementation-steps" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Focus</th>
+<th>Actions</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1: Foundation</strong></td>
+<td>Basic visibility</td>
+<td>• Deploy metrics collection<br>• Implement centralized logging<br>• Create baseline dashboards</td>
+<td>• Prometheus<br>• ELK/Loki<br>• Grafana</td>
+</tr>
+<tr>
+<td><strong>2: Integration</strong></td>
+<td>Connected signals</td>
+<td>• Add distributed tracing<br>• Correlate logs and metrics<br>• Implement alerting</td>
+<td>• Jaeger/Tempo<br>• OpenTelemetry<br>• AlertManager</td>
+</tr>
+<tr>
+<td><strong>3: Advanced</strong></td>
+<td>Comprehensive view</td>
+<td>• Implement SLOs/SLIs<br>• Add user experience monitoring<br>• Service dependency mapping</td>
+<td>• Custom SLO tooling<br>• RUM solutions<br>• Service mesh</td>
+</tr>
+<tr>
+<td><strong>4: Intelligence</strong></td>
+<td>Proactive posture</td>
+<td>• Anomaly detection<br>• Automated remediation<br>• Predictive analytics</td>
+<td>• ML-based tools<br>• Automation platforms<br>• AIOps solutions</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-future-of-observability">8. Future of Observability<a class="headerlink" href="#8-future-of-observability" title="Permanent link">&para;</a></h2>
+<h3 id="emerging-technologies">Emerging Technologies<a class="headerlink" href="#emerging-technologies" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Description</th>
+<th>Impact</th>
+<th>Timeline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>eBPF Monitoring</strong></td>
+<td>Kernel-level tracing without code changes</td>
+<td>Revolutionary efficiency for kernel-level observability</td>
+<td>Now - 2 years</td>
+</tr>
+<tr>
+<td><strong>AIOps</strong></td>
+<td>AI-powered IT operations and anomaly detection</td>
+<td>Automated root cause analysis and predictive alerts</td>
+<td>Now - 3 years</td>
+</tr>
+<tr>
+<td><strong>Continuous Verification</strong></td>
+<td>Automated testing in production</td>
+<td>Faster deployment with fewer incidents</td>
+<td>1-3 years</td>
+</tr>
+<tr>
+<td><strong>Service Mesh Observability</strong></td>
+<td>Built-in monitoring for service mesh architectures</td>
+<td>Simplified collection of telemetry data</td>
+<td>Now - 2 years</td>
+</tr>
+<tr>
+<td><strong>Observability as Code</strong></td>
+<td>Infrastructure-as-code for monitoring</td>
+<td>Automated, versioned monitoring setup</td>
+<td>Now - 2 years</td>
+</tr>
+<tr>
+<td><strong>Low-Code Observability</strong></td>
+<td>Simplified configuration for non-specialists</td>
+<td>Wider adoption across organizations</td>
+<td>1-3 years</td>
+</tr>
+</tbody>
+</table>
+<h3 id="integration-trends">Integration Trends<a class="headerlink" href="#integration-trends" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    A[Modern Observability] --&gt; B[Tool Consolidation]
+    A --&gt; C[Cross-Domain Visibility]
+    A --&gt; D[BizDevOps Integration]
+
+    B --&gt; B1[Single-Pane Views]
+    B --&gt; B2[Unified Alerting]
+
+    C --&gt; C1[Security + Performance]
+    C --&gt; C2[Infrastructure + Application]
+
+    D --&gt; D1[Business Metrics]
+    D --&gt; D2[Customer Experience]</code></pre>
+<h3 id="open-source-future">Open Source Future<a class="headerlink" href="#open-source-future" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>OpenTelemetry Dominance</strong>: Becoming the standard for instrumentation</li>
+<li><strong>Real-Time Analytics Engines</strong>: Stream processing for immediate insights</li>
+<li><strong>GitOps for Observability</strong>: Version-controlled monitoring setup</li>
+<li><strong>Observability Meshes</strong>: Federated collection and aggregation</li>
+</ul>
+<h3 id="enterprise-roadmap">Enterprise Roadmap<a class="headerlink" href="#enterprise-roadmap" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Move from Monitoring to Observability</strong></li>
+<li>From reactive to proactive stance</li>
+<li>
+<p>From siloed tools to unified platforms</p>
+</li>
+<li>
+<p><strong>Implement Continuous Observability</strong></p>
+</li>
+<li>Shift left: Design for observability</li>
+<li>
+<p>Bake into CI/CD pipelines</p>
+</li>
+<li>
+<p><strong>Progress to AIOps and Automation</strong></p>
+</li>
+<li>Anomaly detection</li>
+<li>Automated remediation</li>
+<li>
+<p>Noise reduction</p>
+</li>
+<li>
+<p><strong>Achieve Business-Technical Alignment</strong></p>
+</li>
+<li>Connect technical metrics to business outcomes</li>
+<li>Cost optimization through targeted observability</li>
+</ol>
+<h2 id="9-next-steps-continuing-education">9. Next Steps &amp; Continuing Education<a class="headerlink" href="#9-next-steps-continuing-education" title="Permanent link">&para;</a></h2>
+<h3 id="skill-development-path">Skill Development Path<a class="headerlink" href="#skill-development-path" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    A[Course Completion] --&gt; B[Practice in Lab]
+    B --&gt; C[Small Production Project]
+    C --&gt; D[Advanced Observability]
+    D --&gt; E[AIOps &amp; Automation]</code></pre>
+<h3 id="recommended-learning-resources">Recommended Learning Resources<a class="headerlink" href="#recommended-learning-resources" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Resource Type</th>
+<th>Recommendations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Documentation</strong></td>
+<td>• <a href="https://prometheus.io/docs/">Prometheus Documentation</a><br>• <a href="https://opentelemetry.io/docs/">OpenTelemetry Docs</a><br>• <a href="https://grafana.com/tutorials/">Grafana Tutorials</a></td>
+</tr>
+<tr>
+<td><strong>Communities</strong></td>
+<td>• <a href="https://cloud-native.slack.com/">CNCF Slack</a><br>• <a href="https://monitoring.love/">Monitoring Weekly Newsletter</a><br>• <a href="https://www.reddit.com/r/devops/">r/devops</a></td>
+</tr>
+<tr>
+<td><strong>Certifications</strong></td>
+<td>• <a href="https://www.cncf.io/certification/cka/">CKA - Certified Kubernetes Administrator</a><br>• <a href="https://training.linuxfoundation.org/">Prometheus Certification (Linux Foundation)</a><br>• <a href="https://aws.amazon.com/certification/">AWS/Azure/GCP Monitoring Certifications</a></td>
+</tr>
+<tr>
+<td><strong>Conferences</strong></td>
+<td>• <a href="https://www.cncf.io/kubecon-cloudnativecon-events/">KubeCon + CloudNativeCon</a><br>• <a href="https://monitorama.com/">Monitorama</a><br>• <a href="https://o11yfest.org/">o11yfest</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="practical-projects-for-reinforcement">Practical Projects for Reinforcement<a class="headerlink" href="#practical-projects-for-reinforcement" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Personal Dashboard</strong>: Create a comprehensive dashboard for your own systems</li>
+<li><strong>Alert Tuning Challenge</strong>: Implement and refine meaningful alerts (reduce noise)</li>
+<li><strong>Full-Stack Visibility</strong>: Instrument a simple application with metrics, logs, and traces</li>
+<li><strong>Cost Analysis</strong>: Compare storage and compute costs across different solutions</li>
+<li><strong>SLO Implementation</strong>: Define and track Service Level Objectives for a critical service</li>
+</ol>
+<h3 id="instructors-final-recommendations">Instructor's Final Recommendations<a class="headerlink" href="#instructors-final-recommendations" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Start small</strong>: Focus on one system and do it well before expanding</li>
+<li><strong>Embrace automation</strong>: Use IaC for your monitoring configuration</li>
+<li><strong>Consider business impact</strong>: Connect technical metrics to business outcomes</li>
+<li><strong>Balance completeness and cost</strong>: Collect what you need, not everything possible</li>
+<li><strong>Join the community</strong>: Contribute back and share your learnings</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 25, 2025 16:39:12 UTC">April 25, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["mermaid", "navigation.tabs", "navigation.top", "navigation.expand", "navigation.sections", "navigation.indexes", "navigation.tracking", "navigation.instant", "toc.follow", "toc.sticky", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
+      
+        <script src="../../../../js/extra.js"></script>
+      
+    
+  </body>
+</html>
