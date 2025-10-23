@@ -1,4 +1,4 @@
-# Labor 1: Zabbix Alused
+Zabbix Alused Labor
 
 **Kestus:** 45 min  
 **Tase:** Algaja  
