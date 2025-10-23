@@ -2,254 +2,238 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/final_project/final_project_building_monsystem/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/final_project/topology/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/final_project/help/elk_stack_starter/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/final_project/help/hints/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/final_project/help/kibana_starter/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/final_project/help/networking_debug/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/final_project/help/starter_code/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/final_project/help/virtualbox_wsl/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/01_linux_logging/1_linux_logging_lab/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/01_linux_logging/lisapraktika/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/01_linux_logging/vagrant_setup/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/02_prometheus/lab02_prometheus_part1/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/02_prometheus/lab02_prometheus_part2/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/02_prometheus/lab02_prometheus_part3/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/02_prometheus/lab02_prometheus_part4/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/02_prometheus/lab02_prometheus_part5/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/03_tick_stack/lab03_tick_part1/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/03_tick_stack/lab03_tick_part2/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/04_elk_stack/lab04_elastic/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/05_splunk/splunk_cloud_lab/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/05_splunk/splunk_cluster_lab/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
-         <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/06_zabbix/monitoring-lab-manual-extra/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/06_zabbix/6_zabbix_lab/</loc>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
-         <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/06_zabbix/monitoring-lab-manual-part1/</loc>
-         <lastmod>2025-10-17</lastmod>
-    </url>
-    <url>
-         <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/06_zabbix/monitoring-lab-manual-part2/</loc>
-         <lastmod>2025-10-17</lastmod>
-    </url>
-    <url>
-         <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/06_zabbix/monitoring-lab-manual-part3/</loc>
-         <lastmod>2025-10-17</lastmod>
-    </url>
-    <url>
-         <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/06_zabbix/vm/MultipassSetupforMonitoringLab/</loc>
-         <lastmod>2025-10-17</lastmod>
-    </url>
-    <url>
-         <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/06_zabbix/vm/VirtualBoxSetupGuideforMonitoringLab/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/06_zabbix/lisapraktika/</loc>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/07_jaeger/1_jaeger_app_traces/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/07_jaeger/2_jaeger_opentel/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/07_jaeger/3_jaeger_spans/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/08_alerting/pagerduty/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/elasticsearch/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Intro_HTTP_RESTful_API/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Part10_Deployment_CI_CD/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Part1_Introduction/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Part2_Data_Modeling/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Part3_Search_Querying/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Part4_Advanced_Querying/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Part5_Aggregations/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Part6_Performance_Tuning/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Part7_Monitoring/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Part8_Security/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Elasticsearch/arhive/Part9_Backup_Restore/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Grafana/grafana/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Grafana/loki/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Linux/intro-to-linux-logging/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Observability/intro_logging_monitoring_observability/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Observability/wrap-up-observability/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Prometheus/intro-to-prometheus/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Splunk/intro-to-splunk/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/TICK/intro-to-tick-stack/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Zabbix/zabbix/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/materials/lectures/Zabbix/zabbix_reading/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/resources/additional-reading/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/resources/github-guide/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/resources/konto-digital_ocean/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/resources/vscode-guide/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/resources/additional-reading/zabbix-reading/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/resources/cert_manager/automation/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/resources/cert_manager/basics/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/resources/cert_manager/elastic-cert_manager/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
     <url>
          <loc>https://haapsalu-kutsehariduskeskus.github.io/monitoring/resources/cert_manager/hashicorp/</loc>
-         <lastmod>2025-10-17</lastmod>
+         <lastmod>2025-10-23</lastmod>
     </url>
 </urlset>

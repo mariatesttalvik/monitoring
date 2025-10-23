@@ -1,0 +1,4681 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://haapsalu-kutsehariduskeskus.github.io/monitoring/labs/06_zabbix/lisapraktika/">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Labor 2: Veebirakenduste Monitoorimine - Logging, Monitoring, and Observability Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#labor-2-veebirakenduste-monitoorimine" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Logging, Monitoring, and Observability Guide" class="md-header__button md-logo" aria-label="Logging, Monitoring, and Observability Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Logging, Monitoring, and Observability Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Labor 2: Veebirakenduste Monitoorimine
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../materials/lectures/Observability/intro_logging_monitoring_observability/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Observability
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../final_project/final_project_building_monsystem/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Final Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01_linux_logging/1_linux_logging_lab/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Labs
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../materials/lectures/Elasticsearch/elasticsearch/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Materials
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../resources/github-guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Resources
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Logging, Monitoring, and Observability Guide" class="md-nav__button md-logo" aria-label="Logging, Monitoring, and Observability Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Logging, Monitoring, and Observability Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Observability
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Observability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Observability/intro_logging_monitoring_observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Foundations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Observability/wrap-up-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wrap-Up
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Final Project
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Final Project
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/final_project_building_monsystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/topology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Topology
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Help
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Help
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/elk_stack_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ELK Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/hints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hints
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/kibana_starter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kibana Starter
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/networking_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Networking Debug
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/starter_code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Starter Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final_project/help/virtualbox_wsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox & WSL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Labs
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Labs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 01 Linux Logging
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 01 Linux Logging
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_linux_logging/1_linux_logging_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Labor
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_linux_logging/lisapraktika/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lisapraktika
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 02 Prometheus
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 02 Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_prometheus/lab02_prometheus_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_prometheus/lab02_prometheus_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_prometheus/lab02_prometheus_part3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_prometheus/lab02_prometheus_part4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 4
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_prometheus/lab02_prometheus_part5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 5
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 03 TICK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 03 TICK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_tick_stack/lab03_tick_part1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_tick_stack/lab03_tick_part2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 04 ELK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 04 ELK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_elk_stack/lab04_elastic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 05 Splunk
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 05 Splunk
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_splunk/splunk_cloud_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cloud Lab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_splunk/splunk_cluster_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cluster Lab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 06 Zabbix
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 06 Zabbix
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring-lab-manual-part1.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring-lab-manual-part2.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring-lab-manual-part3.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring-lab-manual-extra.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Extra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 07 Jaeger
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 07 Jaeger
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_jaeger/1_jaeger_app_traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 1 - App Traces
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_jaeger/2_jaeger_opentel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 2 - OpenTelemetry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_jaeger/3_jaeger_spans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Part 3 - Spans
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Lab 08 Alerting (PagerDuty)
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            Lab 08 Alerting (PagerDuty)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08_alerting/pagerduty/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PagerDuty Lab Manual
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Materials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Materials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Elasticsearch
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Elasticsearch
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/elasticsearch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part1_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part2_Data_Modeling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part3_Search_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Search & Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part4_Advanced_Querying/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced Querying
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part5_Aggregations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Aggregations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part6_Performance_Tuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance Tuning
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part7_Monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part8_Security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part9_Backup_Restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backup & Restore
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Part10_Deployment_CI_CD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CI/CD Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Elasticsearch/arhive/Intro_HTTP_RESTful_API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HTTP & REST APIs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Grafana
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Grafana/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Grafana/loki/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Loki
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Linux
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Linux
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Linux/intro-to-linux-logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Logging in Linux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Prometheus/intro-to-prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Splunk
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            Splunk
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Splunk/intro-to-splunk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splunk Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            TICK Stack
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/TICK/intro-to-tick-stack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TICK Stack Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Zabbix
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            Zabbix
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Zabbix/zabbix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../materials/lectures/Zabbix/zabbix_reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix Reading
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/github-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/konto-digital_ocean/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DigitalOcean Account
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/vscode-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VS Code Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reading
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reading
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/additional-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    General
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/additional-reading/zabbix-reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zabbix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Cert Manager
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cert Manager
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/elastic-cert_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Elastic Certs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../resources/cert_manager/hashicorp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HashiCorp
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_6" id="__nav_6_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    VM Setup
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_6">
+            <span class="md-nav__icon md-icon"></span>
+            VM Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vm/MultipassSetupforMonitoringLab.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multipass
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vm/VirtualBoxSetupGuideforMonitoringLab.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VirtualBox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#oppevaljundid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Õppeväljundid
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zabbix-monitooringu-kontseptsioonid-labor-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zabbix Monitooringu Kontseptsioonid (Labor 2)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#labori-arhitektuur" class="md-nav__link">
+    <span class="md-ellipsis">
+      Labori Arhitektuur
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#osa-1-lisa-flask-rakendus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Osa 1: Lisa Flask Rakendus
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Osa 1: Lisa Flask Rakendus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#samm-1-loo-flask-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 1: Loo Flask App
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-2-loo-dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 2: Loo Dockerfile
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-3-lisa-docker-composeymli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 3: Lisa docker-compose.yml'i
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-4-kaivita-flask" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 4: Käivita Flask
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#osa-2-http-agent-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Osa 2: HTTP Agent Monitoring
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Osa 2: HTTP Agent Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mis-on-http-agent-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mis on HTTP Agent Item?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-1-lisa-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 1: Lisa Host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-2-loo-http-check-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 2: Loo HTTP Check Item
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mis-on-item-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mis on Item components?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-3-loo-response-time-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 3: Loo Response Time Item
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-4-vaata-andmeid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 4: Vaata Andmeid
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#osa-3-json-parsing-dependent-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Osa 3: JSON Parsing (Dependent Items)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Osa 3: JSON Parsing (Dependent Items)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mis-on-dependent-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mis on Dependent Item?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-1-loo-master-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 1: Loo Master Item
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-2-loo-dependent-item-uptime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 2: Loo Dependent Item - Uptime
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-3-loo-dependent-item-requests-total" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 3: Loo Dependent Item - Requests Total
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-4-parse-metrics-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 4: Parse Metrics Endpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-5-vaata-koiki-itemeid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 5: Vaata Kõiki Item'eid
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#osa-4-web-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Osa 4: Web Scenarios
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Osa 4: Web Scenarios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mis-on-web-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mis on Web Scenario?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-1-loo-web-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 1: Loo Web Scenario
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-2-lisa-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 2: Lisa Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-3-vaata-scenario-tulemusi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 3: Vaata Scenario Tulemusi
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#osa-5-triggerid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Osa 5: Triggerid
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Osa 5: Triggerid">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mis-on-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mis on Trigger?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-1-loo-response-time-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 1: Loo Response Time Trigger
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-2-loo-error-rate-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 2: Loo Error Rate Trigger
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-3-testi-triggereid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 3: Testi Triggereid
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#osa-6-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Osa 6: Dashboard
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Osa 6: Dashboard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mis-on-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mis on Dashboard?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-1-loo-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 1: Loo Dashboard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-2-lisa-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 2: Lisa Widgets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-3-vaata-dashboardi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 3: Vaata Dashboard'i
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#osa-7-git-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Osa 7: Git Update
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Osa 7: Git Update">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#samm-1-kontrolli-flask-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 1: Kontrolli Flask Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-2-uuenda-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 2: Uuenda README
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samm-3-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samm 3: Commit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kokkuvote" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kokkuvõte
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viited" class="md-nav__link">
+    <span class="md-ellipsis">
+      Viited
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="labor-2-veebirakenduste-monitoorimine">Labor 2: Veebirakenduste Monitoorimine<a class="headerlink" href="#labor-2-veebirakenduste-monitoorimine" title="Permanent link">&para;</a></h1>
+<p><strong>Kestus:</strong> 60 min<br />
+<strong>Tase:</strong> Keskmine<br />
+<strong>Eeldused:</strong> Labor 1 läbitud, Zabbix 7.0 töötab</p>
+<hr />
+<h2 id="oppevaljundid">Õppeväljundid<a class="headerlink" href="#oppevaljundid" title="Permanent link">&para;</a></h2>
+<p>Pärast labori läbimist õpilane:</p>
+<ol>
+<li><strong>Paigaldab</strong> Flask veebirakenduse ja konfigureerib HTTP monitooringu</li>
+<li><strong>Mõistab</strong> HTTP agent, web scenario ja dependent item kontseptsioone</li>
+<li><strong>Kasutab</strong> JSONPath'i API vastuste parsimiseks</li>
+<li><strong>Loob</strong> triggereid veebirakenduse probleemide tuvastamiseks</li>
+<li><strong>Ehitab</strong> kohandatud dashboardi visualiseerimiseks</li>
+<li><strong>Eristab</strong> erinevaid monitooringu tüüpe ja nende kasutusjuhte</li>
+</ol>
+<hr />
+<h2 id="zabbix-monitooringu-kontseptsioonid-labor-2">Zabbix Monitooringu Kontseptsioonid (Labor 2)<a class="headerlink" href="#zabbix-monitooringu-kontseptsioonid-labor-2" title="Permanent link">&para;</a></h2>
+<p><strong>HTTP Agent</strong><br />
+Item type mis teeb HTTP päringuid URL'ile. Ei vaja agenti hostis - lihtsalt curl-like päring. Mõõdab response time ja salvestab vastuse (HTML/JSON).</p>
+<p><strong>Web Scenario</strong><br />
+Mitme-sammuline test (user journey). Näiteks: 1) Ava login, 2) Sisesta credentials, 3) Kontrolli dashboard. Iga samm = eraldi HTTP päring järjest.</p>
+<p><strong>Dependent Item</strong><br />
+Item mis kasutab teise item'i andmeid. Näiteks: 1 HTTP päring tagastab JSON → 5 dependent item'i parse'ivad erinevaid välju. Säästab võrguliiklust!</p>
+<p><strong>JSONPath</strong><br />
+JSON andmete filtreerimine. Näiteks: <code>$.uptime</code> võtab JSON'ist <code>{"uptime": 3600}</code> → <code>3600</code>.</p>
+<p><strong>Trigger</strong><br />
+Tingimus mis loob probleemi. Näiteks: <code>last(/flask-app/response.time)&gt;2000</code> → kui response &gt; 2 sek, tekib alarm.</p>
+<p><strong>Severity</strong><br />
+Probleemi tõsidus: Not classified &lt; Information &lt; Warning &lt; Average &lt; High &lt; Disaster.</p>
+<hr />
+<h2 id="labori-arhitektuur">Labori Arhitektuur<a class="headerlink" href="#labori-arhitektuur" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>                Zabbix Server
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                      │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>      ┌───────────────┼───────────────┐
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>      │               │               │
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  HTTP Agent    Web Scenario    Zabbix Agent
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>      │               │               │
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>      ▼               ▼               ▼
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  ┌─────────────────────────────────────┐
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │      Flask Web App (port 5000)      │
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  /          - home page             │
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  /health    - health check (JSON)   │
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  /metrics   - app metrics (JSON)    │
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  /slow      - slow endpoint (3s)    │
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  └─────────────────────────────────────┘
+</span></code></pre></div>
+<p><strong>Monitooringu tüübid:</strong>
+- <strong>HTTP Agent</strong> → Lihtne URL check (kas vastab? kui kiire?)
+- <strong>Web Scenario</strong> → Kasutaja teekond (multi-step)
+- <strong>Dependent Items</strong> → Parse JSON (üks päring → mitu mõõdikut)</p>
+<hr />
+<h2 id="osa-1-lisa-flask-rakendus">Osa 1: Lisa Flask Rakendus<a class="headerlink" href="#osa-1-lisa-flask-rakendus" title="Permanent link">&para;</a></h2>
+<h3 id="samm-1-loo-flask-app">Samm 1: Loo Flask App<a class="headerlink" href="#samm-1-loo-flask-app" title="Permanent link">&para;</a></h3>
+<p><strong>Miks Flask?</strong><br />
+Lihtne Python veebirakendus. Pakub JSON API endpoint'e mida Zabbix saab monitoorida.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>~/zabbix-lab01
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mkdir<span class="w"> </span>flask-app
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">cd</span><span class="w"> </span>flask-app
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>nano<span class="w"> </span>app.py
+</span></code></pre></div>
+<p>Kirjuta:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">jsonify</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">request_count</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="k">global</span> <span class="n">request_count</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">request_count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="k">return</span> <span class="s2">&quot;Flask App is running!&quot;</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/health&#39;</span><span class="p">)</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="k">def</span><span class="w"> </span><span class="nf">health</span><span class="p">():</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="n">uptime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>        <span class="s2">&quot;uptime_seconds&quot;</span><span class="p">:</span> <span class="n">uptime</span><span class="p">,</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>        <span class="s2">&quot;requests_total&quot;</span><span class="p">:</span> <span class="n">request_count</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="p">})</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/metrics&#39;</span><span class="p">)</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="k">def</span><span class="w"> </span><span class="nf">metrics</span><span class="p">():</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>        <span class="s2">&quot;requests_total&quot;</span><span class="p">:</span> <span class="n">request_count</span><span class="p">,</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>        <span class="s2">&quot;active_users&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>        <span class="s2">&quot;error_rate&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>        <span class="s2">&quot;response_time_ms&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>    <span class="p">})</span>
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/slow&#39;</span><span class="p">)</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="k">def</span><span class="w"> </span><span class="nf">slow</span><span class="p">():</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>    <span class="k">return</span> <span class="s2">&quot;This endpoint is slow!&quot;</span>
+</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+</span><span id="__span-2-39"><a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+</span><span id="__span-2-40"><a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Salvesta.</p>
+<p><strong>Mis need endpoint'id teevad:</strong>
+- <code>/</code> - Põhileht, counter
+- <code>/health</code> - Health check JSON (uptime, requests)
+- <code>/metrics</code> - Rakenduse mõõdikud JSON (users, errors)
+- <code>/slow</code> - Aeglane endpoint (3 sek vastus - triggerite testimiseks!)</p>
+<p>📝 <strong>Küsimus 1:</strong> Miks <code>/slow</code> endpoint on kasulik monitooringu testimiseks?</p>
+<hr />
+<h3 id="samm-2-loo-dockerfile">Samm 2: Loo Dockerfile<a class="headerlink" href="#samm-2-loo-dockerfile" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>nano<span class="w"> </span>Dockerfile
+</span></code></pre></div>
+<p>Kirjuta:</p>
+<div class="language-dockerfile highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">python:3.9-alpine</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>flask
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">COPY</span><span class="w"> </span>app.py<span class="w"> </span>.
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;app.py&quot;</span><span class="p">]</span>
+</span></code></pre></div>
+<p>Salvesta.</p>
+<p><strong>Alpine image:</strong><br />
+Väike (~50MB vs ~900MB). Piisav lihtsale Flask app'ile.</p>
+<hr />
+<h3 id="samm-3-lisa-docker-composeymli">Samm 3: Lisa docker-compose.yml'i<a class="headerlink" href="#samm-3-lisa-docker-composeymli" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span>..
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nano<span class="w"> </span>docker-compose.yml
+</span></code></pre></div>
+<p>Lisa <code>services:</code> sektsiooni (pärast zabbix-agent):</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="w">  </span><span class="nt">flask-app</span><span class="p">:</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./flask-app</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flask-app</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5000:5000&quot;</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zabbix-net</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zabbix-server</span>
+</span></code></pre></div>
+<p><strong>Monitooringu vaatenurgast:</strong>
+- <code>ports: 5000</code> - HTTP access (Zabbix teeb siia päringuid)
+- <code>zabbix-net</code> - Samas võrgus serveriga (muidu ei näe)
+- <code>build:</code> - Ehitab Flask image'i Dockerfile'ist</p>
+<p>Salvesta: <code>Ctrl+O</code>, <code>Enter</code>, <code>Ctrl+X</code></p>
+<hr />
+<h3 id="samm-4-kaivita-flask">Samm 4: Käivita Flask<a class="headerlink" href="#samm-4-kaivita-flask" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
+</span></code></pre></div>
+<p><code>--build</code> ehitab Flask image'i.</p>
+<p><strong>Testi:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>http://localhost:5000
+</span></code></pre></div>
+<p>Peaks tagastama: <code>Flask App is running!</code></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>http://localhost:5000/health
+</span></code></pre></div>
+<p>Peaks tagastama JSON: <code>{"status":"healthy","uptime_seconds":5,...}</code></p>
+<p><strong>Leia Flask IP:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>docker<span class="w"> </span>inspect<span class="w"> </span>flask-app<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;&quot;IPAddress&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
+</span></code></pre></div>
+<p>Näide: <code>"IPAddress": "172.20.0.5"</code></p>
+<p>✅ <strong>Kontrollpunkt:</strong> Flask vastab</p>
+<hr />
+<h2 id="osa-2-http-agent-monitoring">Osa 2: HTTP Agent Monitoring<a class="headerlink" href="#osa-2-http-agent-monitoring" title="Permanent link">&para;</a></h2>
+<h3 id="mis-on-http-agent-item">Mis on HTTP Agent Item?<a class="headerlink" href="#mis-on-http-agent-item" title="Permanent link">&para;</a></h3>
+<p><strong>HTTP Agent</strong> = item type mis teeb HTTP päringuid.</p>
+<p>Erinevus Zabbix Agent'ist:
+- <strong>Zabbix Agent</strong> - Vajab agenti hostis, kogub süsteemi mõõdikuid (CPU, RAM)
+- <strong>HTTP Agent</strong> - EI vaja agenti, lihtsalt HTTP päring URL'ile</p>
+<p>Kasulik:
+- Veebirakenduste monitoorimiseks
+- API endpoint'ide kontrollimiseks
+- Response time mõõtmiseks</p>
+<hr />
+<h3 id="samm-1-lisa-host">Samm 1: Lisa Host<a class="headerlink" href="#samm-1-lisa-host" title="Permanent link">&para;</a></h3>
+<p><strong>Data collection → Hosts → Create host</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+<th>Selgitus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Host name</strong></td>
+<td><code>flask-app</code></td>
+<td>Rakenduse nimi</td>
+</tr>
+<tr>
+<td><strong>Groups</strong></td>
+<td><code>Applications</code></td>
+<td>Loo uus group</td>
+</tr>
+<tr>
+<td><strong>Templates</strong></td>
+<td>Pole</td>
+<td>Lisame item'id käsitsi</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Miks pole template'i?</strong><br />
+Veebirakendused on erinevad. Pole universaalset template'i. Loome custom item'id.</p>
+<p><strong>Interface:</strong>
+- Tüüp: <strong>Agent</strong>
+- IP: <code>172.20.0.5</code> (sinu Flask IP)
+- Port: <code>10050</code></p>
+<p><strong>NB!</strong> Flask'is POLE agenti. Aga HTTP checks ei vaja seda - interface on ainult hosti identifitseerimiseks.</p>
+<p>Salvesta.</p>
+<hr />
+<h3 id="samm-2-loo-http-check-item">Samm 2: Loo HTTP Check Item<a class="headerlink" href="#samm-2-loo-http-check-item" title="Permanent link">&para;</a></h3>
+<p><strong>Data collection → Hosts → flask-app → Items → Create item</strong></p>
+<h3 id="mis-on-item-components">Mis on Item components?<a class="headerlink" href="#mis-on-item-components" title="Permanent link">&para;</a></h3>
+<p>Iga item'il on:
+- <strong>Name</strong> - Inimloetav nimi
+- <strong>Type</strong> - Kuidas kogutakse (HTTP agent, Zabbix agent...)
+- <strong>Key</strong> - Unikaalne identifikaator (nt <code>flask.home.response</code>)
+- <strong>URL</strong> - Kuhu teha päring (HTTP agent puhul)
+- <strong>Update interval</strong> - Kui sageli küsida</p>
+<p><strong>Loo Basic Check:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+<th>Selgitus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Flask: Home page response</code></td>
+<td>Kirjeldav nimi</td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td><code>HTTP agent</code></td>
+<td>Teeb HTTP päringu</td>
+</tr>
+<tr>
+<td><strong>Key</strong></td>
+<td><code>flask.home.response</code></td>
+<td>Unikaalne key</td>
+</tr>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>http://172.20.0.5:5000/</code></td>
+<td>Flask endpoint</td>
+</tr>
+<tr>
+<td><strong>Request type</strong></td>
+<td><code>GET</code></td>
+<td>HTTP meetod</td>
+</tr>
+<tr>
+<td><strong>Update interval</strong></td>
+<td><code>30s</code></td>
+<td>Iga 30 sek</td>
+</tr>
+</tbody>
+</table>
+<p>Salvesta.</p>
+<p><strong>Mis see teeb:</strong><br />
+Iga 30 sekundi tagant: Server teeb GET päring → Salvestab vastuse → History MySQL'i.</p>
+<p>📝 <strong>Küsimus 2:</strong> Miks HTTP Agent ei vaja Zabbix agenti hostis?</p>
+<hr />
+<h3 id="samm-3-loo-response-time-item">Samm 3: Loo Response Time Item<a class="headerlink" href="#samm-3-loo-response-time-item" title="Permanent link">&para;</a></h3>
+<p><strong>Mis on Response Time?</strong><br />
+Aeg millisekundites, mis kulus HTTP vastuse saamiseks. Zabbix mõõdab automaatselt.</p>
+<p><strong>Create item:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Flask: Response time</code></td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td><code>HTTP agent</code></td>
+</tr>
+<tr>
+<td><strong>Key</strong></td>
+<td><code>flask.response.time</code></td>
+</tr>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>http://172.20.0.5:5000/</code></td>
+</tr>
+<tr>
+<td><strong>Request type</strong></td>
+<td><code>GET</code></td>
+</tr>
+<tr>
+<td><strong>Update interval</strong></td>
+<td><code>30s</code></td>
+</tr>
+<tr>
+<td><strong>Type of information</strong></td>
+<td><code>Numeric (float)</code></td>
+</tr>
+<tr>
+<td><strong>Units</strong></td>
+<td><code>ms</code></td>
+</tr>
+</tbody>
+</table>
+<p>Salvesta.</p>
+<p><strong>Response time mõõtmine:</strong><br />
+Zabbix teeb HTTP päringu → mõõdab aega → salvestab millisekundites.</p>
+<hr />
+<h3 id="samm-4-vaata-andmeid">Samm 4: Vaata Andmeid<a class="headerlink" href="#samm-4-vaata-andmeid" title="Permanent link">&para;</a></h3>
+<p>⏱️ Oota 1-2 min</p>
+<p><strong>Monitoring → Latest data → flask-app</strong></p>
+<p>Peaksid nägema:
+- <code>Flask: Home page response</code> (HTML text)
+- <code>Flask: Response time</code> (nt 45 ms)</p>
+<p><strong>Vaata graafikut:</strong><br />
+Kliki response time item'il → <strong>Graph</strong></p>
+<p><strong>Graafik ilmub, sest:</strong>
+- Item'id on loodud ✅
+- Server küsib iga 30 sek ✅
+- History kogutakse ✅</p>
+<p>✅ <strong>Kontrollpunkt:</strong> Näed response time graafikut</p>
+<hr />
+<h2 id="osa-3-json-parsing-dependent-items">Osa 3: JSON Parsing (Dependent Items)<a class="headerlink" href="#osa-3-json-parsing-dependent-items" title="Permanent link">&para;</a></h2>
+<h3 id="mis-on-dependent-item">Mis on Dependent Item?<a class="headerlink" href="#mis-on-dependent-item" title="Permanent link">&para;</a></h3>
+<p><strong>Dependent Item</strong> = item mis kasutab teise item'i andmeid.</p>
+<p><strong>Probleem ilma Dependent Item'ita:</strong><br />
+<code>/health</code> tagastab JSON: <code>{"status":"healthy","uptime_seconds":3600,"requests_total":150}</code></p>
+<p>Kui tahad 3 eraldi mõõdikut → 3 eraldi HTTP päringut! Raiskamine!</p>
+<p><strong>Lahendus Dependent Item'iga:</strong><br />
+1. <strong>Master item</strong> - Teeb 1 HTTP päringu, salvestab JSON
+2. <strong>Dependent items</strong> - Parse'ivad JSON'ist erinevaid välju</p>
+<p><strong>Tulemus:</strong> 1 HTTP päring → 3 mõõdikut! ✅</p>
+<hr />
+<h3 id="samm-1-loo-master-item">Samm 1: Loo Master Item<a class="headerlink" href="#samm-1-loo-master-item" title="Permanent link">&para;</a></h3>
+<p><strong>Create item:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Flask: Health status (raw)</code></td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td><code>HTTP agent</code></td>
+</tr>
+<tr>
+<td><strong>Key</strong></td>
+<td><code>flask.health.raw</code></td>
+</tr>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>http://172.20.0.5:5000/health</code></td>
+</tr>
+<tr>
+<td><strong>Update interval</strong></td>
+<td><code>1m</code></td>
+</tr>
+<tr>
+<td><strong>Type of information</strong></td>
+<td><code>Text</code></td>
+</tr>
+</tbody>
+</table>
+<p>Salvesta.</p>
+<p>See salvestab kogu JSON vastuse.</p>
+<hr />
+<h3 id="samm-2-loo-dependent-item-uptime">Samm 2: Loo Dependent Item - Uptime<a class="headerlink" href="#samm-2-loo-dependent-item-uptime" title="Permanent link">&para;</a></h3>
+<p><strong>Mis on JSONPath?</strong></p>
+<p>JSONPath = JSON'i filtreerimine. Syntax nagu XPath.</p>
+<p>Näide JSON:
+<div class="language-json highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nt">&quot;uptime_seconds&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="p">,</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nt">&quot;requests_total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">}</span>
+</span></code></pre></div></p>
+<p>JSONPath <code>$.uptime_seconds</code> → <code>3600</code></p>
+<p><strong>Create item:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Flask: Uptime</code></td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td><code>Dependent item</code></td>
+</tr>
+<tr>
+<td><strong>Key</strong></td>
+<td><code>flask.uptime</code></td>
+</tr>
+<tr>
+<td><strong>Master item</strong></td>
+<td><code>Flask: Health status (raw)</code></td>
+</tr>
+<tr>
+<td><strong>Type of information</strong></td>
+<td><code>Numeric (unsigned)</code></td>
+</tr>
+<tr>
+<td><strong>Units</strong></td>
+<td><code>uptime</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Preprocessing (OLULINE!):</strong>
+- <strong>Type:</strong> <code>JSONPath</code>
+- <strong>Parameters:</strong> <code>$.uptime_seconds</code></p>
+<p>Salvesta.</p>
+<p><strong>Mis juhtub:</strong><br />
+Master item kogub JSON → Dependent item võtab <code>uptime_seconds</code> → Salvestab eraldi mõõdikuna.</p>
+<p>📝 <strong>Küsimus 3:</strong> Miks Dependent Item on parem kui iga mõõdiku jaoks eraldi HTTP päring?</p>
+<hr />
+<h3 id="samm-3-loo-dependent-item-requests-total">Samm 3: Loo Dependent Item - Requests Total<a class="headerlink" href="#samm-3-loo-dependent-item-requests-total" title="Permanent link">&para;</a></h3>
+<p><strong>Create item:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Flask: Total requests</code></td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td><code>Dependent item</code></td>
+</tr>
+<tr>
+<td><strong>Key</strong></td>
+<td><code>flask.requests.total</code></td>
+</tr>
+<tr>
+<td><strong>Master item</strong></td>
+<td><code>Flask: Health status (raw)</code></td>
+</tr>
+<tr>
+<td><strong>Type of information</strong></td>
+<td><code>Numeric (unsigned)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Preprocessing:</strong>
+- <strong>Type:</strong> <code>JSONPath</code>
+- <strong>Parameters:</strong> <code>$.requests_total</code></p>
+<p>Salvesta.</p>
+<hr />
+<h3 id="samm-4-parse-metrics-endpoint">Samm 4: Parse Metrics Endpoint<a class="headerlink" href="#samm-4-parse-metrics-endpoint" title="Permanent link">&para;</a></h3>
+<p><strong>Loo master item:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Flask: Metrics (raw)</code></td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td><code>HTTP agent</code></td>
+</tr>
+<tr>
+<td><strong>Key</strong></td>
+<td><code>flask.metrics.raw</code></td>
+</tr>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>http://172.20.0.5:5000/metrics</code></td>
+</tr>
+<tr>
+<td><strong>Update interval</strong></td>
+<td><code>1m</code></td>
+</tr>
+<tr>
+<td><strong>Type of information</strong></td>
+<td><code>Text</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Loo 3 dependent item'i:</strong></p>
+<p><strong>1. Active users:</strong>
+- Name: <code>Flask: Active users</code>
+- Key: <code>flask.users.active</code>
+- Master: <code>Flask: Metrics (raw)</code>
+- JSONPath: <code>$.active_users</code></p>
+<p><strong>2. Error rate:</strong>
+- Name: <code>Flask: Error rate</code>
+- Key: <code>flask.error.rate</code>
+- Master: <code>Flask: Metrics (raw)</code>
+- JSONPath: <code>$.error_rate</code>
+- Units: <code>%</code></p>
+<p><strong>3. App response time:</strong>
+- Name: <code>Flask: App response time</code>
+- Key: <code>flask.app.response.time</code>
+- Master: <code>Flask: Metrics (raw)</code>
+- JSONPath: <code>$.response_time_ms</code>
+- Units: <code>ms</code></p>
+<hr />
+<h3 id="samm-5-vaata-koiki-itemeid">Samm 5: Vaata Kõiki Item'eid<a class="headerlink" href="#samm-5-vaata-koiki-itemeid" title="Permanent link">&para;</a></h3>
+<p><strong>Data collection → Hosts → flask-app → Items</strong></p>
+<p>Peaksid nägema:
+- 2 HTTP agent items (master items)
+- 5 Dependent items (parse JSON)
+- Kokku: 7 item'i</p>
+<p><strong>Monitoring → Latest data → flask-app</strong></p>
+<p>⏱️ Oota 1-2 min</p>
+<p>Peaksid nägema kõiki 7 mõõdikut värskendumas!</p>
+<p>✅ <strong>Kontrollpunkt:</strong> JSON parsing töötab</p>
+<hr />
+<h2 id="osa-4-web-scenarios">Osa 4: Web Scenarios<a class="headerlink" href="#osa-4-web-scenarios" title="Permanent link">&para;</a></h2>
+<h3 id="mis-on-web-scenario">Mis on Web Scenario?<a class="headerlink" href="#mis-on-web-scenario" title="Permanent link">&para;</a></h3>
+<p><strong>Web Scenario</strong> = mitme-sammuline test (user journey).</p>
+<p><strong>Näide:</strong><br />
+1. <strong>Step 1:</strong> GET <code>/</code> → Kontroll kas leht avaneb
+2. <strong>Step 2:</strong> GET <code>/health</code> → Kontroll kas API vastab
+3. <strong>Step 3:</strong> GET <code>/metrics</code> → Kontroll kas metrics töötab</p>
+<p>Iga samm mõõdab:
+- Response time
+- HTTP status code
+- Required string (kas leitud?)</p>
+<p><strong>Kasutus:</strong><br />
+Simuleerib kasutaja tegevust. Näiteks: login → dashboard → logout.</p>
+<p><strong>Vahe HTTP Agent'ist:</strong><br />
+- <strong>HTTP Agent</strong> - Üks päring
+- <strong>Web Scenario</strong> - Mitu päringut järjest (session, cookies säilivad)</p>
+<hr />
+<h3 id="samm-1-loo-web-scenario">Samm 1: Loo Web Scenario<a class="headerlink" href="#samm-1-loo-web-scenario" title="Permanent link">&para;</a></h3>
+<p><strong>Data collection → Hosts → flask-app → Web scenarios → Create web scenario</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Flask: User journey</code></td>
+</tr>
+<tr>
+<td><strong>Update interval</strong></td>
+<td><code>1m</code></td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td><code>Mozilla/5.0</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="samm-2-lisa-steps">Samm 2: Lisa Steps<a class="headerlink" href="#samm-2-lisa-steps" title="Permanent link">&para;</a></h3>
+<p><strong>Step 1:</strong>
+- <strong>Name:</strong> <code>Home page</code>
+- <strong>URL:</strong> <code>http://172.20.0.5:5000/</code>
+- <strong>Required status codes:</strong> <code>200</code></p>
+<p><strong>Step 2:</strong>
+- <strong>Name:</strong> <code>Health check</code>
+- <strong>URL:</strong> <code>http://172.20.0.5:5000/health</code>
+- <strong>Required status codes:</strong> <code>200</code>
+- <strong>Required string:</strong> <code>healthy</code></p>
+<p><strong>Step 3:</strong>
+- <strong>Name:</strong> <code>Metrics</code>
+- <strong>URL:</strong> <code>http://172.20.0.5:5000/metrics</code>
+- <strong>Required status codes:</strong> <code>200</code></p>
+<p>Salvesta.</p>
+<p><strong>Mis juhtub:</strong><br />
+Iga minut käib läbi kõik 3 sammu. Kui mõni fail'ib (vale status code või string puudub) → Problem!</p>
+<p>📝 <strong>Küsimus 4:</strong> Millal kasutaksid Web Scenario vs lihtsat HTTP Agent check'i?</p>
+<hr />
+<h3 id="samm-3-vaata-scenario-tulemusi">Samm 3: Vaata Scenario Tulemusi<a class="headerlink" href="#samm-3-vaata-scenario-tulemusi" title="Permanent link">&para;</a></h3>
+<p>⏱️ Oota 2 min</p>
+<p><strong>Monitoring → Hosts → flask-app → Web</strong></p>
+<p>Näed:
+- Download speed (per step)
+- Response time (per step)
+- Failed step (0 = OK, 1 = failed)</p>
+<p><strong>Kliki scenario nimel</strong> → näed kõigi sammude response time graafikut!</p>
+<p>✅ <strong>Kontrollpunkt:</strong> Web scenario töötab</p>
+<hr />
+<h2 id="osa-5-triggerid">Osa 5: Triggerid<a class="headerlink" href="#osa-5-triggerid" title="Permanent link">&para;</a></h2>
+<h3 id="mis-on-trigger">Mis on Trigger?<a class="headerlink" href="#mis-on-trigger" title="Permanent link">&para;</a></h3>
+<p><strong>Trigger</strong> = tingimus mis loob probleemi.</p>
+<p>Komponendid:
+- <strong>Expression</strong> - Tingimus (nt <code>last(/flask-app/flask.response.time)&gt;2000</code>)
+- <strong>Severity</strong> - Tõsidus (Warning, Average, High...)
+- <strong>Problem event</strong> - Kui tingimus TRUE → Problem
+- <strong>OK event</strong> - Kui tingimus FALSE → Problem lahendatud</p>
+<p><strong>Severity tasemed:</strong>
+- <strong>Not classified</strong> - Määramata
+- <strong>Information</strong> - Info
+- <strong>Warning</strong> - Hoiatus
+- <strong>Average</strong> - Keskmine probleem
+- <strong>High</strong> - Kõrge prioriteet
+- <strong>Disaster</strong> - Katastroof</p>
+<hr />
+<h3 id="samm-1-loo-response-time-trigger">Samm 1: Loo Response Time Trigger<a class="headerlink" href="#samm-1-loo-response-time-trigger" title="Permanent link">&para;</a></h3>
+<p><strong>Data collection → Hosts → flask-app → Triggers → Create trigger</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Flask: High response time</code></td>
+</tr>
+<tr>
+<td><strong>Severity</strong></td>
+<td><code>Warning</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Expression:</strong>
+- Kliki <strong>Add</strong>
+- Item: <code>flask.response.time</code>
+- Function: <code>last()</code>
+- Operator: <code>&gt;</code>
+- Value: <code>2000</code></p>
+<p>Peaks olema: <code>last(/flask-app/flask.response.time)&gt;2000</code></p>
+<p><strong>Mis see tähendab:</strong><br />
+Viimane response time &gt; 2000ms (2 sek) → Alarm!</p>
+<p>Salvesta.</p>
+<hr />
+<h3 id="samm-2-loo-error-rate-trigger">Samm 2: Loo Error Rate Trigger<a class="headerlink" href="#samm-2-loo-error-rate-trigger" title="Permanent link">&para;</a></h3>
+<p><strong>Create trigger:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Flask: High error rate</code></td>
+</tr>
+<tr>
+<td><strong>Severity</strong></td>
+<td><code>Average</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Expression:</strong> <code>last(/flask-app/flask.error.rate)&gt;10</code></p>
+<p>Alarm kui error rate &gt; 10%.</p>
+<p>Salvesta.</p>
+<p>📝 <strong>Küsimus 5:</strong> Mis vahe on Warning ja Average severity'l? Kumb on tõsisem?</p>
+<hr />
+<h3 id="samm-3-testi-triggereid">Samm 3: Testi Triggereid<a class="headerlink" href="#samm-3-testi-triggereid" title="Permanent link">&para;</a></h3>
+<p><strong>Tee aeglane päring:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>http://localhost:5000/slow
+</span></code></pre></div>
+<p>Kulub 3 sekundit (&gt; 2s trigger threshold!)</p>
+<p><strong>Vaata probleeme:</strong></p>
+<p><strong>Monitoring → Problems</strong></p>
+<p>⏱️ Oota 1-2 min (next update interval)</p>
+<p>Peaksid nägema:<br />
+🔴 <strong>Flask: High response time</strong> (Warning)</p>
+<p><strong>Lahenda probleem (tee kiired päringud):</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..5<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>curl<span class="w"> </span>http://localhost:5000/<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</span></code></pre></div>
+<p>Response time &lt; 2s → Problem lahendub automaatselt!</p>
+<p>✅ <strong>Kontrollpunkt:</strong> Trigger aktiveerub ja lahendub</p>
+<hr />
+<h2 id="osa-6-dashboard">Osa 6: Dashboard<a class="headerlink" href="#osa-6-dashboard" title="Permanent link">&para;</a></h2>
+<h3 id="mis-on-dashboard">Mis on Dashboard?<a class="headerlink" href="#mis-on-dashboard" title="Permanent link">&para;</a></h3>
+<p><strong>Dashboard</strong> = kohandatud vaade mõõdikutele.</p>
+<p>Widget'id:
+- <strong>Graph</strong> - Ajaloolised andmed graafikuna
+- <strong>Item value</strong> - Üks väärtus suurelt
+- <strong>Gauge</strong> - Visuaalne meter (nt 0-100%)
+- <strong>Problems</strong> - Aktiivsed probleemid
+- <strong>Map</strong> - Võrgu topol puhul</p>
+<hr />
+<h3 id="samm-1-loo-dashboard">Samm 1: Loo Dashboard<a class="headerlink" href="#samm-1-loo-dashboard" title="Permanent link">&para;</a></h3>
+<p><strong>Dashboards → Create dashboard</strong></p>
+<table>
+<thead>
+<tr>
+<th>Väli</th>
+<th>Väärtus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Flask Monitoring</code></td>
+</tr>
+<tr>
+<td><strong>Default page name</strong></td>
+<td><code>Overview</code></td>
+</tr>
+</tbody>
+</table>
+<p>Salvesta.</p>
+<hr />
+<h3 id="samm-2-lisa-widgets">Samm 2: Lisa Widgets<a class="headerlink" href="#samm-2-lisa-widgets" title="Permanent link">&para;</a></h3>
+<p>Kliki dashboard'il → <strong>Edit dashboard</strong> → <strong>Add widget</strong></p>
+<p><strong>Widget 1: Response Time Graph</strong></p>
+<ul>
+<li><strong>Type:</strong> <code>Graph</code></li>
+<li><strong>Name:</strong> <code>Response Time</code></li>
+<li><strong>Data set:</strong></li>
+<li>Host: <code>flask-app</code></li>
+<li>Item: <code>Flask: Response time</code></li>
+<li><strong>Time period:</strong> <code>Last hour</code></li>
+<li><strong>Width:</strong> <code>6</code> (pool ekraanist)</li>
+</ul>
+<p>Add.</p>
+<p><strong>Widget 2: Active Users</strong></p>
+<ul>
+<li><strong>Type:</strong> <code>Item value</code></li>
+<li><strong>Name:</strong> <code>Active Users</code></li>
+<li><strong>Item:</strong> <code>flask-app: Flask: Active users</code></li>
+<li><strong>Show:</strong> <code>As is</code> + <code>Change indicator</code></li>
+<li><strong>Width:</strong> <code>3</code></li>
+</ul>
+<p>Add.</p>
+<p><strong>Widget 3: Error Rate Gauge</strong></p>
+<ul>
+<li><strong>Type:</strong> <code>Gauge</code></li>
+<li><strong>Name:</strong> <code>Error Rate</code></li>
+<li><strong>Item:</strong> <code>flask-app: Flask: Error rate</code></li>
+<li><strong>Min:</strong> <code>0</code></li>
+<li><strong>Max:</strong> <code>100</code></li>
+<li><strong>Thresholds:</strong></li>
+<li><code>0-5</code> → Green</li>
+<li><code>5-10</code> → Yellow</li>
+<li><code>10-100</code> → Red</li>
+<li><strong>Width:</strong> <code>3</code></li>
+</ul>
+<p>Add.</p>
+<p><strong>Widget 4: Problems</strong></p>
+<ul>
+<li><strong>Type:</strong> <code>Problems</code></li>
+<li><strong>Name:</strong> <code>Flask Issues</code></li>
+<li><strong>Show:</strong> <code>Recent problems</code></li>
+<li><strong>Host groups:</strong> <code>Applications</code></li>
+<li><strong>Width:</strong> <code>6</code></li>
+</ul>
+<p>Add.</p>
+<p><strong>Widget 5: Uptime</strong></p>
+<ul>
+<li><strong>Type:</strong> <code>Item value</code></li>
+<li><strong>Name:</strong> <code>Application Uptime</code></li>
+<li><strong>Item:</strong> <code>flask-app: Flask: Uptime</code></li>
+<li><strong>Show:</strong> <code>As is</code></li>
+<li><strong>Advanced configuration → Units:</strong> <code>uptime</code></li>
+<li><strong>Width:</strong> <code>6</code></li>
+</ul>
+<p>Add.</p>
+<p>Salvesta dashboard.</p>
+<hr />
+<h3 id="samm-3-vaata-dashboardi">Samm 3: Vaata Dashboard'i<a class="headerlink" href="#samm-3-vaata-dashboardi" title="Permanent link">&para;</a></h3>
+<p><strong>Dashboards → Flask Monitoring</strong></p>
+<p>Näed:
+- Response time graafikut ✅
+- Active users count ✅
+- Error rate gauge (värvidega!) ✅
+- Probleeme (kui on) ✅
+- Uptime ✅</p>
+<p>📝 <strong>Küsimus 6:</strong> Miks Gauge widget sobib error rate'ile paremini kui lihtne number?</p>
+<p>✅ <strong>Kontrollpunkt:</strong> Dashboard kuvab kõik widgetid</p>
+<hr />
+<h2 id="osa-7-git-update">Osa 7: Git Update<a class="headerlink" href="#osa-7-git-update" title="Permanent link">&para;</a></h2>
+<h3 id="samm-1-kontrolli-flask-files">Samm 1: Kontrolli Flask Files<a class="headerlink" href="#samm-1-kontrolli-flask-files" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ls<span class="w"> </span>-la<span class="w"> </span>flask-app/
+</span></code></pre></div>
+<p>Peaksid nägema:
+- <code>app.py</code>
+- <code>Dockerfile</code></p>
+<hr />
+<h3 id="samm-2-uuenda-readme">Samm 2: Uuenda README<a class="headerlink" href="#samm-2-uuenda-readme" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>nano<span class="w"> </span>README.md
+</span></code></pre></div>
+<p>Lisa <strong>Komponendid</strong> sektsiooni:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">-</span><span class="w"> </span>Flask App (veebirakendus - Python/Flask)
+</span></code></pre></div>
+<p>Lisa uus sektsioon enne <strong>Turvalisus</strong>:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="gu">## Monitooringud</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="gu">### Flask App</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">-</span><span class="w"> </span><span class="gs">**URL:**</span> http://localhost:5000
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">-</span><span class="w"> </span><span class="gs">**HTTP Agent checks:**</span> Response time, status
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Web Scenario:**</span> 3-step user journey
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Custom metrics:**</span> Active users, error rate (JSON parsing)
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Triggerid:**</span> Response time &gt; 2s, Error rate &gt; 10%
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Dashboard:**</span> Flask Monitoring
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="gu">### Zabbix Server</span>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Template:**</span> Linux by Zabbix agent
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Items:**</span> ~50 (CPU, RAM, disk, network)
+</span></code></pre></div>
+<p>Salvesta.</p>
+<hr />
+<h3 id="samm-3-commit">Samm 3: Commit<a class="headerlink" href="#samm-3-commit" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Peaksid nägema:
+- <code>flask-app/app.py</code> (new)
+- <code>flask-app/Dockerfile</code> (new)
+- <code>docker-compose.yml</code> (modified)
+- <code>README.md</code> (modified)</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Lab 2: Add Flask web app monitoring&quot;</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<p>✅ <strong>Kontrollpunkt:</strong> Muudatused Git'is</p>
+<hr />
+<h2 id="kokkuvote">Kokkuvõte<a class="headerlink" href="#kokkuvote" title="Permanent link">&para;</a></h2>
+<p>Sul on nüüd:
+- ✅ Flask veebirakendus
+- ✅ HTTP agent monitoring (response time, status)
+- ✅ JSON parsing (dependent items, JSONPath)
+- ✅ Web scenario (3-step user journey)
+- ✅ Triggerid (2 sek, 10% error rate)
+- ✅ Dashboard (5 widgets)</p>
+<p><strong>Peamised Zabbix kontseptsioonid mis peaksid meelde jääma:</strong></p>
+<p><strong>Item types:</strong>
+- <strong>HTTP Agent:</strong> HTTP päring URL'ile, ei vaja agenti (veebirakendused)
+- <strong>Dependent Item:</strong> Kasutab teise item'i andmeid (JSON parsing, 1 päring → mitu mõõdikut)
+- <strong>Web Scenario:</strong> Mitme-sammuline test (user journey, session)</p>
+<p><strong>Andmete töötlus:</strong>
+- <strong>JSONPath:</strong> JSON filtreerimine (<code>$.field</code>)
+- <strong>Preprocessing:</strong> Andmete töötlus enne salvestamist</p>
+<p><strong>Probleemide tuvastus:</strong>
+- <strong>Trigger:</strong> Tingimus mis loob alarmi
+- <strong>Severity:</strong> Probleemi tõsidus (Info → Warning → Average → High → Disaster)
+- <strong>Expression:</strong> <code>last()</code>, <code>avg()</code>, <code>min()</code>, <code>max()</code> funktsioonid</p>
+<p><strong>Visualiseerimine:</strong>
+- <strong>Dashboard:</strong> Kohandatud vaade
+- <strong>Widgets:</strong> Graph, Item value, Gauge, Problems...</p>
+<hr />
+<h2 id="viited">Viited<a class="headerlink" href="#viited" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.zabbix.com/documentation/7.0/en/manual/config/items/itemtypes/http">HTTP Agent</a></li>
+<li><a href="https://www.zabbix.com/documentation/7.0/en/manual/config/items/itemtypes/dependent_items">Dependent Items</a></li>
+<li><a href="https://www.zabbix.com/documentation/7.0/en/manual/web_monitoring">Web Scenarios</a></li>
+<li><a href="https://www.zabbix.com/documentation/7.0/en/manual/config/triggers">Triggers</a></li>
+<li><a href="https://www.zabbix.com/documentation/7.0/en/manual/web_interface/frontend_sections/dashboards">Dashboards</a></li>
+<li><a href="https://www.zabbix.com/documentation/7.0/en/manual/config/items/preprocessing/jsonpath_functionality">JSONPath</a></li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 21, 2025 09:57:02 UTC">October 21, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["mermaid", "navigation.tabs", "navigation.top", "navigation.expand", "navigation.sections", "navigation.indexes", "navigation.tracking", "navigation.instant", "toc.follow", "toc.sticky", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
+      
+        <script src="../../../js/extra.js"></script>
+      
+    
+  </body>
+</html>
